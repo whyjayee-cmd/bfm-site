@@ -145,7 +145,7 @@ canvas#work{display:none}
       <div class="scanwrap" id="scanwrap" style="margin-top:14px"><canvas id="faceCanvas"></canvas><div class="scanstat" id="scanStat"><span class="dot"></span><span id="scanStatText">피부 신호 측정 중…</span></div></div>
       <div class="sigchips" id="sigChips"></div>
     </div>
-    <div class="foot"><button class="btn" id="toSurvey" disabled>설문으로 마무리 (8문항) →</button></div>
+    <div class="foot"><button class="btn" id="toSurvey" disabled>맞춤 설문 계속하기 →</button></div>
   </section>
 
   <!-- 4. RETAKE -->
@@ -387,6 +387,13 @@ function goRetake(reason){const m=RETAKE[reason]||RETAKE.noface;$('#retakeTitle'
 
 function goSurvey(){buildSurvey();renderQ();$('#stepLabel').textContent='설문';show('#s-survey');}
 
+/* iframe(아임웹)에 임베드되면 부모 페이지로 '진단 완료' 신호를 보내 설문으로 넘긴다.
+   단독 실행(직접 접속)이면 기존 내부 설문으로 진행한다. */
+function handoff(){
+  try{ if(window.parent && window.parent!==window){ window.parent.postMessage({bfm:'diagnose-done'},'*'); return; } }catch(e){}
+  goSurvey();
+}
+
 /* ===== camera ===== */
 let stream=null,rafId=null;
 async function startCamera(){show('#s-cam');$('#stepLabel').textContent='촬영';
@@ -426,10 +433,10 @@ $('#fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.targ
 $('#startCam').onclick=startCamera;
 $('#shoot').onclick=()=>{if(!$('#shoot').disabled)captureStill();};
 $('#camCancel').onclick=()=>{stopCamera();show('#s-intro');$('#stepLabel').textContent='AI 피부 진단';};
-$('#skipPhoto').onclick=()=>{faceResult=null;goSurvey();};
-$('#toSurvey').onclick=goSurvey;
+$('#skipPhoto').onclick=()=>{faceResult=null;handoff();};
+$('#toSurvey').onclick=handoff;
 $('#retakeBtn').onclick=()=>{$('#introErr').classList.remove('on');if(!inApp&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)startCamera();else $('#fileInput').click();};
-$('#retakeSkip').onclick=()=>{faceResult=null;goSurvey();};
+$('#retakeSkip').onclick=()=>{faceResult=null;handoff();};
 $('#qPrev').onclick=()=>{if(qi>0){qi--;renderQ();}};
 $('#qNext').onclick=()=>{if(ans[qi]===-1)return;if(qi<Q.length-1){qi++;renderQ();}else renderResult();};
 $('#retry').onclick=()=>{faceResult=null;$('#introErr').classList.remove('on');$('#stepLabel').textContent='AI 피부 진단';show('#s-intro');};
