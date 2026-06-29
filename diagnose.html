@@ -30,7 +30,7 @@ h1 .ac{color:var(--accent)}
 .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
 .btn.sm{padding:13px;font-size:15px}
 .linkbtn{background:0;border:0;color:var(--mut);font-family:inherit;font-size:14px;cursor:pointer;padding:10px;width:100%;text-align:center;font-weight:600}
-.screen{flex:1;display:none;flex-direction:column;padding-bottom:calc(20px + var(--safe-b))}
+.screen{flex:1;min-height:0;display:none;flex-direction:column;padding-bottom:calc(20px + var(--safe-b))}
 .screen.on{display:flex}.grow{flex:1}
 .note{font-size:12.5px;color:var(--mut-2);text-align:center;margin-top:10px}
 .foot{flex:none;display:flex;flex-direction:column;gap:8px;padding-top:14px}
@@ -62,6 +62,33 @@ h1 .ac{color:var(--accent)}
 .sigchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .sigchip{font-size:13.5px;font-weight:700;padding:9px 13px;border-radius:11px;display:flex;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--line)}
 .sigchip .d{width:9px;height:9px;border-radius:50%}
+/* cinematic scan */
+#s-scan .grow{overflow-y:auto;scrollbar-width:none}
+#s-scan .grow::-webkit-scrollbar{display:none}
+#s-scan .scanwrap{max-height:48vh}
+#s-scan .scanwrap canvas{max-height:48vh;object-fit:cover}
+.scan-cnr i{position:absolute;width:24px;height:24px;border:2px solid var(--accent);border-radius:2px;opacity:0;animation:cnrIn .5s ease forwards}
+.scan-cnr .tl{top:10px;left:10px;border-right:0;border-bottom:0;animation-delay:.15s}
+.scan-cnr .tr{top:10px;right:10px;border-left:0;border-bottom:0;animation-delay:.28s}
+.scan-cnr .bl{bottom:10px;left:10px;border-right:0;border-top:0;animation-delay:.41s}
+.scan-cnr .br{bottom:10px;right:10px;border-left:0;border-top:0;animation-delay:.54s}
+@keyframes cnrIn{from{opacity:0;transform:scale(.6)}to{opacity:.9;transform:scale(1)}}
+.scan-hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.scan-hud .hl{font:700 10px/1 ui-monospace,monospace;letter-spacing:.22em;color:#cfe0ff;background:rgba(8,9,11,.55);padding:5px 8px;border-radius:6px}
+.scan-hud .pc{font:700 13px ui-monospace,monospace;color:#cfe0ff;background:rgba(8,9,11,.55);padding:4px 8px;border-radius:6px;font-variant-numeric:tabular-nums}
+.scan-metrics{margin-top:14px;display:flex;flex-direction:column;gap:9px}
+.scan-metrics .m{opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.scan-metrics .m.in{opacity:1;transform:none}
+.scan-metrics .mt{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:5px}
+.scan-metrics .mt b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.scan-metrics .tr{height:6px;border-radius:99px;background:#1c2230;overflow:hidden}
+.scan-metrics .fl{height:100%;border-radius:99px;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.scan-log{margin-top:13px;font:500 10.5px/1.8 ui-monospace,monospace;color:var(--mut-2)}
+.scan-log .ln{opacity:0;animation:logIn .3s ease forwards}
+.scan-log .ln.done{color:var(--mut)}
+.scan-log .ln.done::before{content:'✓ ';color:var(--accent)}
+.scan-log .ln.run::before{content:'› ';color:var(--accent)}
+@keyframes logIn{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:none}}
 
 /* retake */
 .retake{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
@@ -81,6 +108,15 @@ h1 .ac{color:var(--accent)}
 .opt:active{transform:scale(.99)}.opt .rd{flex:none;width:21px;height:21px;border-radius:50%;border:2px solid var(--mut-2);position:relative}
 .opt.sel{border-color:var(--accent);background:rgba(91,141,239,.08)}.opt.sel .rd{border-color:var(--accent)}.opt.sel .rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--accent)}
 .srow{flex:none;display:flex;gap:10px;padding-top:14px}.srow .btn{flex:1}.srow .btn.ghost{flex:0 0 auto;width:84px}
+/* survey (한 번에 한 질문 · 휠/스와이프로 이동) */
+.qstage{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;position:relative;touch-action:none}
+.qcard{width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center}
+.qcard .opts{width:100%}
+@keyframes qInDown{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes qInUp{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:none}}
+.qcard.inDown{animation:qInDown .34s cubic-bezier(.2,.8,.2,1)}
+.qcard.inUp{animation:qInUp .34s cubic-bezier(.2,.8,.2,1)}
+.qhint{font-size:12px;color:var(--mut-2);margin-top:16px}
 
 /* result */
 .persona{margin-top:8px;background:linear-gradient(165deg,#101626,#0b0d12);border:1px solid #232a3a;border-radius:20px;padding:24px;text-align:center;position:relative;overflow:hidden}
@@ -98,6 +134,24 @@ h1 .ac{color:var(--accent)}
 .reason{margin-top:14px;border-top:1px solid var(--line);padding-top:13px;font-size:14px;color:var(--mut);line-height:1.6}.reason b{color:var(--ink);font-weight:700}
 .usedphoto{margin-top:11px;font-size:12px;color:var(--mut-2);display:flex;align-items:center;gap:7px}.usedphoto .d{width:6px;height:6px;border-radius:50%;background:var(--accent)}
 canvas#work{display:none}
+/* 전역: Pretendard 통일 · 볼드 제거 · 모든 글씨 가운데 정렬 */
+html body, html body *{font-family:var(--sans)!important;font-weight:400!important;text-align:center!important}
+.opt{justify-content:center!important}
+#s-intro .grow{display:flex;flex-direction:column;justify-content:center}
+/* 인트로 버튼: 카메라(주,파랑) / 사진파일(보조,외곽선) / 사진없이(텍스트) */
+#s-intro #startCam{background:var(--accent)!important;color:#fff!important;border:0}
+#s-intro #pickFile{background:transparent!important;color:var(--ink)!important;border:1.5px solid var(--line);box-shadow:none}
+/* 카메라 실시간 인식 HUD */
+.cam-hud{position:absolute;inset:16px;pointer-events:none;z-index:3}
+.cam-hud .cb{position:absolute;width:30px;height:30px;border:2px solid rgba(255,255,255,.5);transition:border-color .3s}
+.cam-hud .cb.tl{top:0;left:0;border-right:0;border-bottom:0}
+.cam-hud .cb.tr{top:0;right:0;border-left:0;border-bottom:0}
+.cam-hud .cb.bl{bottom:0;left:0;border-right:0;border-top:0}
+.cam-hud .cb.br{bottom:0;right:0;border-left:0;border-top:0}
+.cam-hud .cam-scan{position:absolute;left:8%;right:8%;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(91,141,239,.9),transparent);top:10%;animation:camScan 2.6s ease-in-out infinite}
+@keyframes camScan{0%{top:10%}50%{top:86%}100%{top:10%}}
+.cam.locked .cam-hud .cb{border-color:var(--accent)}
+.cam.locked .cam-hud .cam-scan{background:linear-gradient(90deg,transparent,rgba(70,201,139,.95),transparent)}
 </style>
 </head>
 <body>
@@ -109,20 +163,20 @@ canvas#work{display:none}
     <div class="grow">
       <span class="eyebrow">1단계 · 얼굴 분석</span>
       <h1 style="margin-top:11px">먼저 <span class="ac">얼굴</span>을<br>읽어드릴게요.</h1>
-      <p class="sub">AI가 셀카 한 장에서 유분·붉은기 신호를 먼저 읽고, 그 위에 표시해 보여줍니다. 그다음 짧은 설문으로 마무리해요.</p>
+      <p class="sub">카메라로 얼굴을 비추면 AI가 유분·붉은기·트러블을 실시간으로 읽어냅니다. 정면 셀카 한 장이면 충분해요.</p>
       <div class="privacy"><div class="i">🔒</div><div><b>사진은 기기에서만 분석합니다.</b><p>서버에 올리거나 저장하지 않아요. 분석이 끝나면 사라집니다.</p></div></div>
       <div class="guides">
         <div class="g"><span class="c">1</span><span><b>정면</b>으로, 화면 안에 얼굴을 맞춰요.</span></div>
         <div class="g"><span class="c">2</span><span><b>밝은 곳</b>에서, 직사광·플래시는 피해요.</span></div>
         <div class="g"><span class="c">3</span><span>안경·마스크는 벗고, <b>이마</b>가 보이게.</span></div>
       </div>
-      <div class="inapp" id="inappMsg"><b>인스타그램 앱 안에서 열렸어요.</b><br>아래 <b>셀카로 분석 시작</b>을 누르면 휴대폰 카메라로 바로 찍을 수 있어요.</div>
+      <div class="inapp" id="inappMsg"><b>인스타그램 앱 안에서 열렸어요.</b><br>아래 <b>카메라로 바로 촬영</b>을 누르면 휴대폰 카메라로 바로 찍을 수 있어요.</div>
       <div class="err" id="introErr"></div>
     </div>
     <div class="foot">
-      <button class="btn" id="pickFile">셀카로 분석 시작</button>
-      <button class="btn ghost sm" id="startCam" style="display:none">실시간 가이드로 촬영</button>
-      <button class="linkbtn" id="skipPhoto">사진 없이 설문만 할게요 →</button>
+      <button class="btn" id="startCam">📷 카메라로 바로 촬영</button>
+      <button class="btn ghost sm" id="pickFile">사진 파일로 분석</button>
+      <button class="linkbtn" id="skipPhoto">사진 없이 설문만 진행 →</button>
     </div>
     <input type="file" id="fileInput" accept="image/*" capture="user" style="display:none" />
   </section>
@@ -132,6 +186,7 @@ canvas#work{display:none}
     <div class="cam">
       <video id="video" playsinline muted autoplay></video>
       <div class="oval"><svg viewBox="0 0 300 380" fill="none"><ellipse cx="150" cy="190" rx="120" ry="158" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-dasharray="9 9"/></svg></div>
+      <div class="cam-hud"><i class="cb tl"></i><i class="cb tr"></i><i class="cb bl"></i><i class="cb br"></i><div class="cam-scan"></div></div>
       <div class="coach"><div class="pill" id="coachPill"><span class="dot"></span><span id="coachText">카메라 준비 중…</span></div></div>
     </div>
     <div class="foot"><button class="btn" id="shoot" disabled>촬영</button><button class="linkbtn" id="camCancel">취소</button></div>
@@ -140,12 +195,19 @@ canvas#work{display:none}
   <!-- 3. SCAN / OVERLAY -->
   <section class="screen" id="s-scan">
     <div class="grow">
-      <span class="eyebrow" id="scanEyebrow">분석 중</span>
+      <span class="eyebrow" id="scanEyebrow">AI 정밀 분석</span>
       <h1 style="margin-top:10px" id="scanTitle">얼굴을 읽고 있어요</h1>
-      <div class="scanwrap" id="scanwrap" style="margin-top:14px"><canvas id="faceCanvas"></canvas><div class="scanstat" id="scanStat"><span class="dot"></span><span id="scanStatText">피부 신호 측정 중…</span></div></div>
+      <div class="scanwrap" id="scanwrap" style="margin-top:14px">
+        <canvas id="faceCanvas"></canvas>
+        <div class="scan-cnr"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+        <div class="scan-hud"><span class="hl">AI SKIN ANALYSIS</span><span class="pc" id="scanPct">0%</span></div>
+        <div class="scanstat" id="scanStat"><span class="dot"></span><span id="scanStatText">피부 신호 측정 중…</span></div>
+      </div>
+      <div class="scan-metrics" id="scanMetrics"></div>
+      <div class="scan-log" id="scanLog"></div>
       <div class="sigchips" id="sigChips"></div>
     </div>
-    <div class="foot"><button class="btn" id="toSurvey" disabled>맞춤 설문 계속하기 →</button></div>
+    <div class="foot"><button class="btn" id="toSurvey" disabled>설문으로 마무리 (8문항) →</button></div>
   </section>
 
   <!-- 4. RETAKE -->
@@ -158,25 +220,19 @@ canvas#work{display:none}
     <div class="foot"><button class="btn" id="retakeBtn">다시 찍기</button><button class="linkbtn" id="retakeSkip">그냥 설문으로 진행 →</button></div>
   </section>
 
-  <!-- 5. SURVEY -->
+  <!-- 5. SURVEY (스크롤형) -->
   <section class="screen" id="s-survey">
     <div style="flex:none;padding-top:6px">
       <div style="display:flex;justify-content:flex-end"><span class="step"><span id="qCur">1</span> / <span id="qTot">8</span></span></div>
       <div class="prog" style="margin-top:8px"><div class="fl" id="qProg"></div></div>
     </div>
-    <div class="grow" style="display:flex;flex-direction:column;justify-content:center">
-      <span class="qsec" id="qSec">유분·수분</span>
-      <div class="prime" id="qPrime"><span class="s">✦</span><span id="qPrimeText"></span></div>
-      <h2 class="q" id="qText">질문</h2>
-      <div class="opts" id="qOpts"></div>
-    </div>
-    <div class="srow"><button class="btn ghost" id="qPrev">이전</button><button class="btn" id="qNext" disabled>다음</button></div>
+    <div class="qstage" id="qStage"></div>
   </section>
 
   <!-- 6. RESULT -->
   <section class="screen" id="s-result">
     <div class="grow">
-      <span class="eyebrow">AI 분석 완료 · 처방 No. <span id="rFno">—</span></span>
+      <span class="eyebrow">AI 분석 완료</span>
       <h1 style="margin-top:10px">당신에게 맞는<br>처방을 찾았습니다.</h1>
       <div class="rep">
         <div class="h"><span class="t">피부 데이터</span><span class="conf" id="confBadge">보통 확신</span></div>
@@ -199,7 +255,7 @@ canvas#work{display:none}
 /* ===== 피부 타입 페르소나 (★ 이름·매핑은 사용자 확정 후 여기만 고치면 됨) =====
    underlying 분석은 {지성, 건성, 여드름} 점수 → 우세 타입을 페르소나로 표시. 제품은 BfM. */
 const PERSONAS = {
-  지성: {name:'이터널맨',   en:'ETERNAL MAN',     tag:'유분 많은 피부를 단정하게 다스리는 타입'},
+  지성: {name:'젠틀맨',    en:'GENTLE MAN',      tag:'유분 많은 피부를 단정하게 다스리는 타입'},
   건성: {name:'니트맨',    en:'NEAT MAN',        tag:'수분 부족한 피부를 매끈하게 채우는 타입'},
   여드름:{name:'르네상스맨', en:'RENAISSANCE MAN', tag:'자극에 약한 피부를 맑게 되살리는 타입'},
 };
@@ -213,7 +269,8 @@ const argmax=v=>{let m=0;for(let i=1;i<v.length;i++)if(v[i]>v[m])m=i;return m;};
 const ua=navigator.userAgent||'';
 const inApp=/Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER|Line\//i.test(ua);
 if(inApp)$('#inappMsg').classList.add('on');
-if(!inApp&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)$('#startCam').style.display='';
+try{if(window.parent!==window){var _b=document.querySelector('.top .brand');if(_b)_b.style.display='none';}}catch(e){}
+/* 카메라 우선: startCam 버튼 항상 노출, 미지원이면 파일 촬영으로 폴백 */
 
 let faceResult=null, capCanvas=null, Q=[], ans=[], qi=0, primeText='';
 
@@ -268,44 +325,153 @@ async function analyzePhoto(c){
 /* ===== scan + overlay drawing ===== */
 function roundRect(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();}
 function tag(x,cx,cy,text,color){x.font='700 12px '+getComputedStyle(document.body).fontFamily;const w=x.measureText(text).width+18;x.fillStyle='rgba(8,9,11,.82)';x.strokeStyle=color;x.lineWidth=1;roundRect(x,cx-w/2,cy-11,w,22,11);x.fill();x.stroke();x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';x.fillText(text,cx,cy);}
+function meshConns(){try{return vision.mod.FaceLandmarker.FACE_LANDMARKS_TESSELATION||null;}catch(e){return null;}}
+function metricRows(f){
+  const cl=v=>Math.max(0,Math.min(1,v));
+  const sebum=cl(f.shineDiff/0.12), redness=cl((f.redness-0.02)/0.11), blemish=cl((f.Sp?f.Sp[2]:0)/0.5), dryS=cl((0.05-f.shine)/0.05);
+  const moisture=cl(0.85-sebum*0.35-dryS*0.55), tone=cl(0.9-redness*0.55-(f.glare||0)*0.8);
+  const P=v=>Math.round((0.20+v*0.76)*100);
+  return [
+    {k:'T존 유분 · Sebum',v:P(sebum),c:'#5B8DEF'},
+    {k:'수분 밸런스 · Hydration',v:P(moisture),c:'#46c98b'},
+    {k:'붉은기 · Redness',v:P(redness),c:'#E2725B'},
+    {k:'트러블 경향 · Blemish',v:P(blemish),c:'#E2B45B'},
+    {k:'피부 톤 균일도 · Tone',v:P(tone),c:'#83a8ff'}
+  ];
+}
+const FCOL={shine:'#5B8DEF',red:'#E2725B',spot:'#E2B45B'};
+/* 사진 픽셀을 직접 스캔해 유분 광택·홍조·잡티 위치를 찾는다 (실제 데이터 기반) */
+function detectFindings(src,f){
+  const W=src.width,H=src.height; let ctx;
+  try{ctx=src.getContext('2d',{willReadFrequently:true});}catch(e){return [];}
+  const x0=Math.max(0,Math.floor(f.fx)),y0=Math.max(0,Math.floor(f.fy)),fw=Math.min(W-x0,Math.floor(f.fw)),fh=Math.min(H-y0,Math.floor(f.fh));
+  if(fw<12||fh<12)return [];
+  let data; try{data=ctx.getImageData(x0,y0,fw,fh).data;}catch(e){return [];}
+  const cell=Math.max(4,Math.floor(fw/80)),cols=Math.floor(fw/cell),rows=Math.floor(fh/cell);
+  const br=new Float32Array(cols*rows),rd=new Float32Array(cols*rows),sa=new Float32Array(cols*rows),sk=new Uint8Array(cols*rows);
+  let sB=0,sR=0,n=0;
+  for(let cy=0;cy<rows;cy++)for(let cx=0;cx<cols;cx++){let r=0,g=0,b=0,s=0;
+    for(let dy=0;dy<cell;dy+=2)for(let dx=0;dx<cell;dx+=2){const px=cx*cell+dx,py=cy*cell+dy;if(px>=fw||py>=fh)continue;const i=(py*fw+px)*4;r+=data[i];g+=data[i+1];b+=data[i+2];s++;}
+    const idx=cy*cols+cx; if(!s){rd[idx]=-99;continue;} r/=s;g/=s;b/=s;
+    const v=(r+g+b)/3,mx=Math.max(r,g,b),mn=Math.min(r,g,b),sat=mx?(mx-mn)/mx:0;
+    br[idx]=v;rd[idx]=r-Math.max(g,b);sa[idx]=sat;
+    if(v>60&&v<236&&r>=g&&r>=b&&(r-b)>=8&&sat<0.6){sk[idx]=1;sB+=v;sR+=rd[idx];n++;}
+  }
+  if(n<20)return [];
+  const bB=sB/n,bR=sR/n,cand=[];
+  for(let cy=0;cy<rows;cy++)for(let cx=0;cx<cols;cx++){const idx=cy*cols+cx;if(!sk[idx])continue;
+    const px=x0+(cx+0.5)*cell,py=y0+(cy+0.5)*cell,yf=(py-f.fy)/f.fh;
+    if(br[idx]>bB+22&&sa[idx]<0.22) cand.push({x:px,y:py,type:'shine',score:br[idx]-bB});
+    else if(rd[idx]>bR+11&&yf>0.40&&yf<0.80) cand.push({x:px,y:py,type:'red',score:rd[idx]-bR});
+    else if(bB-br[idx]>26&&yf>0.18) cand.push({x:px,y:py,type:'spot',score:bB-br[idx]});
+  }
+  const caps={shine:6,red:5,spot:4},cnt={shine:0,red:0,spot:0},picked=[],minD=f.fw*0.09;
+  cand.sort((a,b)=>b.score-a.score);
+  for(const c of cand){ if(cnt[c.type]>=caps[c.type])continue; if(picked.some(p=>Math.hypot(p.x-c.x,p.y-c.y)<minD))continue; picked.push(c);cnt[c.type]++; if(picked.length>=14)break; }
+  picked.sort((a,b)=>a.y-b.y); picked.forEach(p=>{p.rev=false;p.t0=0;});
+  return picked;
+}
+/* ===== cinematic AI scan ===== */
 function showScan(src){
   capCanvas=src; show('#s-scan'); $('#stepLabel').textContent='분석';
-  $('#scanEyebrow').textContent='분석 중'; $('#scanTitle').textContent='얼굴을 읽고 있어요';
+  $('#scanEyebrow').textContent='AI 정밀 분석'; $('#scanTitle').textContent='얼굴을 읽고 있어요';
   $('#sigChips').innerHTML=''; $('#toSurvey').disabled=true; $('#scanStat').style.display='';
+  $('#scanPct').textContent='0%'; $('#scanLog').innerHTML='';
   const f=faceResult, cv=$('#faceCanvas'); const dispW=Math.min(440,$('#scanwrap').clientWidth||360);
   const sc=dispW/src.width; cv.width=dispW; cv.height=Math.round(src.height*sc);
-  const x=cv.getContext('2d'); const base=()=>{x.clearRect(0,0,cv.width,cv.height);x.drawImage(src,0,0,cv.width,cv.height);};
-  const fy0=f.fy*sc, fy1=(f.fy+f.fh)*sc; let t0=null;
-  function scan(ts){ if(!t0)t0=ts; const p=Math.min(1,(ts-t0)/1300); base();
-    const y=fy0+(fy1-fy0)*p;
-    x.save();x.fillStyle='rgba(11,12,14,.30)';x.fillRect(0,y,cv.width,cv.height-y);
-    const g=x.createLinearGradient(0,y-20,0,y);g.addColorStop(0,'rgba(91,141,239,0)');g.addColorStop(1,'rgba(91,141,239,.45)');x.fillStyle=g;x.fillRect(0,y-20,cv.width,20);
-    x.strokeStyle='rgba(130,175,255,.95)';x.lineWidth=2;x.beginPath();x.moveTo(0,y);x.lineTo(cv.width,y);x.stroke();x.restore();
-    if(p<1)requestAnimationFrame(scan); else setTimeout(()=>drawOverlay(x,base,sc),250);
+  const x=cv.getContext('2d'); const conns=meshConns();
+  const fx=f.fx*sc,fy=f.fy*sc,fw=f.fw*sc,fh=f.fh*sc;
+  const rows=metricRows(f); const oilP=rows[0].v, redP=rows[2].v;
+  const findings=detectFindings(src,f);
+  $('#scanMetrics').innerHTML=rows.map(r=>`<div class="m"><div class="mt"><span>${r.k}</span><b data-v="${r.v}">0%</b></div><div class="tr"><div class="fl" style="background:${r.c}"></div></div></div>`).join('');
+  const mEls=Array.prototype.slice.call($('#scanMetrics').querySelectorAll('.m'));
+  const stages=[
+    {at:0.04,t:'detect_face_region()',label:'얼굴 영역 감지'},
+    {at:0.16,t:'map_landmarks(468)',label:'468 포인트 매핑'},
+    {at:0.33,t:'measure_skin_tone()',label:'피부 톤·밝기 측정'},
+    {at:0.49,t:'analyze_tzone_sebum()',label:'T존 유분 분석'},
+    {at:0.63,t:'scan_pores_texture()',label:'모공·피부결 분석'},
+    {at:0.77,t:'detect_redness_blemish()',label:'홍조·트러블 탐지'},
+    {at:0.90,t:'classify_skin_type()',label:'피부 타입 종합 분류'},
+    {at:0.99,t:'analysis_complete',label:'분석 완료'}
+  ];
+  const logEl=$('#scanLog'); let lastStage=-1; let t0=null;
+  function base(){x.clearRect(0,0,cv.width,cv.height);x.drawImage(src,0,0,cv.width,cv.height);x.fillStyle='rgba(11,18,40,.16)';x.fillRect(0,0,cv.width,cv.height);}
+  function heat(p){ if(p<0.3)return; const a=Math.min(1,(p-0.3)/0.3);
+    let g=x.createRadialGradient(fx+fw*0.5,fy+fh*0.24,2,fx+fw*0.5,fy+fh*0.24,fw*0.42);
+    g.addColorStop(0,'rgba(91,141,239,'+(0.15*a)+')');g.addColorStop(1,'rgba(91,141,239,0)');x.fillStyle=g;x.fillRect(0,0,cv.width,cv.height);
+    if(f.redness>0.05){[fx+fw*0.2,fx+fw*0.8].forEach(cx=>{const r2=x.createRadialGradient(cx,fy+fh*0.58,2,cx,fy+fh*0.58,fw*0.22);r2.addColorStop(0,'rgba(226,114,91,'+(0.13*a)+')');r2.addColorStop(1,'rgba(226,114,91,0)');x.fillStyle=r2;x.fillRect(0,0,cv.width,cv.height);});}
   }
-  requestAnimationFrame(scan);
-}
-function drawOverlay(x,base,sc){
-  base(); const f=faceResult; const fx=f.fx*sc,fy=f.fy*sc,fw=f.fw*sc,fh=f.fh*sc;
-  // subtle landmark dots
-  if(f.pts){x.fillStyle='rgba(130,175,255,.30)';for(let i=0;i<f.pts.length;i+=8){const p=f.pts[i];x.beginPath();x.arc(p.x*x.canvas.width,p.y*x.canvas.height,1,0,7);x.fill();}}
-  // T-zone box
-  const tx=fx+fw*0.30,ty=fy+fh*0.03,tw=fw*0.40,th=fh*0.56;
-  x.setLineDash([6,5]);x.strokeStyle='rgba(91,141,239,.95)';x.lineWidth=2;roundRect(x,tx,ty,tw,th,9);x.stroke();x.setLineDash([]);
-  // cheeks
-  const lcx=fx+fw*0.18,rcx=fx+fw*0.82,ccy=fy+fh*0.58,cr=fw*0.11;
-  x.strokeStyle='rgba(226,114,91,.85)';x.lineWidth=2;[lcx,rcx].forEach(cx=>{x.beginPath();x.arc(cx,ccy,cr,0,7);x.stroke();});
-  // tags from real signals
-  tag(x,tx+tw/2,ty-2,f.shineDiff>0.06?'T존 · 광택↑':(f.shine<0.05?'T존 · 광택 낮음':'T존'),'#5B8DEF');
-  if(f.redness>0.06) tag(x,rcx,ccy+cr+12,'붉은기 감지','#E2725B');
-  // finalize UI
-  $('#scanStat').style.display='none'; $('#scanEyebrow').textContent='분석 완료'; $('#scanTitle').textContent='얼굴에서 이런 신호가 보여요';
-  const chips=[];
-  if(f.shineDiff>0.06)chips.push(['#5B8DEF','T존 광택 ↑ — 유분 신호']); else if(f.shine<0.05)chips.push(['#8A93A0','광택 적음 — 유분 낮음']);
-  if(f.redness>0.06)chips.push(['#E2725B','볼 붉은기 — 여드름 신호']);
-  if(chips.length===0)chips.push(['#46c98b','전반적으로 균형 잡힌 피부']);
-  $('#sigChips').innerHTML=chips.map(c=>`<span class="sigchip"><span class="d" style="background:${c[0]}"></span>${c[1]}</span>`).join('');
-  $('#toSurvey').disabled=false;
+  function mesh(frac){ if(!f.pts)return;
+    if(conns){const n=Math.floor(conns.length*frac);x.strokeStyle='rgba(130,180,255,.22)';x.lineWidth=0.7;x.beginPath();
+      for(let i=0;i<n;i+=2){const c=conns[i];const ai=(c.start!==undefined?c.start:c[0]),bi=(c.end!==undefined?c.end:c[1]);const a=f.pts[ai],b=f.pts[bi];if(!a||!b)continue;x.moveTo(a.x*cv.width,a.y*cv.height);x.lineTo(b.x*cv.width,b.y*cv.height);}x.stroke();}
+    const np=Math.floor(f.pts.length*frac),pl=0.55+0.45*Math.sin(performance.now()/280);
+    for(let i=0;i<np;i+=6){const p=f.pts[i];x.fillStyle='rgba(160,200,255,'+(0.32+0.5*pl)+')';x.beginPath();x.arc(p.x*cv.width,p.y*cv.height,1+pl*0.8,0,7);x.fill();}
+  }
+  function zones(p){
+    if(p>0.47){const tx=fx+fw*0.30,ty=fy+fh*0.03,tw=fw*0.40,th=fh*0.56;x.setLineDash([6,5]);x.lineDashOffset=-(performance.now()/45);x.strokeStyle='rgba(91,141,239,.9)';x.lineWidth=2;roundRect(x,tx,ty,tw,th,9);x.stroke();x.setLineDash([]);x.lineDashOffset=0;}
+    if(p>0.76){const ccy=fy+fh*0.58,cr=fw*0.11;x.strokeStyle='rgba(226,114,91,.85)';x.lineWidth=2;[fx+fw*0.18,fx+fw*0.82].forEach(cx=>{x.beginPath();x.arc(cx,ccy,cr,0,7);x.stroke();});}
+  }
+  function reticle(px,py,col,age){const s=Math.min(1,age/360);if(s<=0)return;
+    x.save();x.globalAlpha=0.92*s;x.strokeStyle=col;x.lineWidth=1.3;
+    x.beginPath();x.moveTo(px-9,py);x.lineTo(px-3.5,py);x.moveTo(px+3.5,py);x.lineTo(px+9,py);x.moveTo(px,py-9);x.lineTo(px,py-3.5);x.moveTo(px,py+3.5);x.lineTo(px,py+9);x.stroke();
+    x.beginPath();x.arc(px,py,4.5,0,7);x.stroke();
+    const pr=(age%1300)/1300;x.globalAlpha=(1-pr)*0.45*s;x.beginPath();x.arc(px,py,4.5+pr*11,0,7);x.stroke();x.restore();}
+  function callout(px,py,side,col,title,val){
+    const lx=side<0?6:cv.width-6;x.save();x.globalAlpha=.9;x.strokeStyle=col;x.lineWidth=1;
+    x.beginPath();x.moveTo(px,py);x.lineTo(px+side*16,py);x.lineTo(lx,py);x.stroke();
+    x.beginPath();x.arc(px,py,2.5,0,7);x.fillStyle=col;x.fill();
+    x.font='400 10.5px Pretendard,system-ui,sans-serif';const tw=Math.max(x.measureText(title).width,x.measureText(val).width)+14;
+    const bx=side<0?lx:lx-tw,by=py-14;
+    x.fillStyle='rgba(8,9,11,.72)';roundRect(x,bx,by,tw,27,6);x.fill();x.globalAlpha=.5;x.strokeStyle=col;x.stroke();
+    x.globalAlpha=1;x.textBaseline='middle';x.textAlign='left';x.fillStyle='#cfe0ff';x.fillText(title,bx+7,by+9);x.fillStyle=col;x.fillText(val,bx+7,by+19);x.restore();}
+  function finish(ts){
+    logEl.querySelectorAll('.ln.run').forEach(n=>{n.classList.remove('run');n.classList.add('done');});
+    $('#scanStat').style.display='none';
+    $('#scanEyebrow').textContent='분석 완료'; $('#scanTitle').textContent='얼굴에서 이런 신호가 보여요';
+    base(); heat(1); mesh(1); zones(1);
+    findings.forEach(fd=>reticle(fd.x*sc,fd.y*sc,FCOL[fd.type],600));
+    callout(fx+fw*0.5,fy+fh*0.12,-1,'#5B8DEF','T-ZONE','유분 '+oilP+'%');
+    if(f.redness>0.05)callout(fx+fw*0.82,fy+fh*0.58,1,'#E2725B','CHEEK','홍조 '+redP+'%');
+    const chips=[];
+    if(f.shineDiff>0.06)chips.push(['#5B8DEF','T존 광택 ↑ — 유분 신호']);
+    if(f.redness>0.06)chips.push(['#E2725B','볼 붉은기 — 진정 케어 권장']);
+    if(!chips.length)chips.push(['#46c98b','피부 신호 분석 완료']);
+    $('#sigChips').innerHTML=chips.map(c=>`<span class="sigchip"><span class="d" style="background:${c[0]}"></span>${c[1]}</span>`).join('');
+    $('#toSurvey').disabled=false;
+  }
+  const parts=[]; for(let i=0;i<26;i++)parts.push({x:fx+Math.random()*fw,y:fy+fh*(0.4+Math.random()*0.6),vy:0.3+Math.random()*0.9,r:0.8+Math.random()*1.4,life:Math.random()});
+  function particles(p){ if(p<0.1||p>0.96)return; x.save();
+    for(const pt of parts){ pt.y-=pt.vy; pt.life-=0.012; if(pt.life<=0||pt.y<fy){pt.x=fx+Math.random()*fw;pt.y=fy+fh*(0.55+Math.random()*0.45);pt.life=0.6+Math.random()*0.4;pt.vy=0.3+Math.random()*0.9;}
+      x.globalAlpha=pt.life*0.6;x.fillStyle='rgba(160,200,255,1)';x.beginPath();x.arc(pt.x,pt.y,pt.r,0,7);x.fill();}
+    x.globalAlpha=1;x.restore();}
+  function radar(p){ if(p<0.1||p>0.9)return; const cx2=fx+fw/2,cy2=fy+fh/2,R=Math.max(fw,fh)*0.6,ang=(performance.now()/650)%(Math.PI*2);x.save();
+    if(x.createConicGradient){const grd=x.createConicGradient(ang,cx2,cy2);grd.addColorStop(0,'rgba(91,141,239,.16)');grd.addColorStop(0.09,'rgba(91,141,239,0)');grd.addColorStop(1,'rgba(91,141,239,0)');x.fillStyle=grd;x.beginPath();x.arc(cx2,cy2,R,0,7);x.fill();}
+    x.strokeStyle='rgba(150,190,255,.45)';x.lineWidth=1.5;x.beginPath();x.moveTo(cx2,cy2);x.lineTo(cx2+Math.cos(ang)*R,cy2+Math.sin(ang)*R);x.stroke();
+    x.setLineDash([4,8]);x.lineDashOffset=-(performance.now()/30);x.strokeStyle='rgba(91,141,239,.22)';x.lineWidth=1;x.beginPath();x.arc(cx2,cy2,R,0,7);x.stroke();x.setLineDash([]);x.restore();}
+  function frame(ts){ if(t0===null)t0=ts; const p=Math.min(1,(ts-t0)/3400); base(); heat(p); radar(p);
+    mesh(Math.min(1,Math.max(0,(p-0.06)/0.42))); zones(p);
+    const sp=Math.min(1,Math.max(0,(p-0.06)/0.8));
+    if(p>0.06&&p<0.92){const gy=fy+fh*sp;x.save();x.strokeStyle='rgba(91,141,239,.06)';x.lineWidth=1;
+      for(let gx=fx;gx<=fx+fw+1;gx+=fw/8){x.beginPath();x.moveTo(gx,fy);x.lineTo(gx,Math.min(gy,fy+fh));x.stroke();}
+      for(let yy=fy;yy<=Math.min(gy,fy+fh);yy+=fh/10){x.beginPath();x.moveTo(fx,yy);x.lineTo(fx+fw,yy);x.stroke();}x.restore();}
+    if(p>0.06&&p<0.92){const y=fy+fh*sp;x.save();
+      const g=x.createLinearGradient(0,y-36,0,y+6);g.addColorStop(0,'rgba(91,141,239,0)');g.addColorStop(.8,'rgba(91,141,239,.34)');g.addColorStop(1,'rgba(140,180,255,.5)');x.fillStyle=g;x.fillRect(0,y-36,cv.width,42);
+      x.shadowColor='rgba(91,141,239,.95)';x.shadowBlur=14;x.strokeStyle='rgba(200,222,255,.98)';x.lineWidth=2;x.beginPath();x.moveTo(0,y);x.lineTo(cv.width,y);x.stroke();
+      x.shadowBlur=0;x.strokeStyle='rgba(130,175,255,.45)';x.lineWidth=1;x.beginPath();x.moveTo(0,y+5);x.lineTo(cv.width,y+5);x.stroke();
+      x.strokeStyle='rgba(160,200,255,.95)';x.lineWidth=2.5;x.beginPath();x.moveTo(0,y);x.lineTo(12,y);x.moveTo(cv.width-12,y);x.lineTo(cv.width,y);x.stroke();x.restore();}
+    const scanYsrc=f.fy+f.fh*sp;
+    findings.forEach(fd=>{ if(!fd.rev&&p>0.16&&fd.y<=scanYsrc){fd.rev=true;fd.t0=ts;} if(fd.rev)reticle(fd.x*sc,fd.y*sc,FCOL[fd.type],ts-fd.t0); });
+    particles(p);
+    if(p>0.62)callout(fx+fw*0.5,fy+fh*0.12,-1,'#5B8DEF','T-ZONE','유분 '+oilP+'%');
+    if(p>0.82&&f.redness>0.05)callout(fx+fw*0.82,fy+fh*0.58,1,'#E2725B','CHEEK','홍조 '+redP+'%');
+    $('#scanPct').textContent=Math.round(p*100)+'%';
+    mEls.forEach((el,i)=>{const st=0.42+i*0.09;if(p>=st){el.classList.add('in');const b=el.querySelector('b'),fl=el.querySelector('.fl'),tgt=+b.dataset.v;if(!el._f){el._f=1;fl.style.width=tgt+'%';}b.textContent=Math.round(Math.min(1,(p-st)/0.16)*tgt)+'%';}});
+    let si=-1;for(let k=0;k<stages.length;k++)if(p>=stages[k].at)si=k;
+    if(si!==lastStage&&si>=0){const pr=logEl.querySelector('.ln.run');if(pr){pr.classList.remove('run');pr.classList.add('done');}$('#scanStatText').textContent=stages[si].label+(si===5?' · '+findings.length+'곳':'');const ln=document.createElement('div');ln.className='ln run';ln.textContent=stages[si].t;logEl.appendChild(ln);lastStage=si;}
+    if(p<1)requestAnimationFrame(frame); else finish(ts);
+  }
+  requestAnimationFrame(frame);
 }
 
 /* ===== adaptive survey ===== */
@@ -331,14 +497,21 @@ function buildSurvey(){
   ans=new Array(Q.length).fill(-1); qi=0; $('#qTot').textContent=Q.length;
   primeText=(faceResult&&faceResult.ok&&hint)?{oily:'셀카에서 T존 광택이 보였어요. 유분 쪽을 확인할게요.',dry:'셀카상 광택이 적은 편이었어요. 수분 쪽을 확인할게요.',acne:'셀카에서 볼 붉은기가 보였어요. 트러블을 확인할게요.'}[hint]:'';
 }
-function renderQ(){
-  const q=Q[qi]; $('#qCur').textContent=qi+1; $('#qProg').style.width=((qi+1)/Q.length*100)+'%';
-  $('#qSec').textContent=q.sec; $('#qText').textContent=q.q;
-  const pr=$('#qPrime'); if(qi===0&&primeText){pr.classList.add('on');$('#qPrimeText').textContent=primeText;}else pr.classList.remove('on');
-  $('#qOpts').innerHTML=q.opts.map((o,j)=>`<button class="opt${ans[qi]===j?' sel':''}" data-j="${j}"><span class="rd"></span><span>${o.t}</span></button>`).join('');
-  $('#qOpts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ans[qi]=+b.dataset.j;renderQ();setTimeout(()=>{if(qi<Q.length-1){qi++;renderQ();}},170);});
-  $('#qPrev').style.visibility=qi===0?'hidden':'visible'; $('#qNext').disabled=ans[qi]===-1; $('#qNext').textContent=qi===Q.length-1?'결과 보기':'다음';
+/* 한 번에 한 질문만 렌더 (항상 선명·중앙). 휠/스와이프 또는 선택 시 다음으로 */
+function renderQ(dir){
+  $('#qTot').textContent=Q.length;
+  const q=Q[qi], st=$('#qStage');
+  $('#qCur').textContent=qi+1; $('#qProg').style.width=((qi+1)/Q.length*100)+'%';
+  const prime=(qi===0&&primeText)?`<div class="prime on"><span class="s">✦</span><span>${primeText}</span></div>`:'';
+  const opts=q.opts.map((o,j)=>`<button class="opt${ans[qi]===j?' sel':''}" data-j="${j}"><span class="rd"></span><span>${o.t}</span></button>`).join('');
+  st.innerHTML=`<div class="qcard ${dir<0?'inUp':'inDown'}"><span class="qsec">${q.sec}</span>${prime}<h2 class="q">${q.q}</h2><div class="opts">${opts}</div><div class="qhint">${qi<Q.length-1?'선택하면 다음 · 스크롤로도 이동':'선택하면 결과 보기'}</div></div>`;
+  st.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    ans[qi]=+b.dataset.j;
+    st.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+    setTimeout(()=>{ if(qi<Q.length-1){qi++;renderQ(1);} else renderResult(); },230);
+  });
 }
+function surveyGo(dir){ if(surveyGo._cd)return; const n=qi+dir; if(n<0||n>=Q.length)return; surveyGo._cd=true; setTimeout(()=>{surveyGo._cd=false;},420); qi=n; renderQ(dir); }
 function surveyVector(){let o=0,d=0,a=0;Q.forEach((q,i)=>{const opt=q.opts[ans[i]]||{};o+=opt.o||0;d+=opt.d||0;a+=opt.a||0;});o+=2;return normalize([o,d,a]);}
 
 /* ===== fusion + result ===== */
@@ -363,13 +536,10 @@ function renderResult(){
   $('#flagWrap').innerHTML=r.flags.map(f=>`<span class="flag">${f}</span>`).join(' ');
   const pct=r.F.map(x=>Math.round(x*100));['#t0','#t1','#t2'].forEach((id,i)=>setTimeout(()=>{$(id).style.width=pct[i]+'%';},60));
   $('#t0v').textContent=pct[0]+'%';$('#t1v').textContent=pct[1]+'%';$('#t2v').textContent=pct[2]+'%';
-  // 처방 번호: 결과 점수에서 결정론적으로 산출(같은 결과면 같은 번호) → 결과 페이지로 전달
-  const fno=((pct[0]*3+pct[1]*7+pct[2]*11+13)%89)+11;
-  $('#rFno').textContent=String(fno).padStart(2,'0');
   $('#reason').innerHTML=reasonText(r,faceResult,Sv);
   $('#usedPhoto').querySelector('span:last-child').textContent=r.usedPhoto?'얼굴 분석 + 설문 반영 · 사진은 기기에서만 처리(서버 전송 없음)':'설문만 반영 · 사진 없이 분석';
   const tkey={지성:'oily',건성:'dry',여드름:'trouble'}[TYPES[r.primary]];
-  document.querySelector('#s-result a.btn').setAttribute('href',`result.html?type=${tkey}&fno=${fno}`);
+  document.querySelector('#s-result a.btn').setAttribute('href','result.html?type='+tkey);
 }
 
 /* ===== retake ===== */
@@ -385,14 +555,7 @@ const RETAKE={
 };
 function goRetake(reason){const m=RETAKE[reason]||RETAKE.noface;$('#retakeTitle').textContent=m[0];$('#retakeMsg').textContent=m[1];$('#stepLabel').textContent='다시 찍기';show('#s-retake');}
 
-function goSurvey(){buildSurvey();renderQ();$('#stepLabel').textContent='설문';show('#s-survey');}
-
-/* iframe(아임웹)에 임베드되면 부모 페이지로 '진단 완료' 신호를 보내 설문으로 넘긴다.
-   단독 실행(직접 접속)이면 기존 내부 설문으로 진행한다. */
-function handoff(){
-  try{ if(window.parent && window.parent!==window){ window.parent.postMessage({bfm:'diagnose-done'},'*'); return; } }catch(e){}
-  goSurvey();
-}
+function goSurvey(){buildSurvey();$('#stepLabel').textContent='설문';show('#s-survey');renderQ();}
 
 /* ===== camera ===== */
 let stream=null,rafId=null;
@@ -409,7 +572,7 @@ function loopGuide(det){const v=$('#video'),pill=$('#coachPill'),txt=$('#coachTe
         c.width=120;c.height=160;cx.drawImage(v,0,0,120,160);const br=brightnessOf(cx.getImageData(0,0,120,160).data);
         if(fw<0.18)msg='조금 더 가까이';else if(br<40)msg='더 밝은 곳에서';else{msg='좋아요 — 촬영하세요';good=true;}}
     }else{msg='촬영 후 분석합니다';good=true;}
-    txt.textContent=msg;pill.classList.toggle('ready',good);$('#shoot').disabled=false;rafId=requestAnimationFrame(step);}
+    txt.textContent=msg;pill.classList.toggle('ready',good);document.querySelector('.cam').classList.toggle('locked',good);$('#shoot').disabled=false;rafId=requestAnimationFrame(step);}
   step();}
 function captureStill(){const v=$('#video'),c=$('#work'),W=Math.min(640,v.videoWidth||640),H=Math.round(W*((v.videoHeight/v.videoWidth)||1.33));
   c.width=W;c.height=H;c.getContext('2d',{willReadFrequently:true}).drawImage(v,0,0,W,H);stopCamera();runFace(c);}
@@ -430,15 +593,20 @@ $('#pickFile').onclick=()=>$('#fileInput').click();
 $('#fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.target.value='';
   try{const bmp=await createImageBitmap(f,{imageOrientation:'from-image'});const c=document.createElement('canvas'),W=Math.min(720,bmp.width||640),H=Math.round(W*((bmp.height||480)/(bmp.width||640)));c.width=W;c.height=H;c.getContext('2d',{willReadFrequently:true}).drawImage(bmp,0,0,W,H);runFace(c);}
   catch(err){const img=new Image();img.onload=()=>runFace(imageToCanvas(img));img.src=URL.createObjectURL(f);}};
-$('#startCam').onclick=startCamera;
+$('#startCam').onclick=()=>{ if(!inApp&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){startCamera();}else{$('#fileInput').click();} };
 $('#shoot').onclick=()=>{if(!$('#shoot').disabled)captureStill();};
 $('#camCancel').onclick=()=>{stopCamera();show('#s-intro');$('#stepLabel').textContent='AI 피부 진단';};
-$('#skipPhoto').onclick=()=>{faceResult=null;handoff();};
-$('#toSurvey').onclick=handoff;
+$('#skipPhoto').onclick=()=>{faceResult=null;goSurvey();};
+$('#toSurvey').onclick=goSurvey;
 $('#retakeBtn').onclick=()=>{$('#introErr').classList.remove('on');if(!inApp&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)startCamera();else $('#fileInput').click();};
-$('#retakeSkip').onclick=()=>{faceResult=null;handoff();};
-$('#qPrev').onclick=()=>{if(qi>0){qi--;renderQ();}};
-$('#qNext').onclick=()=>{if(ans[qi]===-1)return;if(qi<Q.length-1){qi++;renderQ();}else renderResult();};
+$('#retakeSkip').onclick=()=>{faceResult=null;goSurvey();};
+/* 설문: 휠·스와이프로 질문 이동 (한 번에 하나씩) */
+(function(){const st=$('#qStage');if(!st)return;let ty=0;
+  st.addEventListener('wheel',e=>{e.preventDefault();surveyGo(e.deltaY>0?1:-1);},{passive:false});
+  st.addEventListener('touchstart',e=>{ty=e.touches[0].clientY;},{passive:true});
+  st.addEventListener('touchmove',e=>{e.preventDefault();},{passive:false});
+  st.addEventListener('touchend',e=>{const d=ty-e.changedTouches[0].clientY;if(Math.abs(d)<40)return;surveyGo(d>0?1:-1);},{passive:true});
+})();
 $('#retry').onclick=()=>{faceResult=null;$('#introErr').classList.remove('on');$('#stepLabel').textContent='AI 피부 진단';show('#s-intro');};
 </script>
 </body>
