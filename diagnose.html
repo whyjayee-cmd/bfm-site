@@ -138,9 +138,12 @@ canvas#work{display:none}
 html body, html body *{font-family:var(--sans)!important;font-weight:400!important;text-align:center!important}
 .opt{justify-content:center!important}
 #s-intro .grow{display:flex;flex-direction:column;justify-content:center}
-/* 인트로 버튼: 카메라(주,파랑) / 사진파일(보조,외곽선) / 사진없이(텍스트) */
+/* 상단 로고 바 제거 */
+.top{display:none}
+/* 인트로 버튼: 잘 보이게 (파랑 주 / 짙은 보조 / 밑줄 링크) */
 #s-intro #startCam{background:var(--accent)!important;color:#fff!important;border:0}
-#s-intro #pickFile{background:transparent!important;color:var(--ink)!important;border:1.5px solid var(--line);box-shadow:none}
+#s-intro #pickFile{background:#1b202b!important;color:#e8ecf8!important;border:1px solid #343c4a!important;box-shadow:none}
+#s-intro #skipPhoto{color:#aab2c0!important;text-decoration:underline;text-underline-offset:3px}
 /* 카메라 실시간 인식 HUD */
 .cam-hud{position:absolute;inset:16px;pointer-events:none;z-index:3}
 .cam-hud .cb{position:absolute;width:30px;height:30px;border:2px solid rgba(255,255,255,.5);transition:border-color .3s}
