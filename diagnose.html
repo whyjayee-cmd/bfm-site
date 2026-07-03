@@ -541,8 +541,11 @@ function renderResult(){
   $('#t0v').textContent=pct[0]+'%';$('#t1v').textContent=pct[1]+'%';$('#t2v').textContent=pct[2]+'%';
   $('#reason').innerHTML=reasonText(r,faceResult,Sv);
   $('#usedPhoto').querySelector('span:last-child').textContent=r.usedPhoto?'얼굴 분석 + 설문 반영 · 사진은 기기에서만 처리(서버 전송 없음)':'설문만 반영 · 사진 없이 분석';
-  const tkey={지성:'oily',건성:'dry',여드름:'trouble'}[TYPES[r.primary]];
-  document.querySelector('#s-result a.btn').setAttribute('href','result.html?type='+tkey);
+  // 타입별 → 사용자가 만든 아임웹 결과 페이지로 이동 (iframe 밖으로 나가게 target=_top)
+  const typeURL={지성:'https://www.bfm.best/37',건성:'https://www.bfm.best/35',여드름:'https://www.bfm.best/40'}[TYPES[r.primary]]||'https://www.bfm.best/37';
+  const rbtn=document.querySelector('#s-result a.btn');
+  rbtn.setAttribute('href',typeURL);
+  rbtn.setAttribute('target','_top');
 }
 
 /* ===== retake ===== */
