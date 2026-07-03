@@ -155,6 +155,14 @@ html body, html body *{font-family:var(--sans)!important;font-weight:400!importa
 @keyframes camScan{0%{top:10%}50%{top:86%}100%{top:10%}}
 .cam.locked .cam-hud .cb{border-color:var(--accent)}
 .cam.locked .cam-hud .cam-scan{background:linear-gradient(90deg,transparent,rgba(70,201,139,.95),transparent)}
+/* 존별 스캔 리포트 */
+.zhint{font-size:12px;color:var(--mut-2);margin-top:8px}
+.zrow{display:flex;align-items:center;gap:10px;margin-top:11px}
+.zrow .zn{flex:none;width:58px;font-size:12.5px;color:var(--mut);text-align:left!important}
+.zrow .tr{flex:1;height:6px;border-radius:99px;background:#1c2230;overflow:hidden}
+.zrow .fl{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#83a8ff);width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.zrow .zv{flex:none;width:38px;font-size:12px;color:#cfe0ff;text-align:right!important;font-variant-numeric:tabular-nums}
+.zrow .zr{flex:none;font-size:10.5px;color:#f0c9bf;background:rgba(226,114,91,.14);border:1px solid rgba(226,114,91,.35);padding:2px 7px;border-radius:99px}
 </style>
 </head>
 <body>
@@ -246,6 +254,11 @@ html body, html body *{font-family:var(--sans)!important;font-weight:400!importa
         <div class="reason" id="reason"></div>
         <div class="usedphoto" id="usedPhoto"><span class="d"></span><span></span></div>
       </div>
+      <!-- 존별 스캔 리포트 (사진 분석 시에만 표시) -->
+      <div class="rep" id="zoneRep" style="display:none">
+        <div class="h"><span class="t">존별 스캔 리포트</span><span class="conf" id="zoneGapBadge"></span></div>
+        <div id="zoneRows"></div>
+      </div>
       <p class="note" style="margin-top:14px">얼굴 신호 분석과 설문을 종합한 결과예요. 참고용이며 의학적 진단은 아닙니다.</p>
     </div>
     <div class="foot"><a class="btn" href="result.html">내 맞춤 처방 보기 →</a><button class="linkbtn" id="retry">처음부터 다시</button></div>
@@ -315,14 +328,27 @@ async function analyzePhoto(c){
   const ctx=c.getContext('2d',{willReadFrequently:true});
   const cx=clamp(Math.floor(fx),0,W-1),cy=clamp(Math.floor(fy),0,H-1),cw=clamp(Math.floor(fw),2,W-cx),ch=clamp(Math.floor(fh),2,H-cy);
   const fd=ctx.getImageData(cx,cy,cw,ch);const bright=brightnessOf(fd.data);const sharp=laplacianVar(toGray(fd.data,cw,ch),cw,ch);const wb=wbFactors(fd.data);
+  /* ── 존별 5구역 측정: 이마·코·턱(T존) + 양볼(U존) ── */
   const tz=analyzeROI(ctx,fx,fy,fw,fh,[0.34,0.06,0.32,0.55],wb),lc=analyzeROI(ctx,fx,fy,fw,fh,[0.08,0.45,0.24,0.26],wb),rc=analyzeROI(ctx,fx,fy,fw,fh,[0.68,0.45,0.24,0.26],wb);
-  const cheekShine=(lc.shine+rc.shine)/2,shineDiff=Math.max(0,tz.shine-cheekShine*0.6),redness=Math.max(lc.redness,rc.redness),glare=Math.max(tz.clip,(lc.clip+rc.clip)/2);
+  const fo=analyzeROI(ctx,fx,fy,fw,fh,[0.26,0.03,0.48,0.20],wb),ns=analyzeROI(ctx,fx,fy,fw,fh,[0.40,0.32,0.20,0.28],wb),cn=analyzeROI(ctx,fx,fy,fw,fh,[0.34,0.80,0.32,0.17],wb);
+  const cheekShine=(lc.shine+rc.shine)/2,shineT=Math.max(fo.shine,ns.shine,tz.shine),shineU=cheekShine;
+  const tuGap=Math.max(0,shineT-shineU);                       // T·U존 유수분 갭 → 복합성 신호
+  const shineDiff=Math.max(0,tz.shine-cheekShine*0.6),redness=Math.max(lc.redness,rc.redness),glare=Math.max(tz.clip,(lc.clip+rc.clip)/2);
+  /* 피부결(각질) 신호: 볼 국소 거칠기를 얼굴 평균 선명도로 정규화 */
+  let texture=0;
+  try{const rx=clamp(Math.floor(fx+0.10*fw),0,W-2),ry=clamp(Math.floor(fy+0.46*fh),0,H-2),rw=Math.max(4,Math.min(Math.floor(0.22*fw),W-rx)),rh=Math.max(4,Math.min(Math.floor(0.22*fh),H-ry));
+    const cd=ctx.getImageData(rx,ry,rw,rh);const lvC=laplacianVar(toGray(cd.data,rw,rh),rw,rh);
+    texture=clamp((lvC/((sharp||1)+40)-0.55)/1.6,0,1);}catch(e){}
   // 얼굴이 잡혔으면 통과. 품질이 낮으면 막지 않고 q(가중치)만 낮춰 설문 위주로 본다.
   let reason=null;
   const light_ok=clamp((bright-45)/35,0,1)*clamp((215-bright)/35,0,1)*clamp((0.22-glare)/0.22,0.15,1),sharp_ok=clamp((sharp-60)/120,0,1),size_ok=clamp((areaFrac-0.10)/0.10,0,1)*clamp((0.75-areaFrac)/0.15,0,1);
   const q=(frontal?1:0)*light_ok*sharp_ok*size_ok;
-  const oily=clamp(shineDiff/0.13,0,1),dry=clamp((0.05-tz.shine)/0.05,0,1),acne=clamp((redness-0.05)/0.11,0,1);
-  return{ok:reason===null,reason,q,Sp:normalize([oily+0.05,dry,acne]),shine:tz.shine,shineDiff,redness,glare,frontal,pts,fx,fy,fw,fh,srcW:W,srcH:H};
+  /* 스코어: 유분(T존 광택), 건성(전체 광택 낮음+결 거칢), 트러블·복합(붉은기+T·U 갭) */
+  const oily=clamp(shineDiff/0.13,0,1);
+  const dry=clamp(clamp((0.05-tz.shine)/0.05,0,1)*0.7+texture*0.3,0,1);
+  const acne=clamp(clamp((redness-0.05)/0.11,0,1)*0.75+clamp(tuGap/0.11,0,1)*0.35,0,1);
+  return{ok:reason===null,reason,q,Sp:normalize([oily+0.05,dry,acne]),shine:tz.shine,shineDiff,redness,glare,frontal,pts,fx,fy,fw,fh,srcW:W,srcH:H,
+    zones:{fore:fo,nose:ns,chin:cn,lcheek:lc,rcheek:rc},shineT,shineU,tuGap,texture};
 }
 
 /* ===== scan + overlay drawing ===== */
@@ -339,7 +365,8 @@ function metricRows(f){
     {k:'수분 밸런스 · Hydration',v:P(moisture),c:'#46c98b'},
     {k:'붉은기 · Redness',v:P(redness),c:'#E2725B'},
     {k:'트러블 경향 · Blemish',v:P(blemish),c:'#E2B45B'},
-    {k:'피부 톤 균일도 · Tone',v:P(tone),c:'#83a8ff'}
+    {k:'피부 톤 균일도 · Tone',v:P(tone),c:'#83a8ff'},
+    {k:'T·U존 밸런스 · Balance',v:P(cl(1-(f.tuGap||0)/0.12)),c:'#9CC1E8'}
   ];
 }
 const FCOL={shine:'#5B8DEF',red:'#E2725B',spot:'#E2B45B'};
@@ -436,6 +463,7 @@ function showScan(src){
     findings.forEach(fd=>reticle(fd.x*sc,fd.y*sc,FCOL[fd.type],600));
     callout(fx+fw*0.5,fy+fh*0.12,-1,'#5B8DEF','T-ZONE','유분 '+oilP+'%');
     if(f.redness>0.05)callout(fx+fw*0.82,fy+fh*0.58,1,'#E2725B','CHEEK','홍조 '+redP+'%');
+    if(f.shineU!=null)callout(fx+fw*0.18,fy+fh*0.66,-1,'#9CC1E8','U-ZONE','광택 '+Math.round(clamp(f.shineU/0.22,0,1)*100)+'%');
     const chips=[];
     if(f.shineDiff>0.06)chips.push(['#5B8DEF','T존 광택 ↑ — 유분 신호']);
     if(f.redness>0.06)chips.push(['#E2725B','볼 붉은기 — 진정 케어 권장']);
@@ -523,6 +551,8 @@ function fuse(Sv,photo){
   const F=[0,1,2].map(i=>w_v*Sv[i]+w_p*Sp[i]);let primary=argmax(F);const flags=[];
   if(primary===2){flags.push('여드름 주의');primary=argmax([F[0],F[1],-1]);}else if(F[2]>0.24||(usedPhoto&&photo.Sp[2]>0.45))flags.push('여드름 주의');
   if(usedPhoto&&photo.shine!=null&&photo.shine<0.05&&primary===0&&Sv[1]>0.25)flags.push('부분 건성');
+  if(usedPhoto&&photo.tuGap>0.07)flags.push('T·U존 불균형');
+  if(usedPhoto&&photo.texture>0.6)flags.push('결 거칠음');
   const sorted=[...F].sort((a,b)=>b-a);const margin=sorted[0]-sorted[1];const agree=!usedPhoto?0.6:(argmax(Sv)===argmax(photo.Sp)?1:0.4);
   const conf=(usedPhoto?clamp(photo.q,0,1):0.55)*0.4+clamp(margin/0.3,0,1)*0.35+agree*0.25;
   return{F,primary,flags,band:conf>0.7?'높은 확신':conf>0.45?'보통 확신':'낮은 확신',usedPhoto};
@@ -531,6 +561,8 @@ function reasonText(r,photo,Sv){let s='';
   if(r.usedPhoto){s+='셀카와 설문을 함께 분석했어요. ';
     if(photo.shineDiff>0.06)s+='<b>T존 광택이 높아</b> 유분이 많은 편이고, ';else if(photo.shine<0.05)s+='광택이 적어 유분은 낮은 편이고, ';
     if(photo.redness>0.06)s+='볼에 약한 붉은기가 보여 <b>진정 케어</b>도 함께 고려했어요. ';
+    if(photo.tuGap>0.07)s+='T존과 볼의 광택 차이가 커 <b>부위별 밸런스 케어</b>가 필요한 신호예요. ';
+    if(photo.texture>0.6)s+='피부결이 거칠어진 신호가 있어 <b>결 정돈</b>도 반영했어요. ';
     s+='이 신호에 가장 맞는 처방을 매칭했습니다.';}
   else s+='설문 답변을 분석해, 당신에게 <b>가장 맞는 처방</b>을 매칭했어요.';return s;}
 function renderResult(){
@@ -541,6 +573,20 @@ function renderResult(){
   $('#t0v').textContent=pct[0]+'%';$('#t1v').textContent=pct[1]+'%';$('#t2v').textContent=pct[2]+'%';
   $('#reason').innerHTML=reasonText(r,faceResult,Sv);
   $('#usedPhoto').querySelector('span:last-child').textContent=r.usedPhoto?'얼굴 분석 + 설문 반영 · 사진은 기기에서만 처리(서버 전송 없음)':'설문만 반영 · 사진 없이 분석';
+  /* 존별 스캔 리포트: 이마·코·턱·양볼 유분 광택 + 붉은기 + T·U 밸런스 */
+  const zr=$('#zoneRep');
+  if(r.usedPhoto&&faceResult&&faceResult.zones){
+    const Z=faceResult.zones,P=v=>Math.round(clamp(v/0.22,0,1)*100);
+    const rows=[['이마',Z.fore],['코',Z.nose],['턱',Z.chin],['왼볼',Z.lcheek],['오른볼',Z.rcheek]]
+      .map(([n,z])=>{if(!z)return '';const red=z.redness>0.06?'<span class="zr">붉은기</span>':'';
+        return '<div class="zrow"><span class="zn">'+n+'</span><div class="tr"><div class="fl" data-w="'+P(z.shine)+'"></div></div><span class="zv">'+P(z.shine)+'%</span>'+red+'</div>';}).join('');
+    $('#zoneRows').innerHTML='<div class="zhint">부위별 유분 광택 · 촬영 조명에 따라 달라질 수 있어요</div>'+rows;
+    const gb=$('#zoneGapBadge'),gap=faceResult.tuGap||0;
+    gb.textContent=gap>0.07?'T·U존 불균형':'T·U존 균형';
+    gb.style.color=gap>0.07?'#e8d3a6':'#bff0d6';gb.style.background=gap>0.07?'rgba(226,180,91,.14)':'rgba(70,201,139,.15)';
+    zr.style.display='';
+    setTimeout(()=>{zr.querySelectorAll('.fl').forEach(el=>{el.style.width=el.dataset.w+'%';});},120);
+  } else zr.style.display='none';
   // 타입별 → 사용자가 만든 아임웹 결과 페이지로 이동 (iframe 밖으로 나가게 target=_top)
   const typeURL={지성:'https://www.bfm.best/37',건성:'https://www.bfm.best/35',여드름:'https://www.bfm.best/40'}[TYPES[r.primary]]||'https://www.bfm.best/37';
   const rbtn=document.querySelector('#s-result a.btn');
