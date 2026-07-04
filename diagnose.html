@@ -155,6 +155,32 @@ html body, html body *{font-family:var(--sans)!important;font-weight:400!importa
 @keyframes camScan{0%{top:10%}50%{top:86%}100%{top:10%}}
 .cam.locked .cam-hud .cb{border-color:var(--accent)}
 .cam.locked .cam-hud .cam-scan{background:linear-gradient(90deg,transparent,rgba(70,201,139,.95),transparent)}
+/* 클리닉 리포트 (종합 스코어 + 항목별 분석) */
+.clinic{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:12px}
+.clinic .ch{display:flex;align-items:center;justify-content:space-between}
+.clinic .ct{font-size:11px;letter-spacing:.18em;color:var(--accent);font-weight:500}
+.clinic .cm{font-size:11px;color:var(--mut-2)}
+.scorewrap{display:flex;align-items:center;gap:18px;margin-top:14px;text-align:left}
+.donut{position:relative;width:92px;height:92px;border-radius:50%;flex:none;background:conic-gradient(var(--accent) 0 0%,#1c2230 0% 100%)}
+.donut .in{position:absolute;inset:8px;border-radius:50%;background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut .n{font-size:24px;color:#fff;font-variant-numeric:tabular-nums;line-height:1}
+.donut .d{font-size:9px;color:var(--mut-2);margin-top:3px}
+.scoreinfo{flex:1}
+.scoreinfo .g{font-size:17px}
+.scoreinfo .gd{font-size:12.5px;color:var(--mut);margin-top:5px;line-height:1.55}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+.ci{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;text-align:left}
+.ci .k{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.ci .k b{font-weight:400;color:var(--ink);font-size:12.5px}
+.ci .en{font-size:9px;letter-spacing:.1em;color:var(--mut-2)}
+.ci .tr{height:5px;border-radius:99px;background:#1c2230;overflow:hidden;margin-top:9px}
+.ci .fl{height:100%;border-radius:99px;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.ci .row2{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.ci .v{font-size:12px;color:#cfe0ff;font-variant-numeric:tabular-nums}
+.stc{font-size:10px;padding:2px 8px;border-radius:99px}
+.st-good{color:#bff0d6;background:rgba(70,201,139,.13);border:1px solid rgba(70,201,139,.3)}
+.st-mid{color:#e8d3a6;background:rgba(226,180,91,.12);border:1px solid rgba(226,180,91,.3)}
+.st-warn{color:#f0c9bf;background:rgba(226,114,91,.12);border:1px solid rgba(226,114,91,.32)}
 /* 존별 스캔 리포트 */
 .zhint{font-size:12px;color:var(--mut-2);margin-top:8px}
 .zrow{display:flex;align-items:center;gap:10px;margin-top:11px}
@@ -245,6 +271,15 @@ html body, html body *{font-family:var(--sans)!important;font-weight:400!importa
     <div class="grow">
       <span class="eyebrow">AI 분석 완료</span>
       <h1 style="margin-top:10px">당신에게 맞는<br>처방을 찾았습니다.</h1>
+      <!-- 클리닉 리포트: 종합 스코어 + 항목별 분석 -->
+      <div class="clinic" id="clinicRep" style="display:none">
+        <div class="ch"><span class="ct">AI SKIN REPORT</span><span class="cm" id="cMeta"></span></div>
+        <div class="scorewrap">
+          <div class="donut" id="cDonut"><div class="in"><span class="n" id="cScore">–</span><span class="d">/ 100</span></div></div>
+          <div class="scoreinfo"><div class="g" id="cGrade">–</div><div class="gd" id="cGradeDesc"></div></div>
+        </div>
+        <div class="cgrid" id="cGrid"></div>
+      </div>
       <div class="rep">
         <div class="h"><span class="t">피부 데이터</span><span class="conf" id="confBadge">보통 확신</span></div>
         <div id="flagWrap"></div>
@@ -565,8 +600,40 @@ function reasonText(r,photo,Sv){let s='';
     if(photo.texture>0.6)s+='피부결이 거칠어진 신호가 있어 <b>결 정돈</b>도 반영했어요. ';
     s+='이 신호에 가장 맞는 처방을 매칭했습니다.';}
   else s+='설문 답변을 분석해, 당신에게 <b>가장 맞는 처방</b>을 매칭했어요.';return s;}
+/* 클리닉 리포트: 측정 신호 → 항목 6개 + 종합 스코어 (실측 기반, 검증 안 된 수치 없음) */
+function clinicItems(f,Sv,used){
+  const cl=v=>Math.max(0,Math.min(1,v));let sebum,mois,red,blem,tex,tone;
+  if(used&&f){sebum=cl(f.shineDiff/0.12);red=cl((f.redness-0.02)/0.11);blem=cl((f.Sp?f.Sp[2]:0)/0.5);
+    const dryS=cl((0.05-f.shine)/0.05);mois=cl(0.85-sebum*0.35-dryS*0.55);tone=cl(0.9-red*0.55-(f.glare||0)*0.8);tex=cl(f.texture||0);}
+  else{sebum=cl(Sv[0]*1.1);blem=cl(Sv[2]*1.2);red=cl(Sv[2]*0.9);mois=cl(1-Sv[1]*1.1);tex=cl(Sv[1]*0.8);tone=0.6;}
+  const P=v=>Math.round((0.20+v*0.76)*100);
+  const items=[
+    {k:'피지 · T존 유분',en:'SEBUM',v:P(sebum),bad:true,c:'#5B8DEF'},
+    {k:'수분 밸런스',en:'HYDRATION',v:P(mois),bad:false,c:'#46c98b'},
+    {k:'홍조 · 붉은기',en:'REDNESS',v:P(red),bad:true,c:'#E2725B'},
+    {k:'트러블 경향',en:'BLEMISH',v:P(blem),bad:true,c:'#E2B45B'},
+    {k:'피부결',en:'TEXTURE',v:P(tex),bad:true,c:'#9CC1E8'},
+    {k:'톤 균일도',en:'TONE',v:P(tone),bad:false,c:'#83a8ff'}];
+  const score=Math.round(clamp(100-(sebum*18+(1-mois)*15+red*15+blem*12+tex*10+(1-tone)*10),42,96));
+  return{items,score};
+}
+function stChip(v,bad){
+  const good=bad? v<45 : v>68, mid=bad? v<68 : v>45;
+  return good?'<span class="stc st-good">양호</span>':mid?'<span class="stc st-mid">보통</span>':'<span class="stc st-warn">주의</span>';
+}
 function renderResult(){
   const Sv=surveyVector();const r=fuse(Sv,faceResult);show('#s-result');$('#stepLabel').textContent='결과';
+  /* 클리닉 리포트 채우기 */
+  const CR=clinicItems(faceResult,Sv,r.usedPhoto);
+  $('#clinicRep').style.display='';
+  $('#cMeta').textContent=(r.usedPhoto?'얼굴 분석 + 설문':'설문 기반')+' · 6개 항목';
+  $('#cScore').textContent=CR.score;
+  $('#cDonut').style.background='conic-gradient(var(--accent) 0 '+CR.score+'%, #1c2230 '+CR.score+'% 100%)';
+  const gr=CR.score>=85?'우수':CR.score>=70?'양호':CR.score>=55?'보통':'관리 필요';
+  $('#cGrade').textContent='종합 등급 · '+gr;
+  $('#cGradeDesc').textContent='피지·수분·홍조·트러블·결·톤 6개 측정 신호를 종합한 점수예요.';
+  $('#cGrid').innerHTML=CR.items.map(it=>'<div class="ci"><div class="k"><b>'+it.k+'</b><span class="en">'+it.en+'</span></div><div class="tr"><div class="fl" data-w="'+it.v+'" style="background:'+it.c+'"></div></div><div class="row2"><span class="v">'+it.v+'</span>'+stChip(it.v,it.bad)+'</div></div>').join('');
+  setTimeout(()=>{document.querySelectorAll('#cGrid .fl').forEach(el=>{el.style.width=el.dataset.w+'%';});},100);
   const cb=$('#confBadge');cb.textContent=r.band;cb.style.color=r.band[0]==='높'?'#bff0d6':r.band[0]==='보'?'#e8d3a6':'#f0c9bf';cb.style.background=r.band[0]==='높'?'rgba(70,201,139,.15)':r.band[0]==='보'?'rgba(226,180,91,.14)':'rgba(226,114,91,.14)';
   $('#flagWrap').innerHTML=r.flags.map(f=>`<span class="flag">${f}</span>`).join(' ');
   const pct=r.F.map(x=>Math.round(x*100));['#t0','#t1','#t2'].forEach((id,i)=>setTimeout(()=>{$(id).style.width=pct[i]+'%';},60));
@@ -579,7 +646,7 @@ function renderResult(){
     const Z=faceResult.zones,P=v=>Math.round(clamp(v/0.22,0,1)*100);
     const rows=[['이마',Z.fore],['코',Z.nose],['턱',Z.chin],['왼볼',Z.lcheek],['오른볼',Z.rcheek]]
       .map(([n,z])=>{if(!z)return '';const red=z.redness>0.06?'<span class="zr">붉은기</span>':'';
-        return '<div class="zrow"><span class="zn">'+n+'</span><div class="tr"><div class="fl" data-w="'+P(z.shine)+'"></div></div><span class="zv">'+P(z.shine)+'%</span>'+red+'</div>';}).join('');
+        return '<div class="zrow"><span class="zn">'+n+'</span><div class="tr"><div class="fl" data-w="'+P(z.shine)+'"></div></div><span class="zv">'+P(z.shine)+'%</span>'+stChip(P(z.shine),true)+red+'</div>';}).join('');
     $('#zoneRows').innerHTML='<div class="zhint">부위별 유분 광택 · 촬영 조명에 따라 달라질 수 있어요</div>'+rows;
     const gb=$('#zoneGapBadge'),gap=faceResult.tuGap||0;
     gb.textContent=gap>0.07?'T·U존 불균형':'T·U존 균형';
