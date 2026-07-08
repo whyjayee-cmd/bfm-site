@@ -181,6 +181,24 @@ html body, html body *{font-family:var(--sans)!important;font-weight:400!importa
 .st-good{color:#bff0d6;background:rgba(70,201,139,.13);border:1px solid rgba(70,201,139,.3)}
 .st-mid{color:#e8d3a6;background:rgba(226,180,91,.12);border:1px solid rgba(226,180,91,.3)}
 .st-warn{color:#f0c9bf;background:rgba(226,114,91,.12);border:1px solid rgba(226,114,91,.32)}
+/* 인트로 컴팩트: 모바일 한 화면에 들어오게 (스크롤 최소화) */
+#s-intro h1{font-size:clamp(22px,5.6vw,30px);line-height:1.26;margin-top:8px!important}
+#s-intro .sub{font-size:13.5px;line-height:1.55;margin-top:8px}
+#s-intro .privacy{margin-top:12px;padding:11px 13px;gap:9px;border-radius:12px}
+#s-intro .privacy b{font-size:13px}
+#s-intro .privacy p{font-size:12px;line-height:1.45;margin-top:2px}
+#s-intro .privacy .i{width:22px;height:22px;font-size:11px;border-radius:7px}
+#s-intro .guides{margin-top:12px;gap:7px}
+#s-intro .guides .g{font-size:13px}
+#s-intro .guides .g .c{width:20px;height:20px;font-size:11px}
+#s-intro .foot,#s-intro+.foot{padding-top:10px;gap:7px}
+#s-intro .btn{padding:14px;font-size:15.5px}
+#s-intro .linkbtn{padding:7px;font-size:13px}
+@media(max-height:720px){
+  #s-intro h1{font-size:21px}
+  #s-intro .sub{display:none}
+  #s-intro .privacy p{display:none}
+}
 /* 존별 스캔 리포트 */
 .zhint{font-size:12px;color:var(--mut-2);margin-top:8px}
 .zrow{display:flex;align-items:center;gap:10px;margin-top:11px}
@@ -281,7 +299,7 @@ html body, html body *{font-family:var(--sans)!important;font-weight:400!importa
         <div class="cgrid" id="cGrid"></div>
       </div>
       <div class="rep">
-        <div class="h"><span class="t">피부 데이터</span><span class="conf" id="confBadge">보통 확신</span></div>
+        <div class="h"><span class="t">피부 데이터</span></div>
         <div id="flagWrap"></div>
         <div class="bar"><div class="bt"><span>OILY · 유분·번들거림</span><b id="t0v">–</b></div><div class="tr"><div class="fl" id="t0"></div></div></div>
         <div class="bar"><div class="bt"><span>DRY · 속당김·각질</span><b id="t1v">–</b></div><div class="tr"><div class="fl" id="t1"></div></div></div>
@@ -634,7 +652,7 @@ function renderResult(){
   $('#cGradeDesc').textContent='피지·수분·홍조·트러블·결·톤 6개 측정 신호를 종합한 점수예요.';
   $('#cGrid').innerHTML=CR.items.map(it=>'<div class="ci"><div class="k"><b>'+it.k+'</b><span class="en">'+it.en+'</span></div><div class="tr"><div class="fl" data-w="'+it.v+'" style="background:'+it.c+'"></div></div><div class="row2"><span class="v">'+it.v+'</span>'+stChip(it.v,it.bad)+'</div></div>').join('');
   setTimeout(()=>{document.querySelectorAll('#cGrid .fl').forEach(el=>{el.style.width=el.dataset.w+'%';});},100);
-  const cb=$('#confBadge');cb.textContent=r.band;cb.style.color=r.band[0]==='높'?'#bff0d6':r.band[0]==='보'?'#e8d3a6':'#f0c9bf';cb.style.background=r.band[0]==='높'?'rgba(70,201,139,.15)':r.band[0]==='보'?'rgba(226,180,91,.14)':'rgba(226,114,91,.14)';
+  /* 확신도 뱃지는 표시하지 않음 (사용자 요청) */
   $('#flagWrap').innerHTML=r.flags.map(f=>`<span class="flag">${f}</span>`).join(' ');
   const pct=r.F.map(x=>Math.round(x*100));['#t0','#t1','#t2'].forEach((id,i)=>setTimeout(()=>{$(id).style.width=pct[i]+'%';},60));
   $('#t0v').textContent=pct[0]+'%';$('#t1v').textContent=pct[1]+'%';$('#t2v').textContent=pct[2]+'%';
