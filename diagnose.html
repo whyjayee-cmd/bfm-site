@@ -14,7 +14,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);word-break:keep-all;line-break:strict;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;min-height:100%}
 body{font-size:16px;line-height:1.6}
-.wrap{max-width:480px;margin:0 auto;padding:0 20px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.wrap{max-width:480px;margin:0 auto;padding:0 20px;min-height:calc(100vh - var(--hostoff,0px));min-height:calc(100dvh - var(--hostoff,0px));display:flex;flex-direction:column}
 a{color:inherit;text-decoration:none}
 .top{flex:none;display:flex;align-items:center;justify-content:space-between;height:56px}
 .brand{font-weight:800;font-size:21px;letter-spacing:-.04em}.brand i{font-style:normal;color:var(--accent)}
@@ -339,7 +339,7 @@ const argmax=v=>{let m=0;for(let i=1;i<v.length;i++)if(v[i]>v[m])m=i;return m;};
 const ua=navigator.userAgent||'';
 const inApp=/Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER|Line\//i.test(ua);
 if(inApp)$('#inappMsg').classList.add('on');
-try{if(window.parent!==window){var _b=document.querySelector('.top .brand');if(_b)_b.style.display='none';}}catch(e){}
+try{if(window.parent!==window){var _b=document.querySelector('.top .brand');if(_b)_b.style.display='none';document.documentElement.style.setProperty('--hostoff','110px');}}catch(e){}
 /* 카메라 우선: startCam 버튼 항상 노출, 미지원이면 파일 촬영으로 폴백 */
 
 let faceResult=null, capCanvas=null, Q=[], ans=[], qi=0, primeText='';
