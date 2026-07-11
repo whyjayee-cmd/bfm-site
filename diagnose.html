@@ -338,6 +338,7 @@ const argmax=v=>{let m=0;for(let i=1;i<v.length;i++)if(v[i]>v[m])m=i;return m;};
 
 const ua=navigator.userAgent||'';
 const inApp=/Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER|Line\//i.test(ua);
+const preferCPU=/Android/i.test(ua); /* 안드로이드(갤럭시 등): GPU 델리게이트가 생성은 되는데 추론결과가 비는 문제 잦음 → CPU 강제 */
 if(inApp)$('#inappMsg').classList.add('on');
 try{if(window.parent!==window){var _b=document.querySelector('.top .brand');if(_b)_b.style.display='none';document.documentElement.style.setProperty('--hostoff','110px');}}catch(e){}
 /* 카메라 우선: startCam 버튼 항상 노출, 미지원이면 파일 촬영으로 폴백 */
@@ -350,10 +351,10 @@ async function loadVision(){ if(vision)return vision; const mod=await import('ht
   vision={mod,fileset:await mod.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm')}; return vision; }
 async function getDetector(){ if(detector)return detector; const {mod,fileset}=await loadVision();
   const mk=(dg)=>mod.FaceDetector.createFromOptions(fileset,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite',delegate:dg},runningMode:'VIDEO',minDetectionConfidence:0.25});
-  try{detector=await mk('GPU');}catch(e){detector=await mk('CPU');} return detector; }
+  try{detector=await mk(preferCPU?'CPU':'GPU');}catch(e){detector=await mk('CPU');} return detector; }
 async function getLandmarker(){ if(landmarker)return landmarker; const {mod,fileset}=await loadVision();
   const mk=(dg)=>mod.FaceLandmarker.createFromOptions(fileset,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',delegate:dg},runningMode:'IMAGE',numFaces:2,minFaceDetectionConfidence:0.2,minFacePresenceConfidence:0.2});
-  try{landmarker=await mk('GPU');}catch(e){landmarker=await mk('CPU');} return landmarker; }
+  try{landmarker=await mk(preferCPU?'CPU':'GPU');}catch(e){landmarker=await mk('CPU');} return landmarker; }
 
 /* ===== image helpers ===== */
 function brightnessOf(d){let s=0;for(let i=0;i<d.length;i+=4)s+=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];return s/(d.length/4);}
@@ -713,7 +714,7 @@ function loopGuide(det){const v=$('#video'),pill=$('#coachPill'),txt=$('#coachTe
   function step(){if(!v.videoWidth){rafId=requestAnimationFrame(step);return;}let msg='',good=false;
     let r=null;if(det){try{r=det.detectForVideo(v,performance.now()).detections||[];}catch(e){r=null;}}
     if(r){
-      if(r.length===0)msg='얼굴이 보이지 않아요';
+      if(r.length===0)msg='얼굴이 안 잡혀요 · 촬영을 누르면 사진으로 분석해요';
       else{if(r.length>1)r=[r.slice().sort((a,b)=>b.boundingBox.width-a.boundingBox.width)[0]];
         const bb=r[0].boundingBox,fw=bb.width/v.videoWidth,cxF=(bb.originX+bb.width/2)/v.videoWidth,cyF=(bb.originY+bb.height/2)/v.videoHeight;
         c.width=120;c.height=160;cx.drawImage(v,0,0,120,160);const br=brightnessOf(cx.getImageData(0,0,120,160).data);
