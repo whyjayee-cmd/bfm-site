@@ -12,7 +12,10 @@
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
-.wrap{max-width:520px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.wrap{max-width:520px;margin:0 auto;min-height:calc(100dvh - var(--hostoff,0px));display:flex;flex-direction:column;position:relative;overflow:hidden}
+#s-cam .grow{overflow:hidden}
+.camhead{display:flex;align-items:baseline;gap:8px;margin:2px 0 6px;padding:0 2px}
+.camhead b{font-size:18px;font-weight:800}.camhead span{font-size:13px;color:var(--mut)}
 .screen{display:none;flex:1;flex-direction:column}
 .screen.on{display:flex}
 .top{display:flex;align-items:center;gap:10px;padding:14px 18px 6px}
@@ -25,7 +28,7 @@ h1{font-size:clamp(24px,6.5vw,32px);font-weight:800;letter-spacing:-.02em;line-h
 h2{font-size:19px;font-weight:700}
 .eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
 .lead{color:var(--mut);font-size:15px;margin-top:10px}
-.btn{width:100%;border:0;border-radius:14px;background:var(--accent);color:#0a0b0e;font-weight:800;font-size:16px;padding:16px;cursor:pointer;transition:transform .12s,opacity .2s}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:14px;background:var(--accent);color:#fff;font-weight:800;font-size:16.5px;padding:17px;cursor:pointer;box-shadow:0 10px 26px -10px rgba(91,141,239,.7);transition:transform .12s,opacity .2s}
 .btn:active:not(:disabled){transform:scale(.985)}
 .btn:disabled{opacity:.4}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
@@ -41,7 +44,7 @@ h2{font-size:19px;font-weight:700}
 .zchip .zd{font-size:11px;color:var(--faint);margin-top:2px}
 .priv{display:flex;gap:8px;align-items:flex-start;margin-top:16px;color:var(--faint);font-size:12.5px}
 /* camera */
-.cam{position:relative;flex:1;border-radius:18px;overflow:hidden;background:#000;margin:6px 0;min-height:52vh}
+.cam{position:relative;flex:1;border-radius:18px;overflow:hidden;background:#000;margin:6px 0;min-height:240px}
 .cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
 .guide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .guide svg{width:78%;max-width:340px;height:auto}
@@ -113,6 +116,7 @@ canvas.hidden{display:none}
     <div class="top"><span class="brand"><b>BfM</b></span><span class="step" id="camStep">1 / 3</span></div>
     <div class="grow" style="padding-top:2px">
       <div class="dots" id="dots"><i></i><i></i><i></i></div>
+      <div class="camhead"><b id="camZone">이마·T존</b><span id="camTip">안내선에 맞춰 가까이 찍으세요</span></div>
       <div class="cam" id="camBox">
         <video id="video" playsinline autoplay muted></video>
         <div class="zbadge" id="zbadge">이마·T존</div>
@@ -122,7 +126,7 @@ canvas.hidden{display:none}
     </div>
     <div class="foot">
       <button class="btn" id="shoot">촬영</button>
-      <button class="linkbtn" id="camCancel">취소</button>
+      <button class="linkbtn" id="camBack">← 이전</button>
     </div>
   </section>
 
@@ -195,6 +199,7 @@ async function startShot(i){
   shotIdx=i; const z=ZONES[i];
   $('#camStep').textContent=(i+1)+' / 3';
   $('#zbadge').textContent=z.name;
+  $('#camZone').textContent=z.name; $('#camTip').textContent=z.tip;
   $('#guide').innerHTML=z.guide;
   [].forEach.call($('#dots').children,(d,k)=>{d.className=k<i?'done':k===i?'cur':'';});
   show('s-cam');
@@ -394,11 +399,11 @@ function renderResult(res,zmap){
 $('#startBtn').onclick=()=>{ shots.length=0; analyses.length=0; $('#introErr').classList.remove('on'); startShot(0); };
 $('#uploadBtn').onclick=()=>{ shots.length=0; analyses.length=0; pickMulti(); };
 $('#shoot').onclick=()=>{ if(!$('#shoot').disabled) captureShot(); };
-$('#camCancel').onclick=()=>{ stopCam(); show('s-intro'); };
+$('#camBack').onclick=()=>{ stopCam(); if(shotIdx>0) startShot(shotIdx-1); else show('s-intro'); };
 $('#restart').onclick=()=>{ shots.length=0; analyses.length=0; startShot(0); };
 $('#toSurvey').onclick=()=>{ const r=window.__BFM_RESULT||{}; const face={ok:true,q:(typeof r.q==='number'?r.q:0.8),Sp:r.Sp||[0.5,0.3,0.2],source:'closeup'}; try{ sessionStorage.setItem('bfm_face', JSON.stringify(face)); }catch(e){} location.href='diagnose.html?stage=survey'; };
 /* 임베드 시 상단 여백 보정 */
-try{ if(window.parent!==window){ document.documentElement.style.setProperty('--hostoff','0px'); } }catch(e){}
+try{ if(window.parent!==window){ [].forEach.call(document.querySelectorAll('.brand'),function(b){b.style.display='none';}); document.documentElement.style.setProperty('--hostoff','110px'); } }catch(e){}
 </script>
 </body>
 </html>
