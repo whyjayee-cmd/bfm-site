@@ -125,7 +125,7 @@ canvas.hidden{display:none}
       </div>
     </div>
     <div class="foot">
-      <button class="btn" id="shoot">촬영</button>
+      <button class="btn" id="shoot" disabled>촬영</button>
       <button class="linkbtn" id="camBack">← 이전</button>
     </div>
   </section>
@@ -212,26 +212,30 @@ async function startShot(i){
 }
 function stopCam(){ if(rafId)cancelAnimationFrame(rafId); rafId=null; if(stream){stream.getTracks().forEach(t=>t.stop()); stream=null;} }
 
-/* 얼굴인식 없이: 초점(선명도)·밝기·피부충전율로 프레이밍 코칭 */
+/* 피부 픽셀 비율(구도·거리 프록시) */
+function skinFill(d){ let s=0; const n=d.length/4; for(let i=0;i<d.length;i+=4){ if(isSkin(d[i],d[i+1],d[i+2])) s++; } return s/n; }
+
+/* 얼굴인식 없이: 초점·밝기·피부충전율로 코칭 + 품질 게이팅(분석 가능한 화질/조명/구도 아니면 촬영 불가) */
 function coachLoop(){
   const v=$('#video'), c=$('#work'), cx=c.getContext('2d',{willReadFrequently:true}), box=$('#camBox');
+  let goodN=0;
   function step(){
     if(!v.videoWidth){ rafId=requestAnimationFrame(step); return; }
     c.width=128; c.height=128; cx.drawImage(v,0,0,128,128);
     const d=cx.getImageData(0,0,128,128).data;
-    const br=meanBrightness(d);
-    const sk=skinFill(d);
-    const sharp=lapVar(gray(d,128,128),128,128);
-    let msg,good=false;
-    if(sk<0.35) msg='피부가 화면을 채우게 · 더 가까이';
-    else if(sharp<45) msg='초점이 안 맞아요 · 살짝 뒤로';
-    else if(br<45) msg='더 밝은 곳에서';
-    else if(br>228) msg='빛이 너무 세요';
-    else { msg='좋아요 — 촬영하세요'; good=true; }
-    $('#coach').textContent=msg;
-    $('#pill').classList.toggle('ready',good);
-    box.classList.toggle('lock',good);
-    $('#shoot').disabled=false;              // 촬영은 항상 허용(판정은 캡처 후)
+    const br=meanBrightness(d), sk=skinFill(d), sharp=lapVar(gray(d,128,128),128,128);
+    let msg,ok=false;
+    if(sk<0.45) msg='피부가 화면을 더 채우게 · 가까이';
+    else if(br<55) msg='더 밝은 곳에서';
+    else if(br>224) msg='빛이 너무 세요 · 직사광 피하기';
+    else if(sharp<52) msg='초점을 맞춰주세요 · 거리 살짝 조절';
+    else ok=true;
+    goodN = ok ? goodN+1 : 0;
+    const ready = goodN>=3;                    // 3프레임 연속 양호해야 촬영 허용(흔들림 방지)
+    $('#coach').textContent = ready ? '좋아요 — 촬영하세요' : (ok ? '측정 중…' : msg);
+    $('#pill').classList.toggle('ready',ready);
+    box.classList.toggle('lock',ready);
+    $('#shoot').disabled = !ready;             // ⚠️화질/조명/구도 미달이면 촬영 불가(요청)
     rafId=requestAnimationFrame(step);
   }
   step();
@@ -371,6 +375,8 @@ async function runAnalysis(){
   const zmap={};
   for(const s of shots){ if(!s)continue; await new Promise(r=>setTimeout(r,40)); const a=analyzeZone(s.canvas); a.zone=s.key; zmap[s.key]=a; analyses.push(a); const m=await runModel(s.canvas,s.key); if(m)Object.assign(a,m); }
   clearInterval(iv);
+  const weak=Object.keys(zmap).filter(k=>zmap[k]&&zmap[k].weak);
+  if(weak.length){ show('s-intro'); const e=$('#introErr'); e.classList.add('on'); e.textContent='분석하기 어려운 사진이 있어요('+weak.map(k=>({tzone:'이마·T존',nose:'코',eye:'눈가'}[k]||k)).join(', ')+'). 더 가까이·밝은 곳에서 다시 찍어주세요.'; return; }
   renderResult(combine(zmap),zmap);
 }
 
