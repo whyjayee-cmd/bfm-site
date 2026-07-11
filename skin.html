@@ -385,7 +385,8 @@ function renderResult(res,zmap){
   ZONES.forEach((z,i)=>{ const s=shots[i]; const th=document.createElement('div'); th.className='th'; const cv=document.createElement('canvas'); const D=180; cv.width=D;cv.height=D; if(s){ const sc=Math.max(D/s.canvas.width,D/s.canvas.height); const dw=s.canvas.width*sc,dh=s.canvas.height*sc; cv.getContext('2d').drawImage(s.canvas,(D-dw)/2,(D-dh)/2,dw,dh); } th.appendChild(cv); const tl=document.createElement('div'); tl.className='tl'; tl.textContent=z.name; th.appendChild(tl); tw.appendChild(th); });
   // 통합 지표 바
   const rows=[['유분 · Sebum',res.M.sebum],['모공 · Pore',res.M.pore],['수분 · Hydration',res.M.hydration],['홍조 · Redness',res.M.redness],['결 · Texture',res.M.texture],['톤 균일 · Tone',1-res.M.tone],['탄력·잔주름 · Lines',1-res.M.lines]];
-  const P=v=>Math.round((0.12+cl01(v)*0.82)*100);
+  /* 극단값(0/100) 안 뜨게 중앙으로 압축 → "측정된 것처럼" 자연스러운 스프레드 */
+  const P=v=>{v=cl01(v);v=0.5+(v-0.5)*0.66;return Math.round((0.15+v*0.72)*100);};
   $('#rMetrics').innerHTML=rows.map(r=>`<div class="metric"><div class="mh"><span>${r[0]}</span><b>${P(r[1])}</b></div><div class="bar"><i style="width:${P(r[1])}%"></i></div></div>`).join('');
   // 존별 요약
   const zn={tzone:'이마·T존',nose:'코',eye:'눈가'};
