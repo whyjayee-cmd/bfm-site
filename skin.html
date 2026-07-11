@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no"/>
+<meta name="theme-color" content="#0a0b0e"/>
+<title>피부 클로즈업 분석 — BfM</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"/>
+<style>
+:root{--accent:#5B8DEF;--accent2:#83a8ff;--bg:#0a0b0e;--panel:#14171e;--line:#23262f;--ink:#EDEFF3;--mut:#9aa3b2;--faint:#646b78;--ok:#46c98b;--warn:#e0a94a;--bad:#e2607a}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+.wrap{max-width:520px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.on{display:flex}
+.top{display:flex;align-items:center;gap:10px;padding:14px 18px 6px}
+.brand{font-weight:800;letter-spacing:.02em}
+.brand b{color:var(--accent)}
+.step{margin-left:auto;font-size:12px;color:var(--faint);font-weight:600}
+.grow{flex:1;display:flex;flex-direction:column;padding:8px 18px;overflow-y:auto}
+.foot{flex:none;padding:14px 18px calc(14px + env(safe-area-inset-bottom))}
+h1{font-size:clamp(24px,6.5vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.18}
+h2{font-size:19px;font-weight:700}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.lead{color:var(--mut);font-size:15px;margin-top:10px}
+.btn{width:100%;border:0;border-radius:14px;background:var(--accent);color:#0a0b0e;font-weight:800;font-size:16px;padding:16px;cursor:pointer;transition:transform .12s,opacity .2s}
+.btn:active:not(:disabled){transform:scale(.985)}
+.btn:disabled{opacity:.4}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.linkbtn{display:block;width:100%;background:none;border:0;color:var(--faint);font-size:14px;padding:12px;margin-top:4px;cursor:pointer}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.err{color:var(--bad);font-size:14px;margin-top:10px;display:none}
+.err.on{display:block}
+/* zone chips (intro) */
+.zones{display:flex;gap:10px;margin-top:18px}
+.zchip{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 10px;text-align:center}
+.zchip .zi{width:44px;height:44px;margin:0 auto 8px;display:block}
+.zchip .zn{font-weight:700;font-size:14px}
+.zchip .zd{font-size:11px;color:var(--faint);margin-top:2px}
+.priv{display:flex;gap:8px;align-items:flex-start;margin-top:16px;color:var(--faint);font-size:12.5px}
+/* camera */
+.cam{position:relative;flex:1;border-radius:18px;overflow:hidden;background:#000;margin:6px 0;min-height:52vh}
+.cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.guide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.guide svg{width:78%;max-width:340px;height:auto}
+.guide svg .gl{fill:none;stroke:rgba(255,255,255,.62);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.cam.lock .guide svg .gl{stroke:var(--ok);stroke-width:3}
+.coach{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;pointer-events:none}
+.pill{display:inline-flex;align-items:center;gap:8px;background:rgba(8,9,11,.72);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:9px 15px;font-size:13.5px;font-weight:600}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.pill.ready .dot{background:var(--ok)}
+.zbadge{position:absolute;top:12px;left:12px;background:rgba(8,9,11,.72);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:6px 11px;font-size:13px;font-weight:700}
+.dots{display:flex;gap:6px;justify-content:center;margin:2px 0 8px}
+.dots i{width:24px;height:4px;border-radius:2px;background:var(--line)}
+.dots i.done{background:var(--ok)}
+.dots i.cur{background:var(--accent)}
+/* analyzing */
+.scan{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+.ring{width:74px;height:74px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scanstat{color:var(--faint);font-size:13px;min-height:18px}
+/* result */
+.rtype{text-align:center;padding:8px 0 4px}
+.rtype .lab{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.rtype .nm{font-size:30px;font-weight:800;color:var(--accent);margin-top:4px}
+.rtype .dsc{color:var(--mut);font-size:14px;margin-top:6px}
+.metric{margin-top:14px}
+.metric .mh{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:6px}
+.metric .mh b{color:var(--faint);font-weight:600}
+.bar{height:8px;border-radius:5px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.zoneblk{margin-top:18px}
+.zoneblk h3{font-size:13px;color:var(--faint);font-weight:700;letter-spacing:.04em;margin-bottom:8px}
+.thumbs{display:flex;gap:8px;margin-top:16px}
+.thumbs .th{flex:1;position:relative}
+.thumbs canvas{width:100%;border-radius:12px;display:block;aspect-ratio:1;object-fit:cover;border:1px solid var(--line)}
+.thumbs .tl{position:absolute;bottom:6px;left:6px;font-size:10px;font-weight:700;background:rgba(8,9,11,.72);border-radius:6px;padding:2px 6px}
+.note{font-size:11.5px;color:var(--faint);margin-top:16px;line-height:1.55}
+canvas.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== INTRO ===== -->
+  <section class="screen on" id="s-intro">
+    <div class="top"><span class="brand"><b>BfM</b> 피부 클로즈업 분석</span></div>
+    <div class="grow">
+      <span class="eyebrow">Close-up Skin Scan</span>
+      <h1 style="margin-top:8px">3장이면<br>피부를 세밀하게 읽어드려요</h1>
+      <p class="lead">이마·코·눈가를 각각 가까이서 찍으면, 셀카 한 장보다 훨씬 정밀하게 유분·모공·홍조·결을 분석합니다.</p>
+      <div class="zones">
+        <div class="zchip"><svg class="zi" viewBox="0 0 48 48" fill="none" stroke="#5B8DEF" stroke-width="2.4" stroke-linecap="round"><rect x="9" y="10" width="30" height="17" rx="7"/><path d="M13 33 q6 -4 11 0"/><path d="M24 33 q6 -4 11 0"/></svg><div class="zn">이마·T존</div><div class="zd">유분·결</div></div>
+        <div class="zchip"><svg class="zi" viewBox="0 0 48 48" fill="none" stroke="#5B8DEF" stroke-width="2.4" stroke-linecap="round"><path d="M24 8 L18 30 q0 6 6 8 q6 -2 6 -8 Z"/><path d="M18 32 q-4 4 2 6"/><path d="M30 32 q4 4 -2 6"/></svg><div class="zn">코</div><div class="zd">모공·피지</div></div>
+        <div class="zchip"><svg class="zi" viewBox="0 0 48 48" fill="none" stroke="#5B8DEF" stroke-width="2.4" stroke-linecap="round"><path d="M9 26 q15 -12 30 0 q-15 11 -30 0 Z"/><path d="M12 18 q12 -6 24 0"/><path d="M13 32 q11 5 22 0"/></svg><div class="zn">눈가</div><div class="zd">잔주름·톤</div></div>
+      </div>
+      <div class="priv">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:none;margin-top:1px"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg>
+        <span>사진은 <b style="color:var(--mut)">기기에서만</b> 분석돼요. 서버로 전송·저장하지 않습니다.</span>
+      </div>
+      <div class="err" id="introErr"></div>
+    </div>
+    <div class="foot">
+      <button class="btn" id="startBtn">시작하기</button>
+      <button class="linkbtn" id="uploadBtn">카메라 대신 사진 3장 올리기</button>
+    </div>
+  </section>
+
+  <!-- ===== CAMERA (reused for 3 shots) ===== -->
+  <section class="screen" id="s-cam">
+    <div class="top"><span class="brand"><b>BfM</b></span><span class="step" id="camStep">1 / 3</span></div>
+    <div class="grow" style="padding-top:2px">
+      <div class="dots" id="dots"><i></i><i></i><i></i></div>
+      <div class="cam" id="camBox">
+        <video id="video" playsinline autoplay muted></video>
+        <div class="zbadge" id="zbadge">이마·T존</div>
+        <div class="guide" id="guide"></div>
+        <div class="coach"><span class="pill" id="pill"><span class="dot"></span><span id="coach">카메라 준비 중…</span></span></div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="btn" id="shoot">촬영</button>
+      <button class="linkbtn" id="camCancel">취소</button>
+    </div>
+  </section>
+
+  <!-- ===== ANALYZING ===== -->
+  <section class="screen" id="s-scan">
+    <div class="top"><span class="brand"><b>BfM</b></span></div>
+    <div class="grow"><div class="scan">
+      <div class="ring"></div>
+      <h2>피부를 읽고 있어요</h2>
+      <div class="scanstat" id="scanStat">이미지 보정 중…</div>
+    </div></div>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section class="screen" id="s-result">
+    <div class="top"><span class="brand"><b>BfM</b> 분석 결과</span></div>
+    <div class="grow">
+      <div class="rtype">
+        <div class="lab">Your Skin Type</div>
+        <div class="nm" id="rType">—</div>
+        <div class="dsc" id="rDesc"></div>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+      <div id="rMetrics"></div>
+      <div id="rZones"></div>
+      <p class="note" id="rNote"></p>
+    </div>
+    <div class="foot">
+      <button class="btn" id="toSurvey">설문으로 마무리하고 처방 받기 →</button>
+      <button class="linkbtn" id="restart">다시 찍기</button>
+    </div>
+  </section>
+
+  <input type="file" id="fileInput" accept="image/*" capture="user" style="display:none"/>
+  <input type="file" id="fileMulti" accept="image/*" multiple style="display:none"/>
+  <canvas id="work" class="hidden"></canvas>
+</div>
+
+<script>
+/* =========================================================================
+   BfM 클로즈업 피부 분석 — 순수 클라이언트(서버 전송 없음), MediaPipe 불필요.
+   Tier1 촬영 UX + 실선 가이드 / Tier2 Lab·HSV 존별 분석 / Tier3 조명보정 + 모델 훅
+   ========================================================================= */
+'use strict';
+const $=s=>document.querySelector(s);
+const screens=['s-intro','s-cam','s-scan','s-result'];
+function show(id){screens.forEach(s=>$('#'+s).classList.toggle('on',s===id));}
+
+/* ---- 3개 존 정의 + 실선 가이드(SVG path) ---- */
+const ZONES=[
+ {key:'tzone',name:'이마·T존',
+  guide:'<svg viewBox="0 0 320 380"><g class="gl"><rect x="46" y="66" width="228" height="150" rx="34"/><path d="M74 244 q42 -26 78 0"/><path d="M168 244 q42 -26 78 0"/></g></svg>',
+  tip:'이마가 안내선 안에 꽉 차게'},
+ {key:'nose',name:'코',
+  guide:'<svg viewBox="0 0 320 380"><g class="gl"><path d="M160 58 L128 250 q0 34 32 44 q32 -10 32 -44 L160 58"/><path d="M128 262 q-26 22 10 34"/><path d="M192 262 q26 22 -10 34"/></g></svg>',
+  tip:'코 전체가 안내선을 채우게'},
+ {key:'eye',name:'눈가',
+  guide:'<svg viewBox="0 0 320 380"><g class="gl"><path d="M56 196 q104 -66 208 0 q-104 62 -208 0 Z"/><path d="M74 138 q86 -34 172 0"/><path d="M78 236 q82 40 164 0"/></g></svg>',
+  tip:'한쪽 눈가를 안내선에 맞춰'}
+];
+
+let stream=null, rafId=null, shotIdx=0;
+const shots=[];               // {key, canvas}
+const analyses=[];            // per-zone metrics
+
+/* ===================== 카메라 + 실시간 코칭 ===================== */
+const inApp=/Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER|Line\//i.test(navigator.userAgent||'');
+
+async function startShot(i){
+  shotIdx=i; const z=ZONES[i];
+  $('#camStep').textContent=(i+1)+' / 3';
+  $('#zbadge').textContent=z.name;
+  $('#guide').innerHTML=z.guide;
+  [].forEach.call($('#dots').children,(d,k)=>{d.className=k<i?'done':k===i?'cur':'';});
+  show('s-cam');
+  if(inApp||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ pickFile(); return; }
+  const tries=[{video:{facingMode:{ideal:'user'},width:{ideal:1280},height:{ideal:1280}},audio:false},{video:{facingMode:'user'},audio:false},{video:true,audio:false}];
+  let st=null; for(const t of tries){ try{ st=await navigator.mediaDevices.getUserMedia(t); break; }catch(e){} }
+  if(!st){ show('s-intro'); const e=$('#introErr'); e.classList.add('on'); e.textContent='카메라를 열 수 없어요. 아래 “사진 3장 올리기”로 진행하세요.'; return; }
+  stream=st; const v=$('#video'); v.srcObject=st; try{ await v.play(); }catch(e){}
+  coachLoop();
+}
+function stopCam(){ if(rafId)cancelAnimationFrame(rafId); rafId=null; if(stream){stream.getTracks().forEach(t=>t.stop()); stream=null;} }
+
+/* 얼굴인식 없이: 초점(선명도)·밝기·피부충전율로 프레이밍 코칭 */
+function coachLoop(){
+  const v=$('#video'), c=$('#work'), cx=c.getContext('2d',{willReadFrequently:true}), box=$('#camBox');
+  function step(){
+    if(!v.videoWidth){ rafId=requestAnimationFrame(step); return; }
+    c.width=128; c.height=128; cx.drawImage(v,0,0,128,128);
+    const d=cx.getImageData(0,0,128,128).data;
+    const br=meanBrightness(d);
+    const sk=skinFill(d);
+    const sharp=lapVar(gray(d,128,128),128,128);
+    let msg,good=false;
+    if(sk<0.35) msg='피부가 화면을 채우게 · 더 가까이';
+    else if(sharp<45) msg='초점이 안 맞아요 · 살짝 뒤로';
+    else if(br<45) msg='더 밝은 곳에서';
+    else if(br>228) msg='빛이 너무 세요';
+    else { msg='좋아요 — 촬영하세요'; good=true; }
+    $('#coach').textContent=msg;
+    $('#pill').classList.toggle('ready',good);
+    box.classList.toggle('lock',good);
+    $('#shoot').disabled=false;              // 촬영은 항상 허용(판정은 캡처 후)
+    rafId=requestAnimationFrame(step);
+  }
+  step();
+}
+
+function captureShot(){
+  const v=$('#video');
+  const c=document.createElement('canvas');
+  const S=Math.min(720,v.videoWidth||720), ratio=(v.videoHeight/v.videoWidth)||1;
+  c.width=S; c.height=Math.round(S*ratio);
+  c.getContext('2d',{willReadFrequently:true}).drawImage(v,0,0,c.width,c.height);
+  stopCam();
+  shots[shotIdx]={key:ZONES[shotIdx].key,canvas:c};
+  if(shotIdx<2) startShot(shotIdx+1);
+  else runAnalysis();
+}
+
+/* ---- 파일 업로드 폴백(존별 1장) ---- */
+function pickFile(){ const fi=$('#fileInput'); fi.value=''; fi.onchange=()=>{ const f=fi.files&&fi.files[0]; if(f)loadFile(f,shotIdx); }; fi.click(); }
+function loadFile(file,i){
+  const img=new Image();
+  img.onload=()=>{
+    const c=document.createElement('canvas'); const S=Math.min(720,img.naturalWidth||720);
+    c.width=S; c.height=Math.round(S*((img.naturalHeight||S)/(img.naturalWidth||S)));
+    c.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0,c.width,c.height);
+    shots[i]={key:ZONES[i].key,canvas:c};
+    if(i<2){ if(inApp||!navigator.mediaDevices){ startShot(i+1); } else startShot(i+1); }
+    else runAnalysis();
+  };
+  img.onerror=()=>{ const e=$('#introErr'); e.classList.add('on'); e.textContent='사진을 불러오지 못했어요. 다른 사진으로 시도해 주세요.'; };
+  img.src=URL.createObjectURL(file);
+}
+/* 인트로에서 3장 한 번에 올리기 */
+function pickMulti(){ const fm=$('#fileMulti'); fm.value=''; fm.onchange=async()=>{ const fs=[].slice.call(fm.files).slice(0,3); if(fs.length<1)return; for(let i=0;i<fs.length;i++){ await new Promise(res=>{ const img=new Image(); img.onload=()=>{ const c=document.createElement('canvas'); const S=Math.min(720,img.naturalWidth||720); c.width=S;c.height=Math.round(S*((img.naturalHeight||S)/(img.naturalWidth||S))); c.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0,c.width,c.height); shots[i]={key:ZONES[i].key,canvas:c}; res(); }; img.onerror=res; img.src=URL.createObjectURL(fs[i]); }); } if(shots.filter(Boolean).length>=1) runAnalysis(); }; fm.click(); }
+
+/* ===================== 색공간 · 기초 연산 ===================== */
+function meanBrightness(d){ let s=0,n=d.length/4; for(let i=0;i<d.length;i+=4)s+=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]; return s/n; }
+function gray(d,w,h){ const g=new Float32Array(w*h); for(let i=0,j=0;i<d.length;i+=4,j++)g[j]=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]; return g; }
+function lapVar(g,w,h){ let s=0,s2=0,n=0; for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){ const i=y*w+x; const l=4*g[i]-g[i-1]-g[i+1]-g[i-w]-g[i+w]; s+=l;s2+=l*l;n++; } const m=s/n; return s2/n-m*m; }
+function rgb2hsv(r,g,b){ r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn; let h=0; if(d){ if(mx===r)h=((g-b)/d)%6; else if(mx===g)h=(b-r)/d+2; else h=(r-g)/d+4; h*=60; if(h<0)h+=360; } return[h,mx?d/mx:0,mx]; }
+function srgb2lin(c){ c/=255; return c<=0.04045? c/12.92 : Math.pow((c+0.055)/1.055,2.4); }
+function rgb2lab(r,g,b){ const R=srgb2lin(r),G=srgb2lin(g),B=srgb2lin(b);
+  let X=(0.4124*R+0.3576*G+0.1805*B)/0.95047, Y=(0.2126*R+0.7152*G+0.0722*B), Z=(0.0193*R+0.1192*G+0.9505*B)/1.08883;
+  const f=t=>t>0.008856?Math.cbrt(t):7.787*t+16/116; const fx=f(X),fy=f(Y),fz=f(Z);
+  return[116*fy-16, 500*(fx-fy), 200*(fy-fz)]; }
+/* Kovac 기반 피부 픽셀 판정(관대) */
+function isSkin(r,g,b){ const mx=Math.max(r,g,b),mn=Math.min(r,g,b); return r>60&&g>35&&b>18&&r>g&&r>=b&&(r-g)>=7&&(mx-mn)>=10&&r<250; }
+/* Tier3: gray-world 화이트밸런스 계수 */
+function grayWorld(d){ let r=0,g=0,b=0,n=0; for(let i=0;i<d.length;i+=4){ if(d[i+3]<8)continue; r+=d[i];g+=d[i+1];b+=d[i+2];n++; } r/=n||1;g/=n||1;b/=n||1; const gr=(r+g+b)/3; return[clamp(gr/(r||1),.7,1.4),clamp(gr/(g||1),.7,1.4),clamp(gr/(b||1),.7,1.4)]; }
+function clamp(v,a,b){ return v<a?a:v>b?b:v; }
+function cl01(v){ return v<0?0:v>1?1:v; }
+
+/* ===================== 존별 정밀 분석 ===================== */
+/* 반환: {sebum,pore,texture,redness,tone,lines,dark,skinFrac} 0~1 정규화 */
+function analyzeZone(canvas){
+  const W=Math.min(360,canvas.width), H=Math.round(canvas.height*(W/canvas.width));
+  const c=$('#work'); c.width=W; c.height=H; const cx=c.getContext('2d',{willReadFrequently:true});
+  cx.drawImage(canvas,0,0,W,H);
+  const img=cx.getImageData(0,0,W,H), d=img.data;
+  const wb=grayWorld(d);                                   // Tier3 조명보정
+  const N=W*H;
+  const gl=new Float32Array(N);                            // 보정 후 그레이(결/모공용)
+  let skin=0, shine=0, clip=0;
+  const La=[],Aa=[],Ba=[];
+  for(let p=0,i=0;p<N;p++,i+=4){
+    const r=Math.min(255,d[i]*wb[0]), g=Math.min(255,d[i+1]*wb[1]), b=Math.min(255,d[i+2]*wb[2]);
+    gl[p]=0.299*r+0.587*g+0.114*b;
+    if(!isSkin(r,g,b)) continue;
+    skin++;
+    const hsv=rgb2hsv(r,g,b); if(hsv[2]>0.82&&hsv[1]<0.22)shine++; if(hsv[2]>0.97)clip++;
+    const lab=rgb2lab(r,g,b); La.push(lab[0]); Aa.push(lab[1]); Ba.push(lab[2]);
+  }
+  const skinFrac=skin/N;
+  if(skin<N*0.05) return{sebum:0,pore:0,texture:0,redness:0,tone:0,lines:0,dark:0,skinFrac,weak:true};
+  // 광택/피지: 정반사(하이라이트) 비율
+  const sebum=cl01(shine/skin/0.22);
+  // 홍조: Lab a* 중앙값 + 붉은 픽셀 비율
+  const medA=median(Aa), aHi=Aa.filter(v=>v>medA+6).length/Aa.length;
+  const redness=cl01((medA-10)/22*0.5 + aHi/0.20*0.5);
+  // 톤 불균일: L*·a* 표준편차
+  const tone=cl01((std(La)/16*0.6 + std(Aa)/9*0.4));
+  // 밝기(다크서클 프록시): 낮을수록 어두움
+  const dark=cl01((62-median(La))/30);
+  // 결(거칢): 라플라시안 분산 → 선명도로 정규화
+  const lv=lapVar(gl,W,H);
+  const texture=cl01((lv/900-0.15)/1.1);
+  // 모공/블랙헤드: 주변보다 유의하게 어두운 국소 최소점 밀도
+  let pores=0, cnt=0;
+  const rad=2;
+  for(let y=rad;y<H-rad;y++)for(let x=rad;x<W-rad;x++){ const idx=(y*W+x)*4; const r=Math.min(255,d[idx]*wb[0]),g=Math.min(255,d[idx+1]*wb[1]),b=Math.min(255,d[idx+2]*wb[2]); if(!isSkin(r,g,b))continue; cnt++; let sum=0,k=0; for(let dy=-rad;dy<=rad;dy++)for(let dx=-rad;dx<=rad;dx++){ sum+=gl[(y+dy)*W+(x+dx)]; k++; } const nb=sum/k; if(gl[y*W+x] < nb-16) pores++; }
+  const pore=cl01((cnt?pores/cnt:0)/0.10);
+  // 잔주름: 국소 대비의 방향성(수평 에지)이 강하면 라인 신호
+  let hEdge=0, eCnt=0;
+  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){ const p=y*W+x; const gy=Math.abs(gl[p+W]-gl[p-W]); const gx=Math.abs(gl[p+1]-gl[p-1]); if(gy>12&&gy>gx*1.3){ hEdge++; } eCnt++; }
+  const lines=cl01((eCnt?hEdge/eCnt:0)/0.09);
+  return{sebum,pore,texture,redness,tone,lines,dark,skinFrac,weak:false};
+}
+function median(a){ if(!a.length)return 0; const b=a.slice().sort((x,y)=>x-y); return b[b.length>>1]; }
+function std(a){ if(!a.length)return 0; let m=0; for(const v of a)m+=v; m/=a.length; let s=0; for(const v of a)s+=(v-m)*(v-m); return Math.sqrt(s/a.length); }
+
+/* ===================== Tier3 모델 훅(데이터 준비되면 연결) =====================
+   라벨링된 피부 클로즈업으로 학습한 모델을 TF.js/ONNX로 로드해 존별 보정/대체.
+   window.BFM_MODEL_URL 지정 시 활성화. 없으면 알고리즘 분석만 사용. */
+async function runModel(canvas,zoneKey){ if(!window.BFM_MODEL_URL) return null; /* TODO: onnx/tfjs 로드 후 추론 */ return null; }
+
+/* ===================== 종합 → 피부타입 ===================== */
+function combine(zmap){
+  const T=zmap.tzone||{},No=zmap.nose||{},E=zmap.eye||{};
+  const g=(o,k)=>o&&!o.weak&&typeof o[k]==='number'?o[k]:0;
+  // 통합 지표
+  const M={
+    sebum:  (g(T,'sebum')*0.5+g(No,'sebum')*0.5),
+    pore:   (g(No,'pore')*0.7+g(T,'pore')*0.3),
+    texture:(g(T,'texture')*0.4+g(No,'texture')*0.3+g(E,'texture')*0.3),
+    redness:(g(T,'redness')*0.35+g(No,'redness')*0.3+g(E,'redness')*0.35),
+    tone:   (g(T,'tone')*0.4+g(E,'tone')*0.6),
+    lines:  (g(E,'lines')*0.8+g(T,'lines')*0.2),
+    hydration: cl01(1-(g(T,'sebum')*0.25)-(g(T,'texture')*0.45)-(g(E,'dark')*0.15)-(g(E,'lines')*0.15))
+  };
+  // 타입 스코어
+  const oily = M.sebum*0.7 + M.pore*0.3;
+  const dry  = (1-M.sebum)*0.4 + M.texture*0.35 + (1-M.hydration)*0.25;
+  const sens = M.redness*0.8 + M.tone*0.2;
+  const scores=[['ETERNAL MAN','oily',oily],['NEAT MAN','dry',dry],['RENAISSANCE MAN','sensitive',sens]];
+  scores.sort((a,b)=>b[2]-a[2]);
+  // 복합 판정: T존 유분 높은데 눈가/볼 건조 신호면 복합
+  const combo = g(T,'sebum')>0.45 && (g(E,'texture')>0.4||M.hydration<0.5);
+  return {type:combo?'RENAISSANCE MAN':scores[0][0], key:combo?'combination':scores[0][1], M, scores};
+}
+
+const TYPE_DESC={oily:'유분·모공이 두드러지는 피지 타입',dry:'유분이 적고 결·건조가 두드러지는 타입',sensitive:'붉은기·톤 예민함이 보이는 타입',combination:'T존은 유분, 볼·눈가는 건조가 섞인 복합 타입'};
+
+/* ===================== 분석 실행 + 리포트 ===================== */
+async function runAnalysis(){
+  stopCam(); show('s-scan');
+  const steps=['이미지 보정 중…','존별 피부 분석 중…','유분·모공 측정…','홍조·톤 측정…','결과 정리 중…'];
+  let si=0; const iv=setInterval(()=>{ $('#scanStat').textContent=steps[si=Math.min(si+1,steps.length-1)]; },520);
+  await new Promise(r=>setTimeout(r,60));
+  const zmap={};
+  for(const s of shots){ if(!s)continue; await new Promise(r=>setTimeout(r,40)); const a=analyzeZone(s.canvas); a.zone=s.key; zmap[s.key]=a; analyses.push(a); const m=await runModel(s.canvas,s.key); if(m)Object.assign(a,m); }
+  clearInterval(iv);
+  renderResult(combine(zmap),zmap);
+}
+
+function renderResult(res,zmap){
+  window.__BFM_RESULT={type:res.key,metrics:res.M,zones:zmap};
+  $('#rType').textContent=res.type;
+  $('#rDesc').textContent=TYPE_DESC[res.key]||'';
+  // 썸네일
+  const tw=$('#thumbs'); tw.innerHTML='';
+  ZONES.forEach((z,i)=>{ const s=shots[i]; const th=document.createElement('div'); th.className='th'; const cv=document.createElement('canvas'); const D=180; cv.width=D;cv.height=D; if(s){ const sc=Math.max(D/s.canvas.width,D/s.canvas.height); const dw=s.canvas.width*sc,dh=s.canvas.height*sc; cv.getContext('2d').drawImage(s.canvas,(D-dw)/2,(D-dh)/2,dw,dh); } th.appendChild(cv); const tl=document.createElement('div'); tl.className='tl'; tl.textContent=z.name; th.appendChild(tl); tw.appendChild(th); });
+  // 통합 지표 바
+  const rows=[['유분 · Sebum',res.M.sebum],['모공 · Pore',res.M.pore],['수분 · Hydration',res.M.hydration],['홍조 · Redness',res.M.redness],['결 · Texture',res.M.texture],['톤 균일 · Tone',1-res.M.tone],['탄력·잔주름 · Lines',1-res.M.lines]];
+  const P=v=>Math.round((0.12+cl01(v)*0.82)*100);
+  $('#rMetrics').innerHTML=rows.map(r=>`<div class="metric"><div class="mh"><span>${r[0]}</span><b>${P(r[1])}</b></div><div class="bar"><i style="width:${P(r[1])}%"></i></div></div>`).join('');
+  // 존별 요약
+  const zn={tzone:'이마·T존',nose:'코',eye:'눈가'};
+  const zkey={tzone:['sebum','유분'],nose:['pore','모공'],eye:['lines','잔주름']};
+  $('#rZones').innerHTML='<div class="zoneblk"><h3>존별 하이라이트</h3>'+Object.keys(zn).map(k=>{ const a=zmap[k]; if(!a)return ''; const kk=zkey[k]; return `<div class="metric"><div class="mh"><span>${zn[k]} — ${kk[1]}</span><b>${P(a[kk[0]])}</b></div><div class="bar"><i style="width:${P(a[kk[0]])}%"></i></div></div>`; }).join('')+'</div>';
+  $('#rNote').textContent='※ 본 분석은 촬영 환경(조명·초점·기기)에 따라 달라질 수 있는 참고용 결과이며, 의학적 진단이 아닙니다. 사진은 기기에서만 처리되고 전송·저장되지 않습니다.';
+  show('s-result');
+}
+
+/* ===================== 이벤트 ===================== */
+$('#startBtn').onclick=()=>{ shots.length=0; analyses.length=0; $('#introErr').classList.remove('on'); startShot(0); };
+$('#uploadBtn').onclick=()=>{ shots.length=0; analyses.length=0; pickMulti(); };
+$('#shoot').onclick=()=>{ if(!$('#shoot').disabled) captureShot(); };
+$('#camCancel').onclick=()=>{ stopCam(); show('s-intro'); };
+$('#restart').onclick=()=>{ shots.length=0; analyses.length=0; startShot(0); };
+$('#toSurvey').onclick=()=>{ const r=window.__BFM_RESULT||{}; try{ sessionStorage.setItem('bfm_skin', JSON.stringify(r)); }catch(e){} location.href='/survey.html'; };
+/* 임베드 시 상단 여백 보정 */
+try{ if(window.parent!==window){ document.documentElement.style.setProperty('--hostoff','0px'); } }catch(e){}
+</script>
+</body>
+</html>
