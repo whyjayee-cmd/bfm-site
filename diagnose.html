@@ -48,7 +48,7 @@ h1 .ac{color:var(--accent)}
 
 .cam{position:relative;flex:1;border-radius:20px;overflow:hidden;background:#000;margin-top:6px;min-height:380px}
 .cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
-.oval{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.oval svg{width:56%;max-width:230px}
+.oval{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.oval svg{width:68%;max-width:280px}
 .coach{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;pointer-events:none}
 .coach .pill{background:rgba(8,9,11,.82);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
 .coach .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--warn)}
@@ -711,12 +711,13 @@ async function startCamera(){show('#s-cam');$('#stepLabel').textContent='촬영'
 function stopCamera(){if(rafId)cancelAnimationFrame(rafId);rafId=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}}
 function loopGuide(det){const v=$('#video'),pill=$('#coachPill'),txt=$('#coachText'),c=$('#work'),cx=c.getContext('2d',{willReadFrequently:true});
   function step(){if(!v.videoWidth){rafId=requestAnimationFrame(step);return;}let msg='',good=false;
-    if(det){let r=det.detectForVideo(v,performance.now()).detections||[];
+    let r=null;if(det){try{r=det.detectForVideo(v,performance.now()).detections||[];}catch(e){r=null;}}
+    if(r){
       if(r.length===0)msg='얼굴이 보이지 않아요';
       else{if(r.length>1)r=[r.slice().sort((a,b)=>b.boundingBox.width-a.boundingBox.width)[0]];
         const bb=r[0].boundingBox,fw=bb.width/v.videoWidth,cxF=(bb.originX+bb.width/2)/v.videoWidth,cyF=(bb.originY+bb.height/2)/v.videoHeight;
         c.width=120;c.height=160;cx.drawImage(v,0,0,120,160);const br=brightnessOf(cx.getImageData(0,0,120,160).data);
-        if(fw<0.13)msg='조금 더 가까이';else if(br<28)msg='더 밝은 곳에서';else{msg='좋아요 — 촬영하세요';good=true;}}
+        if(fw<0.10)msg='조금 더 가까이';else if(br<25)msg='더 밝은 곳에서';else{msg='좋아요 — 촬영하세요';good=true;}}
     }else{msg='촬영 후 분석합니다';good=true;}
     txt.textContent=msg;pill.classList.toggle('ready',good);document.querySelector('.cam').classList.toggle('locked',good);$('#shoot').disabled=false;rafId=requestAnimationFrame(step);}
   step();}
