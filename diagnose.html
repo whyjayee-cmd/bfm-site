@@ -48,7 +48,7 @@ h1 .ac{color:var(--accent)}
 
 .cam{position:relative;flex:1;border-radius:20px;overflow:hidden;background:#000;margin-top:6px;min-height:380px}
 .cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
-.oval{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.oval svg{width:74%;max-width:300px}
+.oval{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.oval svg{width:56%;max-width:230px}
 .coach{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;pointer-events:none}
 .coach .pill{background:rgba(8,9,11,.82);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
 .coach .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--warn)}
@@ -349,9 +349,11 @@ let vision=null,detector=null,landmarker=null;
 async function loadVision(){ if(vision)return vision; const mod=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
   vision={mod,fileset:await mod.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm')}; return vision; }
 async function getDetector(){ if(detector)return detector; const {mod,fileset}=await loadVision();
-  detector=await mod.FaceDetector.createFromOptions(fileset,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite',delegate:'GPU'},runningMode:'VIDEO',minDetectionConfidence:0.4}); return detector; }
+  const mk=(dg)=>mod.FaceDetector.createFromOptions(fileset,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite',delegate:dg},runningMode:'VIDEO',minDetectionConfidence:0.25});
+  try{detector=await mk('GPU');}catch(e){detector=await mk('CPU');} return detector; }
 async function getLandmarker(){ if(landmarker)return landmarker; const {mod,fileset}=await loadVision();
-  landmarker=await mod.FaceLandmarker.createFromOptions(fileset,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',delegate:'GPU'},runningMode:'IMAGE',numFaces:2,minFaceDetectionConfidence:0.3,minFacePresenceConfidence:0.3}); return landmarker; }
+  const mk=(dg)=>mod.FaceLandmarker.createFromOptions(fileset,{baseOptions:{modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',delegate:dg},runningMode:'IMAGE',numFaces:2,minFaceDetectionConfidence:0.2,minFacePresenceConfidence:0.2});
+  try{landmarker=await mk('GPU');}catch(e){landmarker=await mk('CPU');} return landmarker; }
 
 /* ===== image helpers ===== */
 function brightnessOf(d){let s=0;for(let i=0;i<d.length;i+=4)s+=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];return s/(d.length/4);}
@@ -372,9 +374,11 @@ function analyzeROI(ctx,fx,fy,fw,fh,roi,wb){const cw=ctx.canvas.width,ch=ctx.can
 
 async function analyzePhoto(c){
   let lm; try{lm=await getLandmarker();}catch(e){return{ok:false,reason:'model'};}
-  const res=lm.detect(c); const faces=res.faceLandmarks||[];
+  const res=lm.detect(c); let faces=res.faceLandmarks||[];
   if(faces.length===0)return{ok:false,reason:'noface'};         // 강아지·풍경·물체 등
-  if(faces.length>1)return{ok:false,reason:'multi'};
+  if(faces.length>1){ // 반사·배경 얼굴 무시하고 가장 큰(가까운) 얼굴 선택
+    const ar=fp=>{let a=1,b=1,cc=0,dd=0;for(const p of fp){if(p.x<a)a=p.x;if(p.y<b)b=p.y;if(p.x>cc)cc=p.x;if(p.y>dd)dd=p.y;}return(cc-a)*(dd-b);};
+    faces=[faces.slice().sort((p,q)=>ar(q)-ar(p))[0]]; }
   const pts=faces[0],W=c.width,H=c.height; let mnx=1,mny=1,mxx=0,mxy=0;
   for(const p of pts){if(p.x<mnx)mnx=p.x;if(p.y<mny)mny=p.y;if(p.x>mxx)mxx=p.x;if(p.y>mxy)mxy=p.y;}
   const fx=mnx*W,fy=mny*H,fw=(mxx-mnx)*W,fh=(mxy-mny)*H,areaFrac=(fw*fh)/(W*H);
@@ -698,17 +702,21 @@ function goSurvey(){buildSurvey();$('#stepLabel').textContent='설문';show('#s-
 /* ===== camera ===== */
 let stream=null,rafId=null;
 async function startCamera(){show('#s-cam');$('#stepLabel').textContent='촬영';
-  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:720},height:{ideal:960}},audio:false});
-    const v=$('#video');v.srcObject=stream;await v.play();let det;try{det=await getDetector();}catch(e){det=null;}loopGuide(det);
-  }catch(e){stopCamera();show('#s-intro');$('#introErr').classList.add('on');$('#introErr').textContent='카메라를 열 수 없어요. 위의 ‘셀카로 분석 시작’으로 휴대폰 카메라를 쓰거나, 사진 없이 진행하세요.';}}
+  /* 갤럭시·삼성 브라우저 대응: portrait/facingMode 제약이 OverconstrainedError 나면 단계적 완화 */
+  const tries=[{video:{facingMode:{ideal:'user'},width:{ideal:720},height:{ideal:960}},audio:false},{video:{facingMode:'user'},audio:false},{video:true,audio:false}];
+  let st=null;for(let i=0;i<tries.length;i++){try{st=await navigator.mediaDevices.getUserMedia(tries[i]);break;}catch(e){}}
+  if(!st){stopCamera();show('#s-intro');$('#introErr').classList.add('on');$('#introErr').textContent='카메라를 열 수 없어요. 위의 ‘셀카로 분석 시작’으로 휴대폰 카메라를 쓰거나, 사진 없이 진행하세요.';return;}
+  stream=st;const v=$('#video');v.srcObject=stream;try{await v.play();}catch(e){}
+  let det;try{det=await getDetector();}catch(e){det=null;}loopGuide(det);}
 function stopCamera(){if(rafId)cancelAnimationFrame(rafId);rafId=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}}
 function loopGuide(det){const v=$('#video'),pill=$('#coachPill'),txt=$('#coachText'),c=$('#work'),cx=c.getContext('2d',{willReadFrequently:true});
   function step(){if(!v.videoWidth){rafId=requestAnimationFrame(step);return;}let msg='',good=false;
-    if(det){const r=det.detectForVideo(v,performance.now()).detections||[];
-      if(r.length===0)msg='얼굴이 보이지 않아요';else if(r.length>1)msg='얼굴이 하나만 보이게';
-      else{const bb=r[0].boundingBox,fw=bb.width/v.videoWidth,cxF=(bb.originX+bb.width/2)/v.videoWidth,cyF=(bb.originY+bb.height/2)/v.videoHeight;
+    if(det){let r=det.detectForVideo(v,performance.now()).detections||[];
+      if(r.length===0)msg='얼굴이 보이지 않아요';
+      else{if(r.length>1)r=[r.slice().sort((a,b)=>b.boundingBox.width-a.boundingBox.width)[0]];
+        const bb=r[0].boundingBox,fw=bb.width/v.videoWidth,cxF=(bb.originX+bb.width/2)/v.videoWidth,cyF=(bb.originY+bb.height/2)/v.videoHeight;
         c.width=120;c.height=160;cx.drawImage(v,0,0,120,160);const br=brightnessOf(cx.getImageData(0,0,120,160).data);
-        if(fw<0.18)msg='조금 더 가까이';else if(br<40)msg='더 밝은 곳에서';else{msg='좋아요 — 촬영하세요';good=true;}}
+        if(fw<0.13)msg='조금 더 가까이';else if(br<28)msg='더 밝은 곳에서';else{msg='좋아요 — 촬영하세요';good=true;}}
     }else{msg='촬영 후 분석합니다';good=true;}
     txt.textContent=msg;pill.classList.toggle('ready',good);document.querySelector('.cam').classList.toggle('locked',good);$('#shoot').disabled=false;rafId=requestAnimationFrame(step);}
   step();}
