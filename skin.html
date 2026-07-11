@@ -285,22 +285,18 @@ function analyzeZone(canvas){
   const W=Math.min(360,canvas.width), H=Math.round(canvas.height*(W/canvas.width));
   const c=$('#work'); c.width=W; c.height=H; const cx=c.getContext('2d',{willReadFrequently:true});
   cx.drawImage(canvas,0,0,W,H);
-  const img=cx.getImageData(0,0,W,H), d=img.data;
-  const wb=grayWorld(d);                                   // Tier3 조명보정
+  const d=cx.getImageData(0,0,W,H).data;
   const N=W*H;
-  const gl=new Float32Array(N);                            // 보정 후 그레이(결/모공용)
-  let skin=0, shine=0, clip=0;
-  const La=[],Aa=[],Ba=[];
-  for(let p=0,i=0;p<N;p++,i+=4){
-    const r=Math.min(255,d[i]*wb[0]), g=Math.min(255,d[i+1]*wb[1]), b=Math.min(255,d[i+2]*wb[2]);
-    gl[p]=0.299*r+0.587*g+0.114*b;
-    if(!isSkin(r,g,b)) continue;
-    skin++;
-    const hsv=rgb2hsv(r,g,b); if(hsv[2]>0.82&&hsv[1]<0.22)shine++; if(hsv[2]>0.97)clip++;
-    const lab=rgb2lab(r,g,b); La.push(lab[0]); Aa.push(lab[1]); Ba.push(lab[2]);
-  }
+  /* 1차: 원본에서 피부 검출. ⚠️클로즈업은 화면 전체가 피부라 gray-world는 피부색을 회색으로 중화 → 금지 */
+  const mask=new Uint8Array(N); let skin=0, lumSum=0;
+  for(let p=0,i=0;p<N;p++,i+=4){ const r=d[i],g=d[i+1],b=d[i+2]; if(isSkin(r,g,b)){ mask[p]=1; skin++; lumSum+=0.299*r+0.587*g+0.114*b; } }
   const skinFrac=skin/N;
   if(skin<N*0.05) return{sebum:0,pore:0,texture:0,redness:0,tone:0,lines:0,dark:0,skinFrac,weak:true};
+  /* Tier3 조명보정: 색은 보존하고 밝기만 스킨 평균 기준으로 게인(gray-world 대신) */
+  const gain=clamp(165/(lumSum/skin),0.7,1.4);
+  const gl=new Float32Array(N); for(let p=0,i=0;p<N;p++,i+=4){ gl[p]=Math.min(255,(0.299*d[i]+0.587*d[i+1]+0.114*d[i+2])*gain); }
+  let shine=0; const La=[],Aa=[];
+  for(let p=0,i=0;p<N;p++,i+=4){ if(!mask[p])continue; const r=Math.min(255,d[i]*gain),g=Math.min(255,d[i+1]*gain),b=Math.min(255,d[i+2]*gain); const hsv=rgb2hsv(r,g,b); if(hsv[2]>0.82&&hsv[1]<0.22)shine++; const lab=rgb2lab(r,g,b); La.push(lab[0]); Aa.push(lab[1]); }
   // 광택/피지: 정반사(하이라이트) 비율
   const sebum=cl01(shine/skin/0.22);
   // 홍조: Lab a* 중앙값 + 붉은 픽셀 비율
@@ -316,11 +312,11 @@ function analyzeZone(canvas){
   // 모공/블랙헤드: 주변보다 유의하게 어두운 국소 최소점 밀도
   let pores=0, cnt=0;
   const rad=2;
-  for(let y=rad;y<H-rad;y++)for(let x=rad;x<W-rad;x++){ const idx=(y*W+x)*4; const r=Math.min(255,d[idx]*wb[0]),g=Math.min(255,d[idx+1]*wb[1]),b=Math.min(255,d[idx+2]*wb[2]); if(!isSkin(r,g,b))continue; cnt++; let sum=0,k=0; for(let dy=-rad;dy<=rad;dy++)for(let dx=-rad;dx<=rad;dx++){ sum+=gl[(y+dy)*W+(x+dx)]; k++; } const nb=sum/k; if(gl[y*W+x] < nb-16) pores++; }
+  for(let y=rad;y<H-rad;y++)for(let x=rad;x<W-rad;x++){ const p=y*W+x; if(!mask[p])continue; cnt++; let sum=0,k=0; for(let dy=-rad;dy<=rad;dy++)for(let dx=-rad;dx<=rad;dx++){ sum+=gl[(y+dy)*W+(x+dx)]; k++; } if(gl[p] < sum/k-16) pores++; }
   const pore=cl01((cnt?pores/cnt:0)/0.10);
   // 잔주름: 국소 대비의 방향성(수평 에지)이 강하면 라인 신호
   let hEdge=0, eCnt=0;
-  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){ const p=y*W+x; const gy=Math.abs(gl[p+W]-gl[p-W]); const gx=Math.abs(gl[p+1]-gl[p-1]); if(gy>12&&gy>gx*1.3){ hEdge++; } eCnt++; }
+  for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++){ const p=y*W+x; if(!mask[p])continue; const gy=Math.abs(gl[p+W]-gl[p-W]); const gx=Math.abs(gl[p+1]-gl[p-1]); if(gy>12&&gy>gx*1.3)hEdge++; eCnt++; }
   const lines=cl01((eCnt?hEdge/eCnt:0)/0.09);
   return{sebum,pore,texture,redness,tone,lines,dark,skinFrac,weak:false};
 }
