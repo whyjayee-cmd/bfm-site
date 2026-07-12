@@ -468,12 +468,9 @@ function loopRegion(){const v=$('#video'),pill=$('#coachPill'),txt=$('#coachText
     brL/=nL||1;brR/=nR||1;const br=(brL+brR)/2,clipR=clip/(tot||1),skinR=skin/(tot||1);
     const lap=laplacianVar(toGray(d,100,128),100,128);
     // T존에서 '사람 얼굴' 검증 (강아지·벽·손 차단)
-    let faceMissing=false;
-    if(stepMode==='tzone'&&detLive){try{faceMissing=(((detLive.detectForVideo(v,performance.now())||{}).detections)||[]).length===0;}catch(e){}}
+    /* T존 얼굴검증 제거: 클로즈업엔 온전한 얼굴이 안 잡히고 갤럭시 MediaPipe도 0 반환 → 피부비율(skinR)로 사람/벽 구분 */
     let reason=null;
-    if(stepMode==='tzone'&&!detLive&&!detFailed)reason='사람 확인 준비 중…';
-    else if(faceMissing)reason='얼굴이 안 보여요 — 이마·눈이 화면에 오게';
-    else if(br<42)reason='너무 어두워요 — 밝은 곳으로';
+    if(br<42)reason='너무 어두워요 — 밝은 곳으로';
     else if(br<58)reason='조금 어두워요 — 빛을 더 받게';
     else if(clipR>0.10||br>222)reason='빛이 너무 세요 — 창·조명 정면을 피해요';
     else if(Math.abs(brL-brR)>30)reason='빛이 한쪽에 치우쳤어요 — 정면에서 받게';
@@ -568,8 +565,7 @@ async function runFace(canvas){
 $('#pickFile').onclick=()=>{stepMode='tzone';$('#fileInput').click();};
 $('#fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.target.value='';
   const handle=async c=>{if(stepMode==='face'){runFace(c);return;}
-    if(stepMode==='tzone'){let hasFace=true;try{const lm=await getLandmarker();hasFace=(((lm.detect(c)||{}).faceLandmarks)||[]).length>0;}catch(e){}
-      if(!hasFace){goRegionRetake('tzone','사람 얼굴이 안 보여요 — 얼굴이 나온 사진을 올려주세요');return;}}
+    /* T존 얼굴검증 제거(클로즈업+갤럭시 대응): 아래 skinRatio 검사로 사람/벽 구분 */
     storeRegion(stepMode,c);const rd=regionData[stepMode];if(rd.q<0.35||rd.lap<45||rd.skinRatio<0.45)goRegionRetake(stepMode);else nextAfterRegion();};
   try{const bmp=await createImageBitmap(f,{imageOrientation:'from-image'});const c=document.createElement('canvas'),W=Math.min(720,bmp.width||640),H=Math.round(W*((bmp.height||480)/(bmp.width||640)));c.width=W;c.height=H;c.getContext('2d',{willReadFrequently:true}).drawImage(bmp,0,0,W,H);handle(c);}
   catch(err){const img=new Image();img.onload=()=>handle(imageToCanvas(img));img.src=URL.createObjectURL(f);}};
