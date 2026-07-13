@@ -51,7 +51,7 @@ h1 .ac{color:var(--accent)}
 .cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
 .oval{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.oval svg{width:74%;max-width:300px}
 .coach{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;pointer-events:none}
-.coach .pill{background:rgba(8,9,11,.82);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.coach .pill{background:rgba(8,9,11,.82);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
 .coach .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--warn)}
 .coach .pill.ready .dot{background:var(--ok)}.coach .pill.ready{color:#bff0d6;border-color:rgba(70,201,139,.5)}
 
@@ -125,12 +125,12 @@ canvas#work{display:none}
         <div class="g"><span class="c">2</span><span><b>밝은 곳</b>에서, 직사광·플래시는 피해요.</span></div>
         <div class="g"><span class="c">3</span><span>안경·마스크는 벗고, <b>이마</b>가 보이게.</span></div>
       </div>
-      <div class="inapp" id="inappMsg"><b>인스타그램 앱 안에서 열렸어요.</b><br>아래 <b>셀카로 분석 시작</b>을 누르면 휴대폰 카메라로 바로 찍을 수 있어요.</div>
+      <div class="inapp" id="inappMsg"><b>인스타그램 앱 안에서 열렸어요.</b><br>아래 <b>셀카로 바로 찍기</b>를 누르면 휴대폰 카메라로 바로 찍을 수 있어요.</div>
       <div class="err" id="introErr"></div>
     </div>
     <div class="foot">
-      <button class="btn" id="pickFile">셀카로 분석 시작</button>
-      <button class="btn ghost sm" id="startCam" style="display:none">실시간 가이드로 촬영</button>
+      <button class="btn" id="startCam">가이드로 촬영 시작</button>
+      <button class="btn ghost sm" id="pickFile">셀카로 바로 찍기</button>
       <button class="linkbtn" id="skipPhoto">사진 없이 설문만 할게요 →</button>
     </div>
     <input type="file" id="fileInput" accept="image/*" capture="user" style="display:none" />
@@ -235,7 +235,8 @@ const ua=navigator.userAgent||'';
 const inApp=/Instagram|FBAN|FBAV|FB_IAB|KAKAOTALK|NAVER|Line\//i.test(ua);
 if(inApp)$('#inappMsg').classList.add('on');
 try{if(window.parent!==window)document.documentElement.style.setProperty('--hostoff','110px');}catch(e){}
-if(!inApp&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)$('#startCam').style.display='';
+/* 가이드 촬영이 메인(유도). 라이브 카메라 불가(인앱 등)면 가이드 숨기고 셀카를 메인 버튼으로 승격 */
+if(inApp||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$('#startCam').style.display='none';$('#pickFile').className='btn';}
 
 let faceResult=null, capCanvas=null, Q=[], ans=[], qi=0, primeText='';
 
@@ -289,13 +290,13 @@ function analyzeROI(ctx,fx,fy,fw,fh,roi,wb){const cw=ctx.canvas.width,ch=ctx.can
 
 /* ===== v2 부위 촬영 검증 파라미터 (★팀 캘리브레이션 — 여기 숫자만 조정) ===== */
 const VF={
-  brDark:52, brDim:60, brHot:224, clipLive:0.10, clipHot:0.12, unevenLR:34, // 조명
-  skinFar:0.45,        // 느슨한 피부비율 < → 너무 멀다
-  faceSkinMin:0.30,    // 얼굴피부(색도)비율 < → 피부/얼굴 아님(벽·물체)
-  lapBlur:42,          // 라플라시안 분산 < → 초점 안 맞음
-  motionMax:10,        // 프레임간 평균 밝기차 > → 흔들림(대기)
-  symBlock:0.30, symCoach:0.44, // 좌우 구조대칭(T존·코): 아주 낮으면 차단, 낮으면 코칭
-  readyFrames:5        // 연속 양호 프레임 → 촬영 허용
+  brDark:44, brDim:50, brHot:232, clipLive:0.16, clipHot:0.18, unevenLR:48, // 조명(완화 — 인식 덜 민감하게)
+  skinFar:0.30,        // 느슨한 피부비율(완화)
+  faceSkinMin:0.16,    // 얼굴피부(색도)비율(완화 — 벽만 걸러낼 정도)
+  lapBlur:26,          // 초점(완화 — 웬만하면 통과)
+  motionMax:20,        // 흔들림(완화)
+  symBlock:0.15, symCoach:0.30, // 좌우대칭(완화 — 거의 차단 안 함)
+  readyFrames:3        // 더 빨리 촬영 허용
 };
 /* 얼굴 피부 색도 판정 — 정규화 rg-chromaticity. 피부톤 넓게 허용, 회색·무채색·엉뚱한 색 거름 */
 function isFaceSkin(r,g,b){const s=r+g+b;if(s<95)return false;const nr=r/s,ng=g/s,nb=b/s;
@@ -486,7 +487,7 @@ async function startCamera(mode='face'){stepMode=mode;show('#s-cam');
     v.style.transform=mode==='face'?'scaleX(-1)':'scaleX(-1) scale('+RZOOM+')';
     if(mode==='face'){loopGuide();if(!detLive)getDetector().then(d=>{detLive=d;}).catch(()=>{detFailed=true;});}
     else{if(!detLive)getDetector().then(d=>{detLive=d;}).catch(()=>{detFailed=true;});loopRegion();}
-  }catch(e){stopCamera();show('#s-intro');$('#introErr').classList.add('on');$('#introErr').textContent='카메라를 열 수 없어요. 권한을 허용했는지 확인하거나, 위의 ‘셀카로 분석 시작’으로 진행하세요.';}}
+  }catch(e){stopCamera();show('#s-intro');$('#introErr').classList.add('on');$('#introErr').textContent='카메라를 열 수 없어요. 권한을 허용했는지 확인하거나, 위의 ‘셀카로 바로 찍기’으로 진행하세요.';}}
 function loopRegion(){const v=$('#video'),pill=$('#coachPill'),txt=$('#coachText'),c=$('#work'),cx=c.getContext('2d',{willReadFrequently:true});let okRun=0;prevTiny=null;faceSeen=false;
   function step(){if(stepMode==='face')return;if(!v.videoWidth){txt.textContent='카메라 켜는 중…';rafId=requestAnimationFrame(step);return;}
     const zs=1/RZOOM,zw=v.videoWidth*zs,zh=v.videoHeight*zs,zx=(v.videoWidth-zw)/2,zy=(v.videoHeight-zh)/2;
@@ -520,7 +521,7 @@ function loopRegion(){const v=$('#video'),pill=$('#coachPill'),txt=$('#coachText
 function stopCamera(){if(rafId)cancelAnimationFrame(rafId);rafId=null;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}}
 function loopGuide(){const v=$('#video'),pill=$('#coachPill'),txt=$('#coachText'),c=$('#work'),cx=c.getContext('2d',{willReadFrequently:true});const t0=performance.now();
   function step(){if(stepMode!=='face')return;
-    if(!v.videoWidth){txt.textContent=performance.now()-t0>7000?'카메라가 응답하지 않아요 — 취소 후 ‘셀카로 분석 시작’으로':'카메라 켜는 중…';rafId=requestAnimationFrame(step);return;}
+    if(!v.videoWidth){txt.textContent=performance.now()-t0>7000?'카메라가 응답하지 않아요 — 취소 후 ‘셀카로 바로 찍기’으로':'카메라 켜는 중…';rafId=requestAnimationFrame(step);return;}
     let msg='',good=false;const det=detLive;
     if(det){const r=det.detectForVideo(v,performance.now()).detections||[];
       if(r.length===0)msg='얼굴이 보이지 않아요';else if(r.length>1)msg='얼굴이 하나만 보이게';
