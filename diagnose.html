@@ -247,7 +247,7 @@ const GUIDES={
  cheek:'<svg viewBox="0 0 300 380" fill="none"><path d="M108 80 Q150 58 192 80 Q150 100 108 80 Z" stroke="rgba(91,141,239,.65)" stroke-width="2.5" stroke-dasharray="6 6"/><circle cx="150" cy="80" r="8" stroke="rgba(91,141,239,.55)" stroke-width="2"/><text x="150" y="122" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="13" font-weight="700" font-family="inherit">눈이 여기 오게</text><circle cx="150" cy="232" r="104" stroke="rgba(255,255,255,.7)" stroke-width="3" stroke-dasharray="9 9"/></svg>',
  nose:'<svg viewBox="0 0 300 380" fill="none"><path d="M76 86 Q101 70 126 86 Q101 100 76 86 Z" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="6 6"/><path d="M174 86 Q199 70 224 86 Q199 100 174 86 Z" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="6 6"/><text x="150" y="66" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="13" font-weight="700" font-family="inherit">눈은 위에 걸치게</text><path d="M150 112 C137 112 130 134 130 178 L130 246 C130 276 119 287 108 298 C126 316 174 316 192 298 C181 287 170 276 170 246 L170 178 C170 134 163 112 150 112 Z" stroke="rgba(255,255,255,.7)" stroke-width="3" stroke-dasharray="9 9"/></svg>'
 };
-const RZOOM=1.7; // 부위 촬영 디지털 줌 배율 (고정초점 대응)
+const RZOOM=1; // 자동 줌인 제거(사용자 요청 2026-07-12) — 화면 확대·중앙크롭 없이 전체화면. 1로 두면 scale(1)·크롭 전체프레임이라 로직 그대로 안전
 const RSTEP={
  tzone:{label:'T존 클로즈업',coach:'이마·콧대를 T자 점선에 맞춰요',next:'cheek'},
  cheek:{label:'볼 클로즈업',coach:'볼을 원 안에 — 눈이 위 표시에',next:'nose'},
