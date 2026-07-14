@@ -48,7 +48,13 @@
 #bfm-result .igef{flex:none;font-size:12px;color:var(--accent2);background:rgba(91,141,239,.1);border:1px solid rgba(91,141,239,.24);padding:7px 11px;border-radius:99px;text-align:center}
 #bfm-result .ig p{margin-top:14px;font-size:14px;color:var(--mut);line-height:1.7}
 #bfm-result .iglvl{margin-top:16px;height:6px;border-radius:99px;background:#1c2230;overflow:hidden}
-#bfm-result .iglvl i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#83a8ff)}
+#bfm-result .iglvl i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#83a8ff);transition:width .9s cubic-bezier(.2,.7,.2,1)}
+#bfm-result .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+#bfm-result .fpill{font-family:inherit;font-size:12.5px;font-weight:400;color:var(--mut);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;transition:border-color .2s,color .2s,background .2s,transform .15s}
+#bfm-result .fpill:hover{border-color:rgba(91,141,239,.45);color:#cfe0ff;transform:translateY(-1px)}
+#bfm-result .fpill.on{color:#eaf1ff;border-color:rgba(91,141,239,.65);background:rgba(91,141,239,.14)}
+#bfm-result .pilldesc{margin-top:14px;background:var(--panel);border:1px solid rgba(91,141,239,.32);border-radius:12px;padding:14px 16px;font-size:13.5px;color:var(--mut);line-height:1.65}
+#bfm-result .pdN{display:block;color:var(--ink);font-weight:500;margin-bottom:4px}
 /* formulation */
 #bfm-result .f3{display:flex;flex-direction:column;gap:14px;margin-top:30px}
 #bfm-result .fi{display:flex;gap:16px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
@@ -149,24 +155,18 @@
 
   <!-- KEY ACTIVES -->
   <div class="sec"><div class="wrap">
-    <span class="eyebrow">Key Actives · 핵심 활성</span>
+    <span class="eyebrow">Key 4 · 핵심 성분</span>
     <div class="iglist coreList"></div>
-  </div></div>
-
-  <!-- SUPPORT -->
-  <div class="sec"><div class="wrap">
-    <span class="eyebrow">Support · 보조 케어</span>
-    <div class="iglist subList"></div>
+    <p class="fullnote" style="border-top:0;padding:12px 0 0">막대는 전성분 표기 순서(함량순 표기 원칙) 기준의 상대 위치입니다.</p>
   </div></div>
 
   <!-- FULL INGREDIENTS · 전성분 -->
   <div class="sec"><div class="wrap">
-    <span class="eyebrow rv">Full Ingredients · 전성분</span>
-    <details class="fullwrap rv">
-      <summary>이 처방의 전성분 전체 보기 <span class="cnt"></span></summary>
-      <p class="fulllist"></p>
-      <p class="fullnote">※ 위 성분은 함량 순으로 표기된 실제 전성분입니다. 개봉 후 사용기한·주의사항은 제품 용기·박스 표기를 따르세요.</p>
-    </details>
+    <span class="eyebrow">Full Ingredients · 전성분</span>
+    <p class="lead" style="margin-top:10px;font-size:13.5px">전체 <span class="cnt2">—</span> · 함량 순 표기 · 성분을 탭하면 역할 설명이 표시됩니다.</p>
+    <div class="pills"></div>
+    <div class="pilldesc" hidden><b class="pdN"></b><span class="pdR"></span></div>
+    <p class="fullnote" style="border-top:0">※ 함량 순으로 표기된 실제 전성분입니다. 개봉 후 사용기한·주의사항은 제품 용기·박스 표기를 따르세요.</p>
   </div></div>
 
   <!-- FORMULATION -->
@@ -211,9 +211,9 @@
 (function(){
   var root=document.getElementById('bfm-result');
   var P={
-    eternal:{en:'ETERNAL MAN',ko:'이터널맨',tag:'유분·번들거림을 단정하게 다스리는 타입',fno:32,key:'oily'},
-    neat:{en:'NEAT MAN',ko:'니트맨',tag:'속당김·각질을 매끈하게 채우는 타입',fno:17,key:'dry'},
-    renaissance:{en:'RENAISSANCE MAN',ko:'르네상스맨',tag:'자극·트러블을 맑게 진정시키는 타입',fno:48,key:'trouble'}
+    a:{en:'건성',ko:'타입 A',tag:'수분 부족한 피부를 매끈하게 채우는 처방',fno:17,key:'dry'},
+    b:{en:'지성',ko:'타입 B',tag:'유분·번들거림을 단정하게 다스리는 처방',fno:32,key:'oily'},
+    c:{en:'복합',ko:'타입 C',tag:'유분과 자극을 함께 다스리는 처방',fno:48,key:'trouble'}
   };
   var ING={
     oily:{core:[
@@ -246,20 +246,33 @@
     trouble:'정제수, 부틸렌글라이콜, 다이카프릴릴카보네이트, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 카프릴릭/카프릭트라이글리세라이드, 병풀추출물, 약모밀추출물, 베타인, 식물성스쿠알란, 호호바씨오일, 세테아릴올리베이트, 솔비탄올리베이트, 토코페릴아세테이트, 장엽대황뿌리추출물, 황련뿌리추출물, 뽕나무잎추출물, 도둑놈의지팡이뿌리추출물, 은행나무잎추출물, 다이프로필렌글라이콜, 4-터피네올, 세라마이드엔피, 판테놀, 알란토인, 알로에베라잎추출물, 다이포타슘글리시리제이트, 마데카소사이드, 아시아티코사이드, 아시아틱애씨드, 마데카식애씨드, 하이드로제네이티드레시틴, 동백나무씨오일, 리놀레익애씨드, 에틸헥실글리세린, 하이드록시아세토페논, 암모늄아크릴로일다이메틸타우레이트/브이피코폴리머, 잔탄검, 실리카, 시트릭애씨드, 다이소듐이디티에이',
     dry:'정제수, 카프릴릭/카프릭트라이글리세라이드, 부틸렌글라이콜, 글리세린, 식물성스쿠알란, 나이아신아마이드, 메틸트라이메티콘, 1,2-헥산다이올, 베타인, 판테놀, 해바라기씨오일, 마카다미아씨오일, 호호바씨오일, 폴리글리세릴-2스테아레이트, 글리세릴스테아레이트, 스테아릴알코올, 황금추출물, 글리세릴글루코사이드, 글루코오스, 줄작두콩씨추출물, 돌콩추출물, 렌틸콩씨추출물, 칡뿌리추출물, 녹두씨추출물, 캐롭씨추출물, 락토바실러스발효용해물, 세라마이드엔피, 동백나무씨오일, 리놀레익애씨드, C12-16알코올, 하이드로제네이티드레시틴, 팔미틱애씨드, C14-22알코올, C12-20알킬글루코사이드, 알로에베라잎추출물, 다이포타슘글리시리제이트, 토코페릴아세테이트, 에틸헥실글리세린, 알란토인, 잔탄검, 암모늄아크릴로일다이메틸타우레이트/브이피코폴리머, 아데노신, 하이드록시아세토페논, 다이소듐이디티에이'
   };
-  var t=(root.dataset.type||'').toLowerCase();
-  if(!P[t]){ var u=(new URLSearchParams(location.search).get('type')||'').toLowerCase(); var m={oily:'eternal',dry:'neat',trouble:'renaissance'}; t=m[u]||u; if(!P[t])t='eternal'; }
+  var m={oily:'b',dry:'a',trouble:'c',eternal:'b',neat:'a',renaissance:'c'};
+  var t=(root.dataset.type||'').toLowerCase();t=m[t]||t;
+  if(!P[t]){ var u=(new URLSearchParams(location.search).get('type')||'').toLowerCase(); t=m[u]||u; if(!P[t])t='b'; }
   var p=P[t], ig=ING[p.key];
   root.querySelector('.fno').textContent=String(p.fno).padStart(2,'0');
   root.querySelector('.pc-en').textContent=p.en;
   root.querySelector('.pc-ko').textContent=p.ko;
   root.querySelector('.pc-tag').textContent=p.tag;
-  function card(i,idx){var L='ABCDEFGHIJ'.charAt(idx);var lv=[94,86,79,72,66,60][idx]||60;return '<div class="ig"><span class="igidx">'+String(idx+1).padStart(2,'0')+'</span><div class="igr"><div class="ignm">성분 '+L+'</div><div class="igef">'+i.ef+'</div></div><div class="iglvl"><i style="width:'+lv+'%"></i></div><p>'+i.d+'</p></div>';}
-  root.querySelector('.coreList').innerHTML=ig.core.map(card).join('');
-  root.querySelector('.subList').innerHTML=ig.sub.map(function(i,x){return card(i,ig.core.length+x);}).join('');
-  /* 전성분 채우기 */
-  var full=FULL[p.key]||'';
-  root.querySelector('.fulllist').textContent=full;
-  root.querySelector('.cnt').textContent='('+full.split(',').length+'종)';
+  /* 핵심 4 성분 — 용량 게이지(전성분 표기 순서 기반) */
+  var fullArr=(FULL[p.key]||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
+  function fidx(nm){var n=String(nm).replace(/\s/g,'');for(var i2=0;i2<fullArr.length;i2++){var a=fullArr[i2].replace(/\s/g,'');if(!a)continue;if(a.indexOf(n)>=0||n.indexOf(a)>=0)return i2;}return -1;}
+  var key4=ig.core.concat(ig.sub).slice(0,4);
+  function card(i,idx){var L='ABCD'.charAt(idx);var pos=fidx(i.nm);
+    var lv=pos>=0?Math.max(18,Math.round(94-(pos/Math.max(1,fullArr.length-1))*80)):[88,74,62,52][idx];
+    return '<div class="ig"><span class="igidx">'+String(idx+1).padStart(2,'0')+'</span><div class="igr"><div class="ignm">성분 '+L+'</div><div class="igef">'+i.ef+'</div></div><div class="iglvl"><i style="width:'+lv+'%"></i></div><p>'+i.d+'</p></div>';}
+  root.querySelector('.coreList').innerHTML=key4.map(card).join('');
+  /* 전성분 — 타원 칩, 탭하면 설명 */
+  var ROLE={'정제수':'제품의 베이스가 되는 용제','부틸렌글라이콜':'보습·성분 용해 보조','글리세린':'수분을 끌어당기는 보습제','1,2-헥산다이올':'보존 보조·보습','카프릴릭/카프릭트라이글리세라이드':'가볍게 발리는 피부 유연 오일','다이카프릴릴카보네이트':'산뜻한 에몰리언트 오일','식물성스쿠알란':'피부와 닮은 보습 오일','호호바씨오일':'유수분 밸런스 보습 오일','해바라기씨오일':'지질 보급 보습 오일','마카다미아씨오일':'피부 유연 보습 오일','동백나무씨오일':'윤기·보습 오일','베타인':'수분·진정 보조','판테놀':'진정·보습(프로비타민 B5)','알란토인':'피부 컨디셔닝·진정','세라마이드엔피':'피부 장벽 지질','토코페릴아세테이트':'항산화(비타민 E 유도체)','잔탄검':'점도 조절(제형 안정)','실리카':'피지 흡착·보송한 사용감','아데노신':'주름 개선 기능성 성분','다이소듐이디티에이':'제형 안정화(금속이온 봉쇄)','하이드록시아세토페논':'항산화·보존 보조','에틸헥실글리세린':'컨디셔닝·보존 보조','세테아릴올리베이트':'올리브 유래 천연 유화제','솔비탄올리베이트':'올리브 유래 천연 유화제','하이드로제네이티드레시틴':'유화·흡수 보조','리놀레익애씨드':'피부 지질 보급(오메가6)','암모늄아크릴로일다이메틸타우레이트/브이피코폴리머':'점도·제형 안정 폴리머','다이프로필렌글라이콜':'용제·보습 보조','메틸트라이메티콘':'가벼운 발림성 향상 실리콘','글루코오스':'보습 보조(당류)','시트릭애씨드':'pH 조절','스테아릴알코올':'제형 경도 조절 지방알코올','글리세릴스테아레이트':'유화제','폴리글리세릴-2스테아레이트':'유화제','팔미틱애씨드':'제형 보조 지방산','C12-16알코올':'제형 보조','C14-22알코올':'유화 보조','C12-20알킬글루코사이드':'유화 보조','알로에베라잎추출물':'수분·진정 식물 추출물','다이포타슘글리시리제이트':'감초 유래 진정 성분','은행나무잎추출물':'식물 유래 컨디셔닝','징크피씨에이':'아연 유래 피지 밸런싱','글리세릴글루코사이드':'속 수분 충전 보습 성분','락토바실러스발효용해물':'유산균 발효 컨디셔닝','글로코노락톤':'각질 결 정돈(PHA)','나이아신아마이드':'피지·톤 케어 활성(비타민 B3)','4-터피네올':'티트리 유래 트러블 케어 활성'};
+  var CURATED={};ig.core.concat(ig.sub).forEach(function(i){CURATED[String(i.nm).replace(/\s/g,'')]=i.d;});
+  function roleOf(name){var n=name.replace(/\s/g,'');for(var k in CURATED){if(n.indexOf(k)>=0||k.indexOf(n)>=0)return CURATED[k];}if(ROLE[name])return ROLE[name];for(var k2 in ROLE){if(n.indexOf(k2.replace(/\s/g,''))>=0)return ROLE[k2];}if(/추출물|오일|꽃수|잎수/.test(name))return '식물 유래 컨디셔닝 성분';return '제형 안정·사용감을 위한 보조 성분';}
+  var pillsEl=root.querySelector('.pills');
+  if(pillsEl){pillsEl.innerHTML=fullArr.map(function(n){return '<button type="button" class="fpill">'+n+'</button>';}).join('');
+    var pd=root.querySelector('.pilldesc'),pdN=root.querySelector('.pdN'),pdR=root.querySelector('.pdR');
+    pillsEl.addEventListener('click',function(e){var b2=e.target.closest('.fpill');if(!b2)return;
+      var on=pillsEl.querySelector('.fpill.on');if(on)on.classList.remove('on');b2.classList.add('on');
+      pdN.textContent=b2.textContent;pdR.textContent=roleOf(b2.textContent);pd.hidden=false;});
+    var c2=root.querySelector('.cnt2');if(c2)c2.textContent=fullArr.length+'종';}
 
   /* ── ✦ 스크롤 등장(리빌) : 섹션·카드에 순차 페이드업 ── */
   var targets=[];

@@ -17,34 +17,35 @@ body{font-size:16px;line-height:1.6}
 .wrap{max-width:480px;margin:0 auto;padding:0 20px;min-height:calc(100vh - var(--hostoff,0px));min-height:calc(100dvh - var(--hostoff,0px));display:flex;flex-direction:column}
 a{color:inherit;text-decoration:none}
 .top{flex:none;display:flex;align-items:center;justify-content:space-between;height:56px}
-.brand{font-weight:800;font-size:21px;letter-spacing:-.04em}.brand i{font-style:normal;color:var(--accent)}
-.top .step{font-size:12.5px;color:var(--mut);font-weight:700}
+.brand{font-weight:500;font-size:21px;letter-spacing:-.04em}.brand i{font-style:normal;color:var(--accent)}
+.top .step{font-size:12.5px;color:var(--mut);font-weight:500}
 .prog{height:5px;border-radius:99px;background:var(--panel);overflow:hidden}
 .prog .fl{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#83a8ff);width:25%;transition:width .35s cubic-bezier(.2,.8,.2,1)}
 h1{font-size:27px;font-weight:500;letter-spacing:-.03em;margin:0;line-height:1.22}
+b,strong{font-weight:500}
 h1 .ac{color:var(--accent)}
 .sub{color:var(--mut);font-size:15px;margin-top:12px}
 .eyebrow{font-size:11.5px;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;font-weight:800;font-size:16.5px;padding:17px;border-radius:14px;background:var(--accent);color:#fff;border:0;cursor:pointer;font-family:inherit;box-shadow:0 10px 26px -10px rgba(91,141,239,.7)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;font-weight:500;font-size:16.5px;padding:17px;border-radius:14px;background:var(--accent);color:#fff;border:0;cursor:pointer;font-family:inherit;box-shadow:0 10px 26px -10px rgba(91,141,239,.7)}
 .btn:disabled{opacity:.45;box-shadow:none}.btn:active:not(:disabled){transform:scale(.985)}
 .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
 .btn.sm{padding:13px;font-size:15px}
-.linkbtn{background:0;border:0;color:var(--mut);font-family:inherit;font-size:14px;cursor:pointer;padding:10px;width:100%;text-align:center;font-weight:600}
+.linkbtn{background:0;border:0;color:var(--mut);font-family:inherit;font-size:14px;cursor:pointer;padding:10px;width:100%;text-align:center;font-weight:500}
 .screen{flex:1;display:none;flex-direction:column;padding-bottom:calc(20px + var(--safe-b))}
 .screen.on{display:flex}.grow{flex:1;overflow-y:auto;min-height:0}
 .note{font-size:12.5px;color:var(--mut-2);text-align:center;margin-top:10px}
 .foot{flex:none;display:flex;flex-direction:column;gap:8px;padding-top:14px}
 
 .privacy{margin-top:18px;background:rgba(91,141,239,.07);border:1px solid rgba(91,141,239,.25);border-radius:14px;padding:15px 16px;display:flex;gap:11px;align-items:flex-start}
-.privacy .i{flex:none;width:26px;height:26px;border-radius:8px;background:rgba(91,141,239,.16);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.privacy .i{flex:none;width:26px;height:26px;border-radius:8px;background:rgba(91,141,239,.16);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px}
 .privacy b{font-size:14px;font-weight:400}.privacy p{margin:3px 0 0;font-size:13px;color:var(--mut)}
 .guides{margin-top:18px;display:flex;flex-direction:column;gap:9px}
 .guides .g{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--mut)}
 .guides .g b{color:var(--ink);font-weight:400}
-.guides .g .c{flex:none;width:22px;height:22px;border-radius:7px;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:12px;font-weight:800}
+.guides .g .c{flex:none;width:22px;height:22px;border-radius:7px;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:12px;font-weight:500}
 /* 인트로 압축 — CTA가 스크롤 없이 보이게 */
 #s-intro .sub{margin-top:8px}#s-intro .privacy{margin-top:11px;padding:11px 14px}#s-intro .guides{margin-top:11px;gap:6px}#s-intro h1{font-size:25px}
-.inapp{margin-top:16px;background:rgba(226,180,91,.1);border:1px solid rgba(226,180,91,.35);border-radius:13px;padding:14px;font-size:13.5px;color:#e8d3a6;display:none}.inapp.on{display:block}.inapp b{color:#f2e3c0;font-weight:600}
+.inapp{margin-top:16px;background:rgba(226,180,91,.1);border:1px solid rgba(226,180,91,.35);border-radius:13px;padding:14px;font-size:13.5px;color:#e8d3a6;display:none}.inapp.on{display:block}.inapp b{color:#f2e3c0;font-weight:500}
 .err{margin-top:14px;font-size:13.5px;color:#e8b3a6;background:rgba(226,114,91,.1);border:1px solid rgba(226,114,91,.3);border-radius:12px;padding:13px;display:none}.err.on{display:block}
 
 .cam{position:relative;flex:1;border-radius:20px;overflow:hidden;background:#000;margin-top:6px;min-height:380px}
@@ -60,7 +61,7 @@ h1 .ac{color:var(--accent)}
 .rgthumbs .th{flex:1;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);position:relative}
 .rgthumbs .th img{display:block;width:100%;height:76px;object-fit:cover}
 .rgthumbs .th .lb{position:absolute;left:0;right:0;bottom:0;font-size:10.5px;font-weight:500;text-align:center;padding:3px 0;background:rgba(8,9,11,.72)}
-.rgthumbs .th .lq{position:absolute;top:5px;right:5px;font-size:9.5px;font-weight:600;background:rgba(226,180,91,.92);color:#1a1508;border-radius:6px;padding:2px 5px}
+.rgthumbs .th .lq{position:absolute;top:5px;right:5px;font-size:9.5px;font-weight:500;background:rgba(226,180,91,.92);color:#1a1508;border-radius:6px;padding:2px 5px}
 .rgthumbs .th::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(130,175,255,.95),transparent);box-shadow:0 0 10px rgba(91,141,239,.7);animation:thscan 1.7s ease-out .25s both}
 @keyframes thscan{0%{top:0;opacity:0}12%{opacity:1}86%{opacity:1}100%{top:74px;opacity:0}}
 
@@ -77,18 +78,18 @@ h1 .ac{color:var(--accent)}
 /* retake */
 .retake{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
 .retake .ic{width:64px;height:64px;border-radius:18px;background:rgba(226,180,91,.14);border:1px solid rgba(226,180,91,.4);display:flex;align-items:center;justify-content:center;font-size:30px}
-.retake h2{font-size:22px;font-weight:800;letter-spacing:-.02em}.retake p{color:var(--mut);font-size:15px;margin:0;max-width:300px}
+.retake h2{font-size:22px;font-weight:500;letter-spacing:-.02em}.retake p{color:var(--mut);font-size:15px;margin:0;max-width:300px}
 
 .analyze{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
 .spinner{width:50px;height:50px;border-radius:50%;border:4px solid var(--line);border-top-color:var(--accent);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* survey */
-.qsec{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.qsec{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 .prime{margin:12px 0 0;background:rgba(91,141,239,.09);border:1px solid rgba(91,141,239,.28);border-radius:12px;padding:12px 14px;font-size:13.5px;color:#cfe0ff;display:none}.prime.on{display:flex;gap:9px;align-items:flex-start}.prime .s{flex:none}
-.q{font-size:23px;font-weight:800;letter-spacing:-.03em;line-height:1.3;margin:14px 0 0}
+.q{font-size:23px;font-weight:500;letter-spacing:-.03em;line-height:1.3;margin:14px 0 0}
 .opts{margin-top:22px;display:flex;flex-direction:column;gap:11px}
-.opt{display:flex;align-items:center;gap:13px;background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;font-size:16px;font-weight:600;text-align:left;width:100%;font-family:inherit;color:var(--ink);transition:border-color .15s,background .15s}
+.opt{display:flex;align-items:center;gap:13px;background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;font-size:16px;font-weight:500;text-align:left;width:100%;font-family:inherit;color:var(--ink);transition:border-color .15s,background .15s}
 .opt:active{transform:scale(.99)}.opt .rd{flex:none;width:21px;height:21px;border-radius:50%;border:2px solid var(--mut-2);position:relative}
 .opt.sel{border-color:var(--accent);background:rgba(91,141,239,.08)}.opt.sel .rd{border-color:var(--accent)}.opt.sel .rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--accent)}
 .srow{flex:none;display:flex;gap:10px;padding-top:14px}.srow .btn{flex:1}.srow .btn.ghost{flex:0 0 auto;width:84px}
@@ -96,17 +97,17 @@ h1 .ac{color:var(--accent)}
 /* result */
 .persona{margin-top:8px;background:linear-gradient(165deg,#101626,#0b0d12);border:1px solid #232a3a;border-radius:20px;padding:24px;text-align:center;position:relative;overflow:hidden}
 .persona::before{content:"";position:absolute;width:240px;height:240px;background:radial-gradient(circle,rgba(91,141,239,.22),transparent 70%);top:-110px;left:50%;transform:translateX(-50%)}
-.persona .en{position:relative;font-size:12px;font-weight:800;letter-spacing:.2em;color:var(--accent)}
-.persona .nm{position:relative;font-size:38px;font-weight:850;letter-spacing:-.04em;margin-top:6px}
+.persona .en{position:relative;font-size:12px;font-weight:500;letter-spacing:.2em;color:var(--accent)}
+.persona .nm{position:relative;font-size:38px;font-weight:500;letter-spacing:-.04em;margin-top:6px}
 .persona .tg{position:relative;color:var(--mut);font-size:14.5px;margin-top:8px}
 .rep{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:12px}
 .rep .h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.rep .h .t{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.rep .h .t{font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
 .conf{display:none !important}
-.flag{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:700;color:#f0c9bf;background:rgba(226,114,91,.14);border:1px solid rgba(226,114,91,.4);padding:5px 11px;border-radius:99px}
+.flag{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:500;color:#f0c9bf;background:rgba(226,114,91,.14);border:1px solid rgba(226,114,91,.4);padding:5px 11px;border-radius:99px}
 .bar{margin-top:12px}.bar .bt{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut);margin-bottom:6px}.bar .bt b{color:var(--ink)}
 .bar .tr{height:7px;border-radius:99px;background:#1c2230;overflow:hidden}.bar .fl{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#83a8ff);width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
-.reason{margin-top:14px;border-top:1px solid var(--line);padding-top:13px;font-size:14px;color:var(--mut);line-height:1.6}.reason b{color:var(--ink);font-weight:700}
+.reason{margin-top:14px;border-top:1px solid var(--line);padding-top:13px;font-size:14px;color:var(--mut);line-height:1.6}.reason b{color:var(--ink);font-weight:500}
 .usedphoto{margin-top:11px;font-size:12px;color:var(--mut-2);display:flex;align-items:center;gap:7px}.usedphoto .d{width:6px;height:6px;border-radius:50%;background:var(--accent)}
 canvas#work{display:none}
 </style>
@@ -133,7 +134,6 @@ canvas#work{display:none}
     <div class="foot">
       <button class="btn" id="startCam">가이드로 촬영 시작</button>
       <button class="btn ghost sm" id="pickFile">셀카로 바로 찍기</button>
-      <button class="linkbtn" id="skipPhoto">사진 없이 설문만 할게요 →</button>
     </div>
     <input type="file" id="fileInput" accept="image/*" capture="user" style="display:none" />
   </section>
@@ -223,9 +223,9 @@ canvas#work{display:none}
 /* ===== 피부 타입 페르소나 (★ 이름·매핑은 사용자 확정 후 여기만 고치면 됨) =====
    underlying 분석은 {지성, 건성, 여드름} 점수 → 우세 타입을 페르소나로 표시. 제품은 BfM. */
 const PERSONAS = {
-  지성: {name:'젠틀맨',    en:'GENTLE MAN',      tag:'유분 많은 피부를 단정하게 다스리는 타입'},
-  건성: {name:'니트맨',    en:'NEAT MAN',        tag:'수분 부족한 피부를 매끈하게 채우는 타입'},
-  여드름:{name:'르네상스맨', en:'RENAISSANCE MAN', tag:'자극에 약한 피부를 맑게 되살리는 타입'},
+  지성: {name:'타입 B',  en:'지성',  tag:'유분·번들거림을 단정하게 다스리는 타입'},
+  건성: {name:'타입 A',  en:'건성',  tag:'수분 부족한 피부를 매끈하게 채우는 타입'},
+  여드름:{name:'타입 C', en:'복합',  tag:'유분과 자극을 함께 다스리는 타입'},
 };
 const TYPES=['지성','건성','여드름'];
 const $=s=>document.querySelector(s);
@@ -247,9 +247,9 @@ let faceResult=null, capCanvas=null, Q=[], ans=[], qi=0, primeText='';
 let stepMode='face', regionData={};
 const GUIDES={
  face:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="150" cy="190" rx="120" ry="158" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-dasharray="9 9"/></svg>',
- tzone:'<svg viewBox="0 0 300 380" fill="none"><path d="M48 64 H252 V150 H182 V306 H118 V150 H48 Z" stroke="rgba(255,255,255,.75)" stroke-width="3" stroke-dasharray="9 9" stroke-linejoin="round"/><path d="M62 176 Q88 164 114 174" stroke="rgba(91,141,239,.65)" stroke-width="3" stroke-dasharray="6 6"/><path d="M186 174 Q212 164 238 176" stroke="rgba(91,141,239,.65)" stroke-width="3" stroke-dasharray="6 6"/><text x="150" y="342" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="13" font-weight="700" font-family="inherit">이마·콧대를 T자에 — 눈썹은 파란 선</text></svg>',
- cheek:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="150" cy="208" rx="118" ry="128" stroke="rgba(255,255,255,.7)" stroke-width="3" stroke-dasharray="9 9"/><ellipse cx="150" cy="66" rx="30" ry="13" stroke="rgba(91,141,239,.72)" stroke-width="2.5"/><text x="150" y="43" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12.5" font-weight="700" font-family="inherit">눈</text><path d="M100 152 Q90 190 100 228" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="72" y="194" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="700" font-family="inherit">코</text><path d="M122 330 Q150 348 178 330" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="150" y="366" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="700" font-family="inherit">턱</text><text x="184" y="212" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="13" font-weight="700" font-family="inherit">볼</text></svg>',
- nose:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="50" cy="84" rx="27" ry="12" stroke="rgba(91,141,239,.65)" stroke-width="2.5"/><ellipse cx="250" cy="84" rx="27" ry="12" stroke="rgba(91,141,239,.65)" stroke-width="2.5"/><text x="150" y="56" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12.5" font-weight="700" font-family="inherit">눈은 양쪽 끝 위에</text><path d="M150 110 C136 110 129 132 129 180 L129 248 C129 278 118 289 106 300 C126 318 174 318 194 300 C182 289 171 278 171 248 L171 180 C171 132 164 110 150 110 Z" stroke="rgba(255,255,255,.72)" stroke-width="3" stroke-dasharray="9 9"/><text x="150" y="220" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="13" font-weight="700" font-family="inherit">코</text><path d="M120 344 Q150 360 180 344" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="150" y="376" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="700" font-family="inherit">턱</text></svg>'
+ tzone:'<svg viewBox="0 0 300 380" fill="none"><path d="M48 64 H252 V150 H182 V306 H118 V150 H48 Z" stroke="rgba(255,255,255,.75)" stroke-width="3" stroke-dasharray="9 9" stroke-linejoin="round"/><path d="M62 176 Q88 164 114 174" stroke="rgba(91,141,239,.65)" stroke-width="3" stroke-dasharray="6 6"/><path d="M186 174 Q212 164 238 176" stroke="rgba(91,141,239,.65)" stroke-width="3" stroke-dasharray="6 6"/><text x="150" y="342" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="13" font-weight="500" font-family="inherit">이마·콧대를 T자에 — 눈썹은 파란 선</text></svg>',
+ cheek:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="150" cy="208" rx="118" ry="128" stroke="rgba(255,255,255,.7)" stroke-width="3" stroke-dasharray="9 9"/><ellipse cx="150" cy="66" rx="30" ry="13" stroke="rgba(91,141,239,.72)" stroke-width="2.5"/><text x="150" y="43" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12.5" font-weight="500" font-family="inherit">눈</text><path d="M100 152 Q90 190 100 228" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="72" y="194" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="500" font-family="inherit">코</text><path d="M122 330 Q150 348 178 330" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="150" y="366" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="500" font-family="inherit">턱</text><text x="184" y="212" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="13" font-weight="500" font-family="inherit">볼</text></svg>',
+ nose:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="50" cy="84" rx="27" ry="12" stroke="rgba(91,141,239,.65)" stroke-width="2.5"/><ellipse cx="250" cy="84" rx="27" ry="12" stroke="rgba(91,141,239,.65)" stroke-width="2.5"/><text x="150" y="56" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12.5" font-weight="500" font-family="inherit">눈은 양쪽 끝 위에</text><path d="M150 110 C136 110 129 132 129 180 L129 248 C129 278 118 289 106 300 C126 318 174 318 194 300 C182 289 171 278 171 248 L171 180 C171 132 164 110 150 110 Z" stroke="rgba(255,255,255,.72)" stroke-width="3" stroke-dasharray="9 9"/><text x="150" y="220" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="13" font-weight="500" font-family="inherit">코</text><path d="M120 344 Q150 360 180 344" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="150" y="376" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="500" font-family="inherit">턱</text></svg>'
 };
 const RZOOM=1; // 자동 줌인 제거(사용자 요청 2026-07-12) — 화면 확대·중앙크롭 없이 전체화면. 1로 두면 scale(1)·크롭 전체프레임이라 로직 그대로 안전
 const RSTEP={
@@ -568,9 +568,9 @@ function analyzeRegionShot(c,region){const ctx=c.getContext('2d',{willReadFreque
   else if(sym<VF.symBlock&&(region==='tzone'||region==='nose'))reason='offcenter';
   return{shine:skin?shine/skin:0,redness:skin?red/skin:0,lap,bright,skinRatio,faceSkinRatio,sym,q,reason};}
 function makeThumb(c){const t=document.createElement('canvas');t.width=160;t.height=Math.round(160*c.height/c.width);t.getContext('2d').drawImage(c,0,0,t.width,t.height);return t.toDataURL('image/jpeg',0.72);}
-function storeRegion(r,c){regionData[r]={...analyzeRegionShot(c,r),thumb:makeThumb(c)};}
+function storeRegion(r,c){regionData[r]={...analyzeRegionShot(c,r),thumb:makeThumb(c),cv:c};}
 function beginRegion(r){if(!inApp&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)startCamera(r);else{stepMode=r;$('#fileInput').click();}}
-function nextAfterRegion(){const nx=RSTEP[stepMode]&&RSTEP[stepMode].next;if(nx)beginRegion(nx);else{applyRegions();showIdx();}}
+function nextAfterRegion(){const nx=RSTEP[stepMode]&&RSTEP[stepMode].next;if(nx)beginRegion(nx);else{applyRegions();regionTheater();}}
 const P100=x=>Math.round(clamp(x,0,1)*100);
 function applyRegions(){const tz=regionData.tzone,n=regionData.nose,ch=regionData.cheek;if(!tz&&!n&&!ch)return;
   const tzOilC=tz?clamp(tz.shine/0.15,0,1):null,noseOil=n?clamp(n.shine/0.15,0,1):null,pore=n?clamp((n.lap-110)/560,0,1):null;
@@ -589,6 +589,71 @@ function applyRegions(){const tz=regionData.tzone,n=regionData.nose,ch=regionDat
     redness:ch?ch.redness:(n?n.redness:0),
     idx:{tzOil:tzOilC!=null?P100(tzOilC):null,noseOil:n?P100(noseOil):null,pore:n?P100(pore):null,cheekOil:ch?P100(cheekOil):null,red:ch?P100(cheekRed):null}};}
 function idxBar(lb,v){return v==null?'':`<div class="bar"><div class="bt"><span>${lb}</span><b>${v}</b></div><div class="tr"><div class="fl" style="width:${v}%"></div></div></div>`;}
+/* ===== 부위 분석 씨어터 — 찍은 사진 위 스캔·측정 연출(실측값 기반) ===== */
+function regionTheater(){
+  const order=['tzone','cheek','nose'].filter(k=>regionData[k]&&regionData[k].cv);
+  if(!order.length){showIdx();return;}
+  show('#s-scan');$('#stepLabel').textContent='분석 중';
+  $('#scanEyebrow').textContent='분석 중';$('#sigChips').innerHTML='';
+  const tsv=$('#toSurvey');tsv.style.display='none';$('#scanStat').style.display='';
+  const cv=$('#faceCanvas'),x=cv.getContext('2d');
+  const TITLE={tzone:'T존을 읽고 있어요',cheek:'볼을 읽고 있어요',nose:'코를 읽고 있어요'};
+  const STAGES={
+   tzone:[['scan_tzone_region()','T존 스캔'],['measure_sebum_shine()','유분·광택 측정'],['map_texture_grid()','피부결 매핑']],
+   cheek:[['scan_cheek_region()','볼 스캔'],['detect_redness()','홍조·붉은기 탐지'],['measure_balance()','수분 밸런스 측정']],
+   nose:[['scan_nose_region()','코 스캔'],['analyze_pores_texture()','모공·결 분석'],['fuse_zone_signals()','존 신호 종합']]};
+  function reticle(px,py,col,age){const s=Math.min(1,age/360);if(s<=0)return;
+    x.save();x.globalAlpha=0.92*s;x.strokeStyle=col;x.lineWidth=1.3;
+    x.beginPath();x.moveTo(px-9,py);x.lineTo(px-3.5,py);x.moveTo(px+3.5,py);x.lineTo(px+9,py);x.moveTo(px,py-9);x.lineTo(px,py-3.5);x.moveTo(px,py+3.5);x.lineTo(px,py+9);x.stroke();
+    x.beginPath();x.arc(px,py,4.5,0,7);x.stroke();
+    const pr=(age%1300)/1300;x.globalAlpha=(1-pr)*0.45*s;x.beginPath();x.arc(px,py,4.5+pr*11,0,7);x.stroke();x.restore();}
+  function callout(px,py,side,col,title,val){
+    const lx=side<0?6:cv.width-6;x.save();x.globalAlpha=.9;x.strokeStyle=col;x.lineWidth=1;
+    x.beginPath();x.moveTo(px,py);x.lineTo(px+side*16,py);x.lineTo(lx,py);x.stroke();
+    x.beginPath();x.arc(px,py,2.5,0,7);x.fillStyle=col;x.fill();
+    x.font='400 10.5px Pretendard,system-ui,sans-serif';const tw=Math.max(x.measureText(title).width,x.measureText(val).width)+14;
+    const bx2=side<0?lx:lx-tw,by2=py-14;
+    x.fillStyle='rgba(8,9,11,.72)';roundRect(x,bx2,by2,tw,27,6);x.fill();x.globalAlpha=.5;x.strokeStyle=col;x.stroke();
+    x.globalAlpha=1;x.textBaseline='middle';x.textAlign='left';x.fillStyle='#cfe0ff';x.fillText(title,bx2+7,by2+9);x.fillStyle=col;x.fillText(val,bx2+7,by2+19);x.restore();}
+  let ri=0;
+  function runOne(){
+    const rk=order[ri],rd=regionData[rk],src=rd.cv;
+    $('#scanTitle').textContent=TITLE[rk];
+    const dispW=Math.min(440,$('#scanwrap').clientWidth||360),scl=dispW/src.width;
+    cv.width=dispW;cv.height=Math.round(src.height*scl);
+    const bx=cv.width*0.16,by=cv.height*0.16,bw=cv.width*0.68,bh=cv.height*0.68;
+    const shineP=P100(clamp((rd.shine||0)/0.15,0,1));
+    const redP=P100(clamp(((rd.redness||0)-0.04)/0.12,0,1));
+    const poreP=P100(clamp(((rd.lap||0)-110)/560,0,1));
+    const CALL={
+     tzone:[[0.58,bx+bw*0.5,by+bh*0.18,-1,'#5B8DEF','T-ZONE','유분 광택 '+shineP+'%']],
+     cheek:[[0.55,bx+bw*0.72,by+bh*0.45,1,(rd.redness>0.05?'#E2725B':'#46c98b'),'CHEEK',(rd.redness>0.05?'홍조 '+redP+'%':'붉은기 낮음')],[0.82,bx+bw*0.3,by+bh*0.68,-1,'#9CC1E8','MOISTURE','유분 '+shineP+'%']],
+     nose:[[0.55,bx+bw*0.5,by+bh*0.4,-1,'#9CC1E8','NOSE','모공·결 '+poreP+'%'],[0.82,bx+bw*0.5,by+bh*0.72,1,'#5B8DEF','SEBUM','유분 '+shineP+'%']]};
+    const parts=[];for(let i=0;i<18;i++)parts.push({x:bx+Math.random()*bw,y:by+bh*(0.4+Math.random()*0.6),vy:0.3+Math.random()*0.8,r:0.8+Math.random()*1.3,life:Math.random()});
+    const st=STAGES[rk];let lastS=-1,t0=null;const DUR=1700;
+    function base(){x.clearRect(0,0,cv.width,cv.height);x.drawImage(src,0,0,cv.width,cv.height);x.fillStyle='rgba(11,18,40,.14)';x.fillRect(0,0,cv.width,cv.height);}
+    function frame(ts){if(t0===null)t0=ts;const p=Math.min(1,(ts-t0)/DUR);base();
+      if(p>0.1){x.setLineDash([6,5]);x.lineDashOffset=-(performance.now()/45);x.strokeStyle='rgba(91,141,239,.85)';x.lineWidth=2;roundRect(x,bx,by,bw,bh,10);x.stroke();x.setLineDash([]);x.lineDashOffset=0;}
+      const sp=Math.min(1,Math.max(0,(p-0.05)/0.75));
+      if(p>0.05&&p<0.94){const gy=by+bh*sp;x.save();x.strokeStyle='rgba(91,141,239,.07)';x.lineWidth=1;
+        for(let gx=bx;gx<=bx+bw+1;gx+=bw/8){x.beginPath();x.moveTo(gx,by);x.lineTo(gx,Math.min(gy,by+bh));x.stroke();}
+        for(let yy=by;yy<=Math.min(gy,by+bh);yy+=bh/9){x.beginPath();x.moveTo(bx,yy);x.lineTo(bx+bw,yy);x.stroke();}x.restore();}
+      if(p>0.05&&p<0.94){const y=by+bh*sp;x.save();const g=x.createLinearGradient(0,y-30,0,y+6);g.addColorStop(0,'rgba(91,141,239,0)');g.addColorStop(.8,'rgba(91,141,239,.32)');g.addColorStop(1,'rgba(140,180,255,.5)');x.fillStyle=g;x.fillRect(0,y-30,cv.width,36);
+        x.shadowColor='rgba(91,141,239,.95)';x.shadowBlur=13;x.strokeStyle='rgba(200,222,255,.98)';x.lineWidth=2;x.beginPath();x.moveTo(0,y);x.lineTo(cv.width,y);x.stroke();x.restore();}
+      if(p>0.08&&p<0.95){x.save();for(const pt of parts){pt.y-=pt.vy;pt.life-=0.014;if(pt.life<=0||pt.y<by){pt.x=bx+Math.random()*bw;pt.y=by+bh*(0.5+Math.random()*0.5);pt.life=0.6+Math.random()*0.4;}
+        x.globalAlpha=pt.life*0.55;x.fillStyle='rgba(160,200,255,1)';x.beginPath();x.arc(pt.x,pt.y,pt.r,0,7);x.fill();}x.globalAlpha=1;x.restore();}
+      CALL[rk].forEach(c=>{if(p>c[0]){reticle(c[1],c[2],c[4],(ts-t0)-c[0]*DUR);callout(c[1],c[2],c[3],c[4],c[5],c[6]);}});
+      let si=p<0.33?0:p<0.7?1:2;
+      if(si!==lastS){$('#scanStatText').textContent=st[si][1]+' · '+st[si][0];lastS=si;}
+      if(p<1)requestAnimationFrame(frame);
+      else{ri++;if(ri<order.length)setTimeout(runOne,260);else{
+        $('#scanEyebrow').textContent='분석 완료';$('#scanTitle').textContent='부위 신호를 모두 읽었어요';
+        $('#scanStat').style.display='none';setTimeout(()=>{tsv.style.display='';showIdx();},500);}}
+    }
+    requestAnimationFrame(frame);
+  }
+  runOne();
+}
 function showIdx(){show('#s-idx');$('#stepLabel').textContent='부위 분석';
   const idx=(faceResult&&faceResult.idx)||{};const th=[];
   if(capCanvas)th.push(`<div class="th"><img src="${makeThumb(capCanvas)}"><span class="lb">얼굴</span></div>`);
@@ -630,7 +695,7 @@ $('#startCam').onclick=()=>startCamera('tzone');
 $('#shoot').onclick=()=>{if(!$('#shoot').disabled)captureStill();};
 $('#camCancel').onclick=()=>{stopCamera();if(stepMode!=='face'&&Object.keys(regionData).length){applyRegions();showIdx();}else{show('#s-intro');$('#stepLabel').textContent='AI 피부 진단';}};
 $('#regionSkip').onclick=()=>{stopCamera();nextAfterRegion();};
-$('#skipPhoto').onclick=()=>{faceResult=null;regionData={};goSurvey();};
+/* '사진 없이 설문만' 링크 제거(2026-07-14 사용자 요청) */
 $('#toSurvey').onclick=()=>beginRegion('tzone');
 $('#idxToSurvey').onclick=goSurvey;
 $('#retakeBtn').onclick=()=>{if(retakeCtx){const r=retakeCtx.region;retakeCtx=null;beginRegion(r);return;}$('#introErr').classList.remove('on');stepMode='face';if(!inApp&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)startCamera('face');else $('#fileInput').click();};
