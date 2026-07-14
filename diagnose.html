@@ -61,6 +61,8 @@ h1 .ac{color:var(--accent)}
 .rgthumbs .th img{display:block;width:100%;height:76px;object-fit:cover}
 .rgthumbs .th .lb{position:absolute;left:0;right:0;bottom:0;font-size:10.5px;font-weight:500;text-align:center;padding:3px 0;background:rgba(8,9,11,.72)}
 .rgthumbs .th .lq{position:absolute;top:5px;right:5px;font-size:9.5px;font-weight:600;background:rgba(226,180,91,.92);color:#1a1508;border-radius:6px;padding:2px 5px}
+.rgthumbs .th::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(130,175,255,.95),transparent);box-shadow:0 0 10px rgba(91,141,239,.7);animation:thscan 1.7s ease-out .25s both}
+@keyframes thscan{0%{top:0;opacity:0}12%{opacity:1}86%{opacity:1}100%{top:74px;opacity:0}}
 
 /* scan / overlay */
 .scanwrap{margin-top:8px;border-radius:20px;overflow:hidden;background:#000;position:relative;display:flex;align-items:center;justify-content:center}
@@ -163,6 +165,7 @@ canvas#work{display:none}
       <span class="eyebrow">부위별 분석 완료</span>
       <h1 style="margin-top:10px">부위에서 읽은<br>피부 <span class="ac">지수</span>예요</h1>
       <div class="rgthumbs" id="rgThumbs"></div>
+      <div class="sigchips" id="idxChips"></div>
       <div class="rep" id="idxRep"></div>
       <p class="note">0~100 상대 지수 · 촬영 조건에 따라 달라질 수 있어요 · 사진은 기기에서만 처리</p>
     </div>
@@ -593,6 +596,14 @@ function showIdx(){show('#s-idx');$('#stepLabel').textContent='부위 분석';
   if(regionData.cheek)th.push(`<div class="th"><img src="${regionData.cheek.thumb}"><span class="lb">볼</span>${regionData.cheek.q<0.35?'<span class="lq">품질 낮음</span>':''}</div>`);
   if(regionData.nose)th.push(`<div class="th"><img src="${regionData.nose.thumb}"><span class="lb">코</span>${regionData.nose.q<0.35?'<span class="lq">품질 낮음</span>':''}</div>`);
   $('#rgThumbs').innerHTML=th.join('');
+  const chips=[];
+  if(idx.tzOil!=null&&idx.tzOil>=55)chips.push(['#5B8DEF','T존 유분·광택 높음']);
+  else if(idx.tzOil!=null&&idx.tzOil<28)chips.push(['#8A93A0','T존 유분 낮음 · 건조 경향']);
+  if(idx.pore!=null&&idx.pore>=50)chips.push(['#5B8DEF','코 모공·결 뚜렷']);
+  if(idx.red!=null&&idx.red>=45)chips.push(['#E2725B','볼 붉은기 감지']);
+  if(idx.cheekOil!=null&&idx.cheekOil<28&&(idx.tzOil==null||idx.tzOil<42))chips.push(['#7FB4FF','수분 보강 권장']);
+  if(!chips.length)chips.push(['#46c98b','전반적으로 균형 잡힌 피부']);
+  const cbox=$('#idxChips');if(cbox)cbox.innerHTML=chips.map(c=>`<span class="sigchip"><span class="d" style="background:${c[0]}"></span>${c[1]}</span>`).join('');
   const bars=idxBar('T존 유분·광택',idx.tzOil)+idxBar('코 유분',idx.noseOil)+idxBar('코 모공·결 가시도',idx.pore)+idxBar('볼 유분',idx.cheekOil)+idxBar('볼 붉은기',idx.red);
   $('#idxRep').innerHTML='<div class="h"><span class="t">부위별 지수 (0~100)</span></div>'+(bars||'<p class="note" style="text-align:left;margin:6px 0 0">부위 사진이 없어 얼굴 분석만 반영해요.</p>');}
 function imageToCanvas(img){const c=document.createElement('canvas'),W=Math.min(720,img.naturalWidth||640),H=Math.round(W*(((img.naturalHeight||480)/(img.naturalWidth||640))));c.width=W;c.height=H;c.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0,W,H);return c;}
