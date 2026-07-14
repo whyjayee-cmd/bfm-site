@@ -539,7 +539,7 @@ function captureStill(){const v=$('#video'),c=$('#work'),W=Math.min(stepMode==='
   const cp=document.createElement('canvas');cp.width=sw;cp.height=sh;cp.getContext('2d').drawImage(c,sx,sy,sw,sh,0,0,sw,sh);
   storeRegion(stepMode,cp);
   const rd=regionData[stepMode];rd.faceSeen=faceSeen;
-  if(rd.reason||rd.q<0.32)goRegionRetake(stepMode);else nextAfterRegion();}
+  if(rd.reason==='noskin'||rd.reason==='dark')goRegionRetake(stepMode);else nextAfterRegion();}
 
 /* ===== v2 부위 분석 (룰베이스 지수) ===== */
 function analyzeRegionShot(c,region){const ctx=c.getContext('2d',{willReadFrequently:true});
@@ -612,7 +612,7 @@ $('#pickFile').onclick=()=>{stepMode='tzone';$('#fileInput').click();};
 $('#fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.target.value='';
   const handle=async c=>{if(stepMode==='face'){runFace(c);return;}
     /* T존 얼굴검증 제거(클로즈업+갤럭시 대응): 아래 skinRatio 검사로 사람/벽 구분 */
-    storeRegion(stepMode,c);const rd=regionData[stepMode];if(rd.reason||rd.q<0.32)goRegionRetake(stepMode);else nextAfterRegion();};
+    storeRegion(stepMode,c);const rd=regionData[stepMode];if(rd.reason==='noskin'||rd.reason==='dark')goRegionRetake(stepMode);else nextAfterRegion();};
   try{const bmp=await createImageBitmap(f,{imageOrientation:'from-image'});const c=document.createElement('canvas'),W=Math.min(720,bmp.width||640),H=Math.round(W*((bmp.height||480)/(bmp.width||640)));c.width=W;c.height=H;c.getContext('2d',{willReadFrequently:true}).drawImage(bmp,0,0,W,H);handle(c);}
   catch(err){const img=new Image();img.onload=()=>handle(imageToCanvas(img));img.src=URL.createObjectURL(f);}};
 $('#startCam').onclick=()=>startCamera('tzone');
