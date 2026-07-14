@@ -1,248 +1,284 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>내 처방 — BfM</title>
-<meta name="description" content="타입마다 성분이 다릅니다. 당신 타입에 꼭 필요한 성분만, 바르기 쉬운 올인원 한 병에." />
-<link rel="preconnect" href="https://cdn.jsdelivr.net" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
-<style>
-:root{--bg:#0B0C0E;--panel:#14161A;--panel-2:#1A1D23;--line:#262A31;--ink:#EDEFF2;--mut:#9AA2AD;--mut-2:#6B727C;
-  --clinic:#F4F6F8;--clinic-2:#fff;--clinic-ink:#0E1116;--clinic-mut:#5A626D;--clinic-line:#E4E8EC;
-  --accent:#5B8DEF;--accent-strong:#3E6FE0;--safe-b:env(safe-area-inset-bottom,0px);
-  --sans:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);word-break:keep-all;line-break:strict;overflow-wrap:break-word;letter-spacing:-.01em;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;padding-bottom:calc(76px + var(--safe-b))}
-img{max-width:100%;display:block}a{color:inherit;text-decoration:none}
-.wrap{max-width:560px;margin:0 auto;padding-inline:20px}
-.eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
-h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.03em;line-height:1.18}
-.sec{padding:46px 0}
-.sec.light{background:var(--clinic);color:var(--clinic-ink)}
-.sec.white{background:#fff;color:var(--clinic-ink)}
-.sec.light .eyebrow,.sec.white .eyebrow{color:var(--accent-strong)}
-.lead{color:var(--mut);font-size:15.5px;margin-top:12px;line-height:1.7}
-.sec.light .lead,.sec.white .lead{color:var(--clinic-mut)}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;font-weight:800;font-size:16.5px;padding:17px;border-radius:14px;background:var(--accent);color:#fff;border:0;cursor:pointer;font-family:inherit;box-shadow:0 10px 26px -10px rgba(91,141,239,.7)}
-.btn:active{transform:scale(.985)}
-.btn.ghost{background:#fff;color:var(--clinic-ink);border:1.5px solid var(--clinic-line);box-shadow:none}
-
-/* header */
-header{position:sticky;top:0;z-index:50;background:rgba(11,12,14,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-header .wrap{display:flex;align-items:center;justify-content:space-between;height:54px}
-.brand{font-weight:800;font-size:20px;letter-spacing:-.04em}.brand i{font-style:normal;color:var(--accent)}
-header .re{font-size:13.5px;color:var(--mut);font-weight:600}
-
-/* hero */
-.hero{padding:40px 0 36px;background:radial-gradient(130% 90% at 80% 0%,#16223f,#0b0c0e 60%)}
-.hero .et{font-size:11.5px;font-weight:800;letter-spacing:.18em;color:var(--accent);text-transform:uppercase}
-.hero .en{font-size:clamp(40px,11vw,58px);font-weight:850;letter-spacing:-.04em;line-height:1;margin-top:12px}
-.hero .ko{font-size:17px;color:var(--mut);font-weight:700;margin-top:8px}
-.hero .one{font-size:clamp(19px,4vw,23px);font-weight:800;letter-spacing:-.03em;margin-top:20px;line-height:1.4}
-.hero .one .ac{color:var(--accent)}
-.str{display:flex;gap:10px;margin-top:22px}
-.str .s{flex:1;background:rgba(91,141,239,.08);border:1px solid rgba(91,141,239,.25);border-radius:13px;padding:14px}
-.str .s .k{font-size:12.5px;color:var(--mut);font-weight:600}
-.str .s .v{font-size:15px;font-weight:800;margin-top:4px;letter-spacing:-.02em}
-.str .s .v b{color:var(--accent)}
-.personaCard{margin-top:18px;background:linear-gradient(135deg,rgba(91,141,239,.15),rgba(91,141,239,.04));border:1px solid rgba(91,141,239,.32);border-radius:16px;padding:18px 20px}
-.personaCard .pc-en{font-size:12px;font-weight:800;letter-spacing:.2em;color:var(--accent)}
-.personaCard .pc-ko{font-size:30px;font-weight:850;letter-spacing:-.03em;margin-top:4px}
-.personaCard .pc-tag{font-size:13.5px;color:var(--mut);margin-top:6px}
-.trustrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.trustrow span{font-size:12.5px;font-weight:700;color:var(--accent-strong);background:rgba(91,141,239,.1);border:1px solid rgba(91,141,239,.22);padding:7px 11px;border-radius:99px}
-
-/* concept */
-.concept h2{font-size:25px}
-.concept .big{font-weight:800;color:var(--clinic-ink)}
-
-/* ingredient cards */
-.ighead{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
-.ighead .en{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--accent-strong);text-transform:uppercase}
-.ighead h2{font-size:22px}
-.ig{background:#fff;border:1px solid var(--clinic-line);border-radius:16px;padding:20px;margin-bottom:12px}
-.sec.white .ig{background:var(--clinic);}
-.ig .r{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.ig .nm{font-size:18px;font-weight:800;letter-spacing:-.02em}
-.ig .nm .en{display:block;font-size:11.5px;font-weight:700;color:var(--clinic-mut);letter-spacing:.03em;margin-top:2px}
-.ig .ef{flex:none;font-size:12px;font-weight:800;color:var(--accent-strong);background:rgba(91,141,239,.1);padding:7px 11px;border-radius:99px;text-align:center}
-.ig p{margin:12px 0 0;font-size:14px;color:var(--clinic-mut);line-height:1.65}
-.subnote{font-size:12.5px;color:var(--clinic-mut);margin-top:6px}
-
-/* formulation */
-.form3{display:flex;flex-direction:column;gap:12px;margin-top:22px}
-.f3{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
-.f3 .n{flex:none;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-strong));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff}
-.f3 b{font-size:15.5px}.f3 p{margin:3px 0 0;color:var(--mut);font-size:14px;line-height:1.6}
-
-/* product */
-.prod{background:#fff;border:1px solid var(--clinic-line);border-radius:18px;overflow:hidden;margin-top:8px}
-.prod .pic{height:190px;background:radial-gradient(120% 100% at 30% 20%,#17243f,#0b0d12 62%);display:flex;align-items:center;justify-content:center;position:relative}
-.prod .pic .mk{font-weight:900;font-size:46px;letter-spacing:-.05em;color:rgba(255,255,255,.92)}.prod .pic .mk i{font-style:normal;color:var(--accent)}
-.prod .pic .hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.32)}
-.prod .body{padding:20px}
-.prod .nm{font-size:21px;font-weight:800;letter-spacing:-.03em}
-.prod .ds{color:var(--clinic-mut);font-size:14px;margin-top:6px}
-.prod .price{display:flex;align-items:baseline;gap:9px;margin-top:16px}
-.prod .price .now{font-size:29px;font-weight:850;letter-spacing:-.03em}.prod .price .s{font-size:13px;color:var(--clinic-mut)}
-.prod .spec{margin-top:14px;border-top:1px solid var(--clinic-line);padding-top:14px;display:flex;flex-direction:column;gap:8px;font-size:13.5px;color:var(--clinic-mut)}
-.prod .spec .ln{display:flex;justify-content:space-between}.prod .spec .ln b{color:var(--clinic-ink);font-weight:700}
-.prod .body .btn{margin-top:18px}
-
-/* guarantee */
-.guar{background:linear-gradient(135deg,#10141f,#0b0d12);border:1px solid #232a3a;border-radius:18px;padding:26px 22px;text-align:center;margin-top:8px}
-.guar .ic{width:52px;height:52px;border-radius:15px;margin:0 auto 14px;background:linear-gradient(135deg,var(--accent),var(--accent-strong));display:flex;align-items:center;justify-content:center;font-size:24px}
-.guar h2{font-size:22px}.guar p{color:var(--mut);font-size:14px;margin-top:10px}
-
-footer{background:#070809;border-top:1px solid var(--line);color:var(--mut-2);font-size:11.5px;line-height:1.85;padding:28px 0 22px}
-footer .bd{font-size:18px;color:var(--ink);font-weight:800;margin-bottom:8px}footer b{color:var(--mut)}
-.sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:10px 16px calc(10px + var(--safe-b));background:rgba(11,12,14,.94);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
-.sticky .btn{box-shadow:none}
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1)}.reveal.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
-</style>
+<meta name="description" content="타입마다 성분이 다릅니다. 당신 타입에 꼭 필요한 성분만, 바르기 쉬운 올인원 한 병에.">
 </head>
-<body>
-<header><div class="wrap"><a href="diagnose.html" class="brand">B<i>f</i>M</a><a href="diagnose.html" class="re">다시 진단</a></div></header>
+<body style="margin:0;background:#0a0b0e"><!-- ============================================================
+     BfM 결과/타입 페이지 — 다크 프리미엄(청색+블랙) · 아임웹 코드입력 블록
+     ★ 사용법: 아래 <section> 의 data-type 을 페이지에 맞게 바꾸세요
+        · NEAT MAN(건성) 페이지        → data-type="neat"
+        · ETERNAL MAN(지성) 페이지      → data-type="eternal"
+        · RENAISSANCE MAN(트러블) 페이지 → data-type="renaissance"
+     ★ 제품/주문 버튼 href 는 .order 의 href 를 수정
+     · 폰트 Pretendard · 볼드 없음(헤딩 500)
+============================================================ -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<section id="bfm-result" data-type="eternal">
+<style>
+#bfm-result{--accent:#5B8DEF;--accent2:#83a8ff;--ink:#EDEFF3;--mut:#9aa3b2;--faint:#646b78;--panel:#14171e;--line:#23262f;
+  margin:0;background:#0a0b0e;color:var(--ink);
+  font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all;line-break:strict;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+#bfm-result *{box-sizing:border-box;margin:0;font-weight:400}
+#bfm-result .wrap{max-width:760px;margin:0 auto;padding:0 26px}
+#bfm-result .eyebrow{font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+#bfm-result h2{font-size:clamp(25px,4vw,38px);font-weight:500;letter-spacing:-.035em;line-height:1.25}
+#bfm-result .lead{color:var(--mut);font-size:15.5px;line-height:1.8;margin-top:16px}
+#bfm-result .lead b{color:var(--ink);font-weight:400}
+/* hero */
+#bfm-result .hero{padding:96px 0 40px;background:radial-gradient(120% 90% at 50% -10%,#13203a,#0a0b0e 60%);text-align:center}
+#bfm-result .hero .et{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+#bfm-result .persona{margin:22px auto 0;max-width:520px;background:linear-gradient(165deg,#101626,#0b0d12);border:1px solid #283247;border-radius:22px;padding:34px 26px;box-shadow:0 40px 80px -50px rgba(0,0,0,.9)}
+#bfm-result .pc-en{font-size:12px;letter-spacing:.24em;color:var(--accent)}
+#bfm-result .pc-ko{font-size:clamp(34px,8vw,46px);font-weight:500;letter-spacing:-.04em;margin-top:8px}
+#bfm-result .pc-tag{color:var(--mut);font-size:14.5px;margin-top:10px}
+#bfm-result .pc-fno{display:inline-block;margin-top:18px;font-size:12.5px;color:#cfe0ff;background:rgba(91,141,239,.1);border:1px solid rgba(91,141,239,.28);padding:7px 14px;border-radius:99px}
+#bfm-result .hero h1{font-size:clamp(24px,4vw,34px);font-weight:500;letter-spacing:-.035em;line-height:1.3;margin-top:36px}
+#bfm-result .hero h1 .ac{color:var(--accent)}
+/* sections */
+#bfm-result .sec{padding:64px 0;border-top:1px solid var(--line)}
+#bfm-result .iglist{margin-top:32px;display:flex;flex-direction:column;gap:14px}
+#bfm-result .ig{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;transition:border-color .3s}
+#bfm-result .ig:hover{border-color:rgba(91,141,239,.4)}
+#bfm-result .igr{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+#bfm-result .ignm{font-size:18px;font-weight:500;letter-spacing:-.02em}
+#bfm-result .igen{display:block;font-size:11.5px;color:var(--faint);letter-spacing:.03em;margin-top:3px}
+#bfm-result .igef{flex:none;font-size:12px;color:var(--accent2);background:rgba(91,141,239,.1);border:1px solid rgba(91,141,239,.24);padding:7px 11px;border-radius:99px;text-align:center}
+#bfm-result .ig p{margin-top:14px;font-size:14px;color:var(--mut);line-height:1.7}
+#bfm-result .iglvl{margin-top:16px;height:6px;border-radius:99px;background:#1c2230;overflow:hidden}
+#bfm-result .iglvl i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#83a8ff)}
+/* formulation */
+#bfm-result .f3{display:flex;flex-direction:column;gap:14px;margin-top:30px}
+#bfm-result .fi{display:flex;gap:16px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+#bfm-result .fn{flex:none;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;background:linear-gradient(135deg,var(--accent),#3E6FE0)}
+#bfm-result .fi b{font-size:16px;font-weight:500}
+#bfm-result .fi p{margin-top:5px;color:var(--mut);font-size:14px;line-height:1.6}
+/* product */
+#bfm-result .prod{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:30px;margin-top:30px}
+#bfm-result .prod .nm{font-size:22px;font-weight:500;letter-spacing:-.03em}
+#bfm-result .prod .ds{color:var(--mut);font-size:14.5px;line-height:1.7;margin-top:10px}
+#bfm-result .prod .price{display:flex;align-items:baseline;gap:10px;margin-top:20px}
+#bfm-result .prod .now{font-size:30px;font-weight:300;letter-spacing:-.03em}
+#bfm-result .prod .s{font-size:13px;color:var(--faint)}
+#bfm-result .prod .spec{margin-top:18px;border-top:1px solid var(--line)}
+#bfm-result .prod .ln{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--mut)}
+#bfm-result .prod .ln b{color:var(--ink);font-weight:400}
+#bfm-result .trust{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+#bfm-result .trust span{font-size:12.5px;color:var(--accent2);border:1px solid rgba(91,141,239,.28);padding:7px 12px;border-radius:99px}
+#bfm-result .order{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;padding:17px;border-radius:14px;background:var(--accent);color:#fff;font-size:16.5px;font-weight:500;text-decoration:none}
+/* guarantee */
+#bfm-result .guar{margin:64px 0 0;padding:48px 30px;text-align:center;background:radial-gradient(120% 120% at 50% -10%,#16223f,#0c0e13 62%);border:1px solid #283247;border-radius:22px}
+#bfm-result .guar .badge{width:54px;height:54px;border-radius:15px;margin:0 auto 18px;background:linear-gradient(135deg,var(--accent),#3E6FE0);display:flex;align-items:center;justify-content:center;font-size:25px}
+#bfm-result .guar h3{font-size:22px;font-weight:500;letter-spacing:-.03em}
+#bfm-result .guar p{max-width:520px;margin:14px auto 0;color:var(--mut);font-size:15px;line-height:1.8}
+#bfm-result .guar .triad{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
+#bfm-result .guar .triad span{font-size:13px;color:#cfe0ff;border:1px solid rgba(91,141,239,.3);background:rgba(91,141,239,.08);padding:8px 15px;border-radius:99px}
+#bfm-result .botpad{height:80px}
+@media(max-width:760px){#bfm-result .hero{padding:76px 0 32px}#bfm-result .sec{padding:54px 0}}
 
-<!-- HERO -->
-<section class="hero"><div class="wrap">
-  <div class="et">AI 분석 완료 · 처방 No. <span id="fno">—</span></div>
-  <div class="personaCard" id="personaCard">
-    <div class="pc-en" id="pcEn">YOUR TYPE</div>
-    <div class="pc-ko" id="pcKo">맞춤 타입</div>
-    <div class="pc-tag" id="pcTag"></div>
-  </div>
-  <div class="en" style="font-size:clamp(28px,7.5vw,40px);line-height:1.14;margin-top:18px">당신에게 맞는<br>처방을 찾았습니다.</div>
-  <div class="one"><span class="ac">셀카 AI 분석과 설문</span>을 종합해, 당신 피부에 가장 맞는 한 병을 매칭했습니다.</div>
-  <div class="str">
-    <div class="s"><div class="k">개인 맞춤</div><div class="v">효과 <b>↑</b></div></div>
-    <div class="s"><div class="k">우리가 정함</div><div class="v">선택 피로 <b>0</b></div></div>
-  </div>
-</div></section>
+/* ── ✦ 프리미엄 연출 (스크롤 등장 / 리빌) ───────────────────── */
+#bfm-result .rv{opacity:0;transform:translateY(24px);transition:opacity .85s cubic-bezier(.2,.7,.2,1),transform .85s cubic-bezier(.2,.7,.2,1)}
+#bfm-result .rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){#bfm-result .rv{opacity:1!important;transform:none!important;transition:none}#bfm-result .persona,#bfm-result .persona::after{animation:none!important}}
 
-<!-- CONCEPT -->
-<section class="sec light concept"><div class="wrap">
-  <span class="eyebrow">AI 매칭</span>
-  <h2>당신에게 맞는 것만,<br>한 병에.</h2>
-  <p class="lead">남자 피부는 다 다릅니다. AI가 당신의 피부 신호와 답변을 읽어 가장 맞는 처방을 매칭합니다. <span class="big">꼭 필요한 성분만</span> 좋은 오일과 안정적인 유화로 잡아, 바르기 쉬운 올인원 한 병에. 고를 필요 없이.</p>
-</div></section>
+/* 페르소나 카드: 등장 + 은은한 광택 스윕 + 상단 글로우 */
+#bfm-result .persona{position:relative;overflow:hidden;animation:bfmPersona 1s cubic-bezier(.2,.7,.2,1) both}
+@keyframes bfmPersona{from{opacity:0;transform:translateY(26px) scale(.972)}to{opacity:1;transform:none}}
+#bfm-result .persona::before{content:"";position:absolute;left:0;right:0;top:0;height:64%;background:radial-gradient(60% 100% at 50% 0,rgba(91,141,239,.26),transparent 72%);pointer-events:none}
+#bfm-result .persona::after{content:"";position:absolute;top:0;left:-60%;width:42%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.08),transparent);transform:skewX(-18deg);animation:bfmSheen 4.2s ease-in-out 1.1s infinite;pointer-events:none}
+@keyframes bfmSheen{0%,62%{left:-60%}100%{left:165%}}
+#bfm-result .persona>*{position:relative}
+#bfm-result .pc-ko{background:linear-gradient(180deg,#fff,#bcd0ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#bfm-result .pc-fno{position:relative;overflow:hidden}
+#bfm-result .pc-fno::after{content:"";position:absolute;inset:0;border-radius:99px;background:linear-gradient(100deg,transparent,rgba(207,224,255,.5),transparent);transform:translateX(-120%);animation:bfmChip 3.4s ease-in-out 1.6s infinite}
+@keyframes bfmChip{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 
-<!-- KEY ACTIVES -->
-<section class="sec white"><div class="wrap">
-  <div class="ighead"><span class="en">KEY ACTIVES</span><h2>핵심 활성</h2></div>
-  <div id="coreList"></div>
-</div></section>
+/* 성분 카드: 인덱스 번호 + 호버 리프트 + 왼쪽 액센트 라인 */
+#bfm-result .ig{position:relative;transition:border-color .3s,transform .3s,box-shadow .3s;overflow:hidden}
+#bfm-result .ig::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),transparent);opacity:0;transition:opacity .3s}
+#bfm-result .ig:hover{border-color:rgba(91,141,239,.42);transform:translateY(-4px);box-shadow:0 26px 50px -34px rgba(91,141,239,.5)}
+#bfm-result .ig:hover::before{opacity:1}
+#bfm-result .ig .igidx{position:absolute;right:20px;bottom:14px;font-size:44px;line-height:1;color:#fff;opacity:.04;letter-spacing:-.04em}
 
-<!-- SUPPORT -->
-<section class="sec light"><div class="wrap">
-  <div class="ighead"><span class="en">SUPPORT</span><h2>보조 케어</h2></div>
-  <div id="subList"></div>
-</div></section>
+/* 처방 카드 / 포뮬레이션 아이템 호버 */
+#bfm-result .fi{transition:border-color .3s,transform .3s}
+#bfm-result .fi:hover{border-color:rgba(91,141,239,.35);transform:translateY(-3px)}
+#bfm-result .prod{transition:border-color .3s,box-shadow .3s}
+#bfm-result .prod:hover{border-color:rgba(91,141,239,.4);box-shadow:0 40px 80px -50px rgba(91,141,239,.5)}
+#bfm-result .order{transition:background .2s,transform .15s,box-shadow .3s;box-shadow:0 18px 40px -20px rgba(91,141,239,.8)}
+#bfm-result .order:hover{background:#3E6FE0;transform:translateY(-2px)}
 
-<!-- FORMULATION -->
-<section class="sec"><div class="wrap">
-  <span class="eyebrow">성분만큼 중요한 것</span>
-  <h2 style="font-size:24px;margin-top:11px">좋은 성분도,<br>베이스가 싸구려면 소용없습니다.</h2>
-  <div class="form3">
-    <div class="f3"><div class="n">1</div><div><b>좋은 베이스 오일</b><p>아무리 좋은 활성도 베이스가 받쳐주지 않으면 피부에 안 먹습니다. 흡수 좋은 식물성 오일만 씁니다.</p></div></div>
-    <div class="f3"><div class="n">2</div><div><b>안정적인 유화</b><p>오일과 물을 제대로 섞는 유화 기술. 분리 없이, 끈적임 없이, 산뜻하게 발립니다.</p></div></div>
-    <div class="f3"><div class="n">3</div><div><b>꼭 필요한 성분만</b><p>유행 성분을 다 때려넣지 않습니다. 당신 타입에 필요한 것만. 그래서 한 병으로 충분합니다.</p></div></div>
-  </div>
-</div></section>
+/* 히어로 상단: AI 분석 완료 라인에 진행 바 */
+#bfm-result .scanline{max-width:200px;margin:16px auto 0;height:2px;border-radius:2px;background:#1c2230;overflow:hidden}
+#bfm-result .scanline i{display:block;height:100%;width:38%;border-radius:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:bfmScan 2.1s ease-in-out infinite}
+@keyframes bfmScan{0%{transform:translateX(-120%)}100%{transform:translateX(360%)}}
 
-<!-- PRODUCT -->
-<section class="sec light"><div class="wrap">
-  <span class="eyebrow">처방</span>
-  <h2 style="font-size:24px;margin:11px 0 18px">고르기 쉽게, 바르기 쉽게.</h2>
-  <div class="prod reveal">
-    <!-- 제품 사진으로 교체: div.pic 안에 <img> -->
-    <div class="pic"><span class="mk">B<i>f</i>M</span><span class="hint">제품 사진 자리</span></div>
-    <div class="body">
+/* 전성분 아코디언 */
+#bfm-result .fullwrap{margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:0 24px;transition:border-color .3s}
+#bfm-result .fullwrap[open]{border-color:rgba(91,141,239,.4)}
+#bfm-result .fullwrap summary{list-style:none;cursor:pointer;padding:22px 0;font-size:15.5px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+#bfm-result .fullwrap summary::-webkit-details-marker{display:none}
+#bfm-result .fullwrap summary::after{content:"+";color:var(--accent2);font-size:20px;flex:none;transition:transform .3s}
+#bfm-result .fullwrap[open] summary::after{transform:rotate(45deg)}
+#bfm-result .fullwrap .cnt{margin-left:auto;margin-right:6px;font-size:12.5px;color:var(--faint)}
+#bfm-result .fulllist{padding:0 0 6px;color:var(--mut);font-size:13.5px;line-height:1.9;word-break:keep-all}
+#bfm-result .fullnote{padding:14px 0 22px;font-size:12px;color:var(--faint);line-height:1.6;border-top:1px solid var(--line);margin-top:4px}
+</style>
+
+  <!-- HERO -->
+  <div class="hero"><div class="wrap">
+    <div class="et">AI 분석 완료 · 처방 No. <span class="fno">—</span></div>
+    <div class="scanline"><i></i></div>
+    <div class="persona">
+      <div class="pc-en">YOUR TYPE</div>
+      <div class="pc-ko">—</div>
+      <div class="pc-tag"></div>
+      <div class="pc-fno">맞춤 처방 매칭 완료</div>
+    </div>
+    <h1>당신에게 맞는<br><span class="ac">처방</span>을 찾았습니다.</h1>
+  </div></div>
+
+  <!-- CONCEPT -->
+  <div class="sec" style="border-top:0"><div class="wrap">
+    <span class="eyebrow">AI Matching</span>
+    <h2 style="margin-top:14px">당신에게 맞는 것만,<br>한 병에.</h2>
+    <p class="lead">남자 피부는 다 다릅니다. AI가 당신의 피부 신호와 답변을 읽어 가장 맞는 처방을 매칭합니다. <b>꼭 필요한 성분만</b> 좋은 오일과 안정적인 유화로 잡아, 바르기 쉬운 올인원 한 병에. 고를 필요 없이.</p>
+  </div></div>
+
+  <!-- KEY ACTIVES -->
+  <div class="sec"><div class="wrap">
+    <span class="eyebrow">Key Actives · 핵심 활성</span>
+    <div class="iglist coreList"></div>
+  </div></div>
+
+  <!-- SUPPORT -->
+  <div class="sec"><div class="wrap">
+    <span class="eyebrow">Support · 보조 케어</span>
+    <div class="iglist subList"></div>
+  </div></div>
+
+  <!-- FULL INGREDIENTS · 전성분 -->
+  <div class="sec"><div class="wrap">
+    <span class="eyebrow rv">Full Ingredients · 전성분</span>
+    <details class="fullwrap rv">
+      <summary>이 처방의 전성분 전체 보기 <span class="cnt"></span></summary>
+      <p class="fulllist"></p>
+      <p class="fullnote">※ 위 성분은 함량 순으로 표기된 실제 전성분입니다. 개봉 후 사용기한·주의사항은 제품 용기·박스 표기를 따르세요.</p>
+    </details>
+  </div></div>
+
+  <!-- FORMULATION -->
+  <div class="sec"><div class="wrap">
+    <span class="eyebrow">Formulation</span>
+    <h2 style="margin-top:14px;font-size:clamp(22px,3.4vw,30px)">좋은 성분도, 베이스가<br>싸구려면 소용없습니다.</h2>
+    <div class="f3">
+      <div class="fi"><div class="fn">1</div><div><b>좋은 베이스 오일</b><p>아무리 좋은 활성도 베이스가 받쳐주지 않으면 피부에 안 먹습니다. 흡수 좋은 식물성 오일만 씁니다.</p></div></div>
+      <div class="fi"><div class="fn">2</div><div><b>안정적인 유화</b><p>오일과 물을 제대로 섞는 유화 기술. 분리 없이, 끈적임 없이, 산뜻하게 발립니다.</p></div></div>
+      <div class="fi"><div class="fn">3</div><div><b>꼭 필요한 성분만</b><p>유행 성분을 다 때려넣지 않습니다. 당신 타입에 필요한 것만. 그래서 한 병으로 충분합니다.</p></div></div>
+    </div>
+  </div></div>
+
+  <!-- PRODUCT -->
+  <div class="sec"><div class="wrap">
+    <span class="eyebrow">Your Prescription</span>
+    <div class="prod">
       <div class="nm">Perfect All-in-One</div>
       <div class="ds">당신 타입에 맞춘 활성·보조 성분을, 좋은 오일·유화로 한 병에. 토너·로션·세럼·영양을 따로 바를 필요 없습니다.</div>
-      <div class="price"><span class="now">21,900원</span><span class="s">2달치(200ml) · 하루 약 365원</span></div>
+      <div class="price"><span class="now">21,900원</span><span class="s">2개월분(200ml) · 하루 약 365원</span></div>
       <div class="spec">
         <div class="ln"><span>용량</span><b>200ml · 약 2개월분</b></div>
         <div class="ln"><span>구성</span><b>올인원 1병 (4-in-1)</b></div>
         <div class="ln"><span>배송</span><b>전국 무료배송 · 정기배송</b></div>
       </div>
-      <div class="trustrow"><span>✓ 100% 환불 보장</span><span>✓ 무료 타입 교체</span><span>✓ 구독 해지 자유</span></div>
-      <a href="#" class="btn">정기배송으로 시작하기 →</a>
+      <div class="trust"><span>100% 환불 보장</span><span>무료 타입 교체</span><span>구독 해지 자유</span></div>
+      <!-- ▼ 주문/결제 페이지 주소 -->
+      <a class="order" href="https://www.bfm.best/shop_view?idx=5">정기배송으로 시작하기 →</a>
     </div>
-  </div>
-</div></section>
+  </div></div>
 
-<!-- GUARANTEE -->
-<section class="sec"><div class="wrap"><div class="guar reveal">
-  <div class="ic">↺</div><h2>안 맞으면, 100% 교환·환불.</h2>
-  <p>다른 타입으로 무료 교체, 그래도 안 맞으면 100% 환불해 드립니다. 정기배송은 언제든 한 번에 해지. 결정은 천천히 하세요.</p>
-</div></div></section>
-
-<footer><div class="wrap">
-  <div class="bd">B<span style="color:var(--accent)">f</span>M</div>
-  <b>상호명</b> BFM · <b>대표</b> 장주혁<br>
-  <b>사업자등록번호</b> 556-25-02163<br>
-  <b>통신판매업신고</b> 제2026-서울강남-0000호<br>
-  <b>주소</b> 서울 강남구 압구정로 321, 5동 405호<br>
-  <b>고객센터</b> 010-9306-5043 · jjangga7004@snu.ac.kr<br>
-  <a href="https://www.instagram.com/bfm_forman/" target="_blank" rel="noopener" style="color:var(--mut)">인스타그램 @bfm_forman</a><br>
-  Copyright ⓒ 2026 BFM. All rights reserved.
-</div></footer>
-
-<div class="sticky"><a href="#" class="btn">정기배송으로 시작 · 21,900원 →</a></div>
+  <!-- GUARANTEE -->
+  <div class="wrap"><div class="guar">
+    <div class="badge">↺</div>
+    <h3>안 맞으면, 100% 교환·환불.</h3>
+    <p>다른 타입으로 무료 교체, 그래도 안 맞으면 100% 환불해 드립니다. 정기배송은 언제든 한 번에 해지. 결정은 천천히 하세요.</p>
+    <div class="triad"><span>100% 환불 보장</span><span>무료 타입 교체</span><span>구독 해지 자유</span></div>
+  </div></div>
+  <div class="botpad"></div>
 
 <script>
-const TYPE = {
-  oily:{en:'ETERNAL MAN',ko:'이터널맨',tag:'유분·번들거림을 단정하게 다스리는 타입'},
-  dry:{en:'NEAT MAN',ko:'니트맨',tag:'속당김·각질을 매끈하게 채우는 타입'},
-  trouble:{en:'RENAISSANCE MAN',ko:'르네상스맨',tag:'자극·트러블을 맑게 진정시키는 타입'},
-};
-const ING = {
-  oily:{ core:[
-    {nm:'나이아신아마이드',en:'Niacinamide',ef:'피지 조절·모공',d:'T존 과잉 피지 분비를 잡고 모공을 시각적으로 좁혀줍니다. 하루 종일 번들거림이 신경 쓰이는 피부가 1순위로 들여야 할 성분.'},
-    {nm:'황금추출물',en:'Scutellaria',ef:'피지선 항염',d:'한방계 항염 원료. 피지선 과활성에서 시작되는 미세 염증을 가라앉혀, 트러블이 자리잡기 전 단계에서 차단하는 역할.'},
-    {nm:'베타-글루칸',en:'Beta-Glucan',ef:'진정·수분 균형',d:'피지가 많아도 속은 건조한 남성 피부 특유의 불균형을 잡아줍니다. 표면 자극을 다스리면서 수분층을 동시에 채워주는 멀티 성분.'}],
-   sub:[
-    {nm:'병풀추출물',en:'Centella',ef:'트러블 예방·재생',d:'시카로 알려진 진정 원료. 면도·외부 자극으로 예민해진 피부의 회복 속도를 끌어올립니다.'},
-    {nm:'폴리글루타믹애씨드',en:'Poly-Glutamic Acid',ef:'산뜻 보습',d:'하이알루론산보다 무겁지 않은 차세대 수분 폴리머. 끈적임 없이 표면 수분을 잡아두는 데 특화되어 지성 피부에도 부담이 없습니다.'},
-    {nm:'카퍼트라이펩타이드-1',en:'Copper Tripeptide-1',ef:'회복 신호',d:'손상 단백질의 회복 신호를 자극하는 구리 펩타이드. 피지 케어 과정에서 누적되는 미세 손상을 보완합니다.'}]},
-  trouble:{ core:[
-    {nm:'4-터피네올',en:'Terpinen-4-ol',ef:'항균·트러블 케어',d:'티트리오일의 활성 단일 분획. 원유 형태보다 자극은 낮추면서 트러블 원인균에 대한 작용은 그대로 유지합니다. 라인의 메인으로 박을 만한 무게감.'},
-    {nm:'약모밀추출물(어성초)',en:'Houttuynia',ef:'항염·진정',d:'한방계 트러블 케어의 대표 원료. 진행 중인 염증과 미세 자극을 가라앉혀 새 트러블이 올라오는 사이클 자체를 늦춥니다.'},
-    {nm:'나이아신아마이드',en:'Niacinamide',ef:'피지·붉은 자국',d:'과잉 피지를 줄이면서 트러블이 지나간 자리의 붉은 자국·색소 침착을 함께 옅게 만들어줍니다. 트러블 제형에서 빠질 수 없는 멀티 성분.'}],
-   sub:[
-    {nm:'시카 컴플렉스',en:'Cica Complex',ef:'재생·진정',d:'병풀추출물에 마데카소사이드 계열을 더한 강화 시카 구성. 이미 자극받은 피부의 장벽 회복과 진정을 동시에 끌어올립니다.'},
-    {nm:'판테놀',en:'Panthenol',ef:'자극 완화·수분',d:'프로비타민 B5. 트러블 피부 특유의 따끔거림과 건조함을 같이 다스리며, 자극 회복 속도를 끌어올리는 보조 성분.'}]},
-  dry:{ core:[
-    {nm:'세라마이드 콤플렉스',en:'Ceramide NP·AP·EOP',ef:'장벽 재건',d:'피부 장벽을 이루는 핵심 지질을 사람 피부와 같은 종류로. 무너진 보호막을 다시 쌓아 수분이 새어나가는 길부터 막습니다. 속당김·각질이 잦은 건성 피부의 1순위 성분.'},
-    {nm:'콜레스테롤+지방산',en:'Cholesterol + Fatty Acid',ef:'지질 황금비',d:'세라마이드만 넣어선 장벽이 안 채워집니다. 콜레스테롤·지방산을 황금비로 함께 넣어야 제대로 메워집니다. 건성 케어의 핵심은 ‘비율’.'},
-    {nm:'5종 히알루론산',en:'5-Hyaluronic Acid',ef:'다층 수분',d:'분자 크기가 다른 5종이 표면부터 안쪽까지 단계별로 수분을 채웁니다. 겉만 촉촉한 게 아니라 속까지.'}],
-   sub:[
-    {nm:'스쿠알란',en:'Squalane',ef:'유수분 보호막',d:'피부와 가장 닮은 보습 오일. 끈적임 없이 얇은 막을 만들어 건조한 환경에서도 수분을 지킵니다.'},
-    {nm:'판테놀',en:'Panthenol',ef:'진정·결 정돈',d:'프로비타민 B5. 당김과 미세 각질을 다스리며 거칠어진 결을 부드럽게 정돈합니다.'},
-    {nm:'마데카소사이드',en:'Madecassoside',ef:'장벽 회복',d:'병풀 유래 진정 성분. 약해진 건성 피부의 장벽 회복을 돕습니다.'}]},
-};
-const params = new URLSearchParams(location.search);
-const key = (params.get('type')||'oily').toLowerCase();
-const ig = ING[key]||ING.oily;
-const t = TYPE[key]||TYPE.oily;
-// 처방 번호: 진단에서 넘어온 ?fno 우선, 없으면 타입별 고정값
-let fno = parseInt(params.get('fno'),10);
-if(!fno || fno<1 || fno>99) fno = ({oily:32,dry:17,trouble:48}[key]||32);
-document.getElementById('fno').textContent = String(fno).padStart(2,'0');
-document.getElementById('pcEn').textContent = t.en;
-document.getElementById('pcKo').textContent = t.ko;
-document.getElementById('pcTag').textContent = t.tag;
-const _LT='ABCDEFGHIJ';let _li=0;
-const card=i=>`<div class="ig reveal"><div class="r"><div class="nm">성분 ${_LT[_li++]}</div><div class="ef">${i.ef}</div></div><p>${i.d}</p></div>`;
-document.getElementById('coreList').innerHTML=ig.core.map(card).join('');
-document.getElementById('subList').innerHTML=ig.sub.map(card).join('');
-const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-setTimeout(()=>document.querySelectorAll('.reveal:not(.in)').forEach(e=>e.classList.add('in')),1400);
+(function(){
+  var root=document.getElementById('bfm-result');
+  var P={
+    eternal:{en:'ETERNAL MAN',ko:'이터널맨',tag:'유분·번들거림을 단정하게 다스리는 타입',fno:32,key:'oily'},
+    neat:{en:'NEAT MAN',ko:'니트맨',tag:'속당김·각질을 매끈하게 채우는 타입',fno:17,key:'dry'},
+    renaissance:{en:'RENAISSANCE MAN',ko:'르네상스맨',tag:'자극·트러블을 맑게 진정시키는 타입',fno:48,key:'trouble'}
+  };
+  var ING={
+    oily:{core:[
+      {nm:'나이아신아마이드',en:'Niacinamide',ef:'피지 조절·모공',d:'전성분 상위에 배치된 핵심 활성. 과잉 피지 분비를 잡고 모공을 시각적으로 좁혀줍니다. 번들거림이 신경 쓰이는 지성 피부가 1순위로 챙겨야 할 성분.'},
+      {nm:'징크피씨에이',en:'Zinc PCA',ef:'피지·번들거림',d:'아연 기반 피지 밸런싱 성분. T존 유분을 눌러 하루 종일 뽀송한 상태를 오래 유지시켜 줍니다.'},
+      {nm:'버지니아풍년화추출물',en:'Witch Hazel',ef:'모공·수렴',d:'천연 아스트린젠트(수렴) 원료. 늘어진 모공을 조이고 번들거리는 표면을 산뜻하게 정돈합니다.'}],
+     sub:[
+      {nm:'소나무잎추출물',en:'Pine Leaf',ef:'항산화·진정',d:'항산화 폴리페놀이 풍부한 식물 추출물. 외부 자극으로 지친 피부를 차분하게 가라앉힙니다.'},
+      {nm:'세라마이드엔피',en:'Ceramide NP',ef:'장벽 보호',d:'피지가 많아도 속은 건조한 지성 피부를 위해. 무너지기 쉬운 장벽을 채워 수분이 새는 것을 막습니다.'},
+      {nm:'식물성스쿠알란',en:'Squalane',ef:'산뜻 보습',d:'피부와 닮은 가벼운 보습 오일. 끈적임 없이 얇은 막을 만들어 유수분 균형을 잡아줍니다.'}]},
+    trouble:{core:[
+      {nm:'4-터피네올',en:'Terpinen-4-ol',ef:'항균·트러블 케어',d:'티트리오일의 활성 단일 분획. 원유 형태보다 자극은 낮추면서 트러블 원인균에 대한 작용은 그대로. 라인의 메인 활성으로 담았습니다.'},
+      {nm:'병풀추출물 + 시카 4종',en:'Centella · Madecassoside 외',ef:'진정·재생',d:'병풀추출물에 마데카소사이드·아시아티코사이드·아시아틱애씨드·마데카식애씨드까지. 시카 진정 성분을 풀 스펙트럼으로 담아 자극받은 피부를 빠르게 가라앉힙니다.'},
+      {nm:'약모밀추출물(어성초)',en:'Houttuynia',ef:'항염·진정',d:'한방계 트러블 케어의 대표 원료. 진행 중인 미세 염증을 다스려 새 트러블이 올라오는 사이클 자체를 늦춥니다.'}],
+     sub:[
+      {nm:'나이아신아마이드',en:'Niacinamide',ef:'피지·붉은 자국',d:'과잉 피지를 줄이면서 트러블이 지나간 자리의 붉은 자국을 함께 옅게 만들어줍니다.'},
+      {nm:'황련뿌리추출물',en:'Coptis Root',ef:'한방 항균·진정',d:'장엽대황뿌리·도둑놈의지팡이(고삼)와 함께 담은 한방 진정 콤플렉스. 예민해진 피부를 차분하게 정돈합니다.'},
+      {nm:'뽕나무잎추출물',en:'Mulberry Leaf',ef:'맑은 톤 관리',d:'트러블 후 칙칙해진 피부 톤을 맑게 관리하는 것을 돕는 식물 추출물.'}]},
+    dry:{core:[
+      {nm:'세라마이드엔피',en:'Ceramide NP',ef:'장벽 재건',d:'피부 장벽을 이루는 핵심 지질. 무너진 보호막을 다시 쌓아 수분이 새어나가는 길부터 막습니다. 속당김·각질이 잦은 건성 피부의 1순위 성분.'},
+      {nm:'3종 식물성 오일',en:'Sunflower·Macadamia·Jojoba',ef:'유수분 보호막',d:'해바라기·마카다미아·호호바씨 오일에 식물성 스쿠알란까지. 피부와 닮은 지질로 얇은 보호막을 만들어 건조한 환경에서도 수분을 지킵니다.'},
+      {nm:'글리세릴글루코사이드',en:'Glyceryl Glucoside',ef:'속 수분 충전',d:'수분 통로(아쿠아포린)에 작용하는 차세대 보습 성분. 겉만이 아니라 속에서부터 촉촉함을 끌어올립니다.'}],
+     sub:[
+      {nm:'황금추출물',en:'Scutellaria',ef:'진정·항산화',d:'한방계 진정 원료. 건조로 예민해진 피부를 가라앉히고 항산화로 지켜줍니다.'},
+      {nm:'락토바실러스발효용해물',en:'Lactobacillus Ferment',ef:'결 정돈·장벽',d:'유산균 발효 성분. 거칠어진 결을 부드럽게 다듬고 건강한 장벽 환경을 돕습니다.'},
+      {nm:'식물 단백 콤플렉스',en:'Bean·Lentil·Mung 외',ef:'영양·탄력',d:'줄작두콩·돌콩·렌틸콩·녹두·칡 등 식물 유래 영양 성분을 더해 푸석한 건성 피부에 영양을 채웁니다.'}]}
+  };
+  var FULL={
+    oily:'정제수, 부틸렌글라이콜, 다이카프릴릴카보네이트, 나이아신아마이드, 글리세린, 카프릴릭/카프릭트라이글리세라이드, 1,2-헥산다이올, 식물성스쿠알란, 호호바씨오일, 징크피씨에이, 베타인, 소나무잎추출물, 버지니아풍년화추출물, 은행나무잎추출물, 판테놀, 알란토인, 알로에베라잎추출물, 세테아릴올리베이트, 솔비탄올리베이트, 토코페릴아세테이트, 다이포타슘글리시리제이트, 글로코노락톤, 세라마이드엔피, 에틸헥실글리세린, 암모늄아크릴로일다이메틸타우레이트/브이피코폴리머, 하이드록시아세토페논, 하이드로제네이티드레시틴, 동백나무씨오일, 리놀레익애씨드, 실리카, 잔탄검, 아데노신, 다이소듐이디티에이',
+    trouble:'정제수, 부틸렌글라이콜, 다이카프릴릴카보네이트, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 카프릴릭/카프릭트라이글리세라이드, 병풀추출물, 약모밀추출물, 베타인, 식물성스쿠알란, 호호바씨오일, 세테아릴올리베이트, 솔비탄올리베이트, 토코페릴아세테이트, 장엽대황뿌리추출물, 황련뿌리추출물, 뽕나무잎추출물, 도둑놈의지팡이뿌리추출물, 은행나무잎추출물, 다이프로필렌글라이콜, 4-터피네올, 세라마이드엔피, 판테놀, 알란토인, 알로에베라잎추출물, 다이포타슘글리시리제이트, 마데카소사이드, 아시아티코사이드, 아시아틱애씨드, 마데카식애씨드, 하이드로제네이티드레시틴, 동백나무씨오일, 리놀레익애씨드, 에틸헥실글리세린, 하이드록시아세토페논, 암모늄아크릴로일다이메틸타우레이트/브이피코폴리머, 잔탄검, 실리카, 시트릭애씨드, 다이소듐이디티에이',
+    dry:'정제수, 카프릴릭/카프릭트라이글리세라이드, 부틸렌글라이콜, 글리세린, 식물성스쿠알란, 나이아신아마이드, 메틸트라이메티콘, 1,2-헥산다이올, 베타인, 판테놀, 해바라기씨오일, 마카다미아씨오일, 호호바씨오일, 폴리글리세릴-2스테아레이트, 글리세릴스테아레이트, 스테아릴알코올, 황금추출물, 글리세릴글루코사이드, 글루코오스, 줄작두콩씨추출물, 돌콩추출물, 렌틸콩씨추출물, 칡뿌리추출물, 녹두씨추출물, 캐롭씨추출물, 락토바실러스발효용해물, 세라마이드엔피, 동백나무씨오일, 리놀레익애씨드, C12-16알코올, 하이드로제네이티드레시틴, 팔미틱애씨드, C14-22알코올, C12-20알킬글루코사이드, 알로에베라잎추출물, 다이포타슘글리시리제이트, 토코페릴아세테이트, 에틸헥실글리세린, 알란토인, 잔탄검, 암모늄아크릴로일다이메틸타우레이트/브이피코폴리머, 아데노신, 하이드록시아세토페논, 다이소듐이디티에이'
+  };
+  var t=(root.dataset.type||'').toLowerCase();
+  if(!P[t]){ var u=(new URLSearchParams(location.search).get('type')||'').toLowerCase(); var m={oily:'eternal',dry:'neat',trouble:'renaissance'}; t=m[u]||u; if(!P[t])t='eternal'; }
+  var p=P[t], ig=ING[p.key];
+  root.querySelector('.fno').textContent=String(p.fno).padStart(2,'0');
+  root.querySelector('.pc-en').textContent=p.en;
+  root.querySelector('.pc-ko').textContent=p.ko;
+  root.querySelector('.pc-tag').textContent=p.tag;
+  function card(i,idx){var L='ABCDEFGHIJ'.charAt(idx);var lv=[94,86,79,72,66,60][idx]||60;return '<div class="ig"><span class="igidx">'+String(idx+1).padStart(2,'0')+'</span><div class="igr"><div class="ignm">성분 '+L+'</div><div class="igef">'+i.ef+'</div></div><div class="iglvl"><i style="width:'+lv+'%"></i></div><p>'+i.d+'</p></div>';}
+  root.querySelector('.coreList').innerHTML=ig.core.map(card).join('');
+  root.querySelector('.subList').innerHTML=ig.sub.map(function(i,x){return card(i,ig.core.length+x);}).join('');
+  /* 전성분 채우기 */
+  var full=FULL[p.key]||'';
+  root.querySelector('.fulllist').textContent=full;
+  root.querySelector('.cnt').textContent='('+full.split(',').length+'종)';
+
+  /* ── ✦ 스크롤 등장(리빌) : 섹션·카드에 순차 페이드업 ── */
+  var targets=[];
+  root.querySelectorAll('.sec .eyebrow, .sec h2, .sec .lead, .ig, .fi, .prod, .guar, .hero h1').forEach(function(el){el.classList.add('rv');targets.push(el);});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    /* 같은 리스트 안 카드들은 살짝 시차를 두고 등장 */
+    root.querySelectorAll('.iglist').forEach(function(list){
+      Array.prototype.forEach.call(list.children,function(c,x){c.style.transitionDelay=(x*80)+'ms';});
+    });
+    targets.forEach(function(el){io.observe(el);});
+  } else {
+    targets.forEach(function(el){el.classList.add('in');});
+  }
+})();
 </script>
+</section>
+
 </body>
 </html>
