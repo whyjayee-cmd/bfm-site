@@ -165,9 +165,7 @@ canvas#work{display:none}
     <div class="grow">
       <span class="eyebrow">부위별 분석 완료</span>
       <h1 style="margin-top:10px">부위에서 읽은<br>피부 <span class="ac">지수</span>예요</h1>
-      <div class="rgthumbs" id="rgThumbs"></div>
-      <div class="sigchips" id="idxChips"></div>
-      <div class="rep" id="idxRep"></div>
+      <p class="note">부위 분석 결과는 최종 결과 리포트에서 함께 보여드려요.</p>
       <p class="note">0~100 상대 지수 · 촬영 조건에 따라 달라질 수 있어요 · 사진은 기기에서만 처리</p>
     </div>
     <div class="foot"><button class="btn" id="idxToSurvey">설문으로 마무리 (8문항) →</button></div>
@@ -201,8 +199,8 @@ canvas#work{display:none}
   <!-- 6. RESULT -->
   <section class="screen" id="s-result">
     <div class="grow">
-      <span class="eyebrow">AI 분석 완료</span>
-      <h1 style="margin-top:10px">당신에게 맞는<br>처방을 찾았습니다.</h1>
+      <span class="eyebrow">결과 리포트</span>
+      <h1 style="margin-top:10px">사진과 설문을 종합한<br>피부 <span class="ac">리포트</span>예요</h1>
       <div class="rep">
         <div class="h"><span class="t">피부 데이터</span><span class="conf" id="confBadge">보통 확신</span></div>
         <div id="flagWrap"></div>
@@ -211,6 +209,11 @@ canvas#work{display:none}
         <div class="bar"><div class="bt"><span>TROUBLE · 트러블·자극</span><b id="t2v">–</b></div><div class="tr"><div class="fl" id="t2"></div></div></div>
         <div class="reason" id="reason"></div>
         <div class="usedphoto" id="usedPhoto"><span class="d"></span><span></span></div>
+      </div>
+      <div class="rgthumbs" id="rgThumbs"></div>
+      <div class="sigchips" id="idxChips"></div>
+      <div class="rep" id="idxRep"></div>
+      <div style="display:none">
       </div>
       <p class="note" style="margin-top:14px">얼굴 신호 분석과 설문을 종합한 결과예요. 참고용이며 의학적 진단은 아닙니다.</p>
     </div>
@@ -249,14 +252,14 @@ let stepMode='face', regionData={};
 const GUIDES={
  face:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="150" cy="190" rx="120" ry="158" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-dasharray="9 9"/></svg>',
  tzone:'<svg viewBox="0 0 300 380" fill="none"><path d="M48 64 H252 V150 H182 V306 H118 V150 H48 Z" stroke="rgba(255,255,255,.75)" stroke-width="3" stroke-dasharray="9 9" stroke-linejoin="round"/><path d="M62 176 Q88 164 114 174" stroke="rgba(91,141,239,.65)" stroke-width="3" stroke-dasharray="6 6"/><path d="M186 174 Q212 164 238 176" stroke="rgba(91,141,239,.65)" stroke-width="3" stroke-dasharray="6 6"/><text x="150" y="342" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="13" font-weight="500" font-family="inherit">이마·콧대를 T자에 — 눈썹은 파란 선</text></svg>',
- cheek:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="150" cy="208" rx="118" ry="128" stroke="rgba(255,255,255,.7)" stroke-width="3" stroke-dasharray="9 9"/><ellipse cx="150" cy="66" rx="30" ry="13" stroke="rgba(91,141,239,.72)" stroke-width="2.5"/><text x="150" y="43" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12.5" font-weight="500" font-family="inherit">눈</text><path d="M100 152 Q90 190 100 228" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="72" y="194" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="500" font-family="inherit">코</text><path d="M122 330 Q150 348 178 330" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="150" y="366" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="500" font-family="inherit">턱</text><text x="184" y="212" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="13" font-weight="500" font-family="inherit">볼</text></svg>',
- nose:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="88" cy="84" rx="26" ry="12" stroke="rgba(91,141,239,.65)" stroke-width="2.5"/><ellipse cx="212" cy="84" rx="26" ry="12" stroke="rgba(91,141,239,.65)" stroke-width="2.5"/><text x="150" y="56" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12.5" font-weight="500" font-family="inherit">눈을 위 타원에 맞춰요</text><path d="M150 110 C136 110 129 132 129 180 L129 248 C129 278 118 289 106 300 C126 318 174 318 194 300 C182 289 171 278 171 248 L171 180 C171 132 164 110 150 110 Z" stroke="rgba(255,255,255,.72)" stroke-width="3" stroke-dasharray="9 9"/><text x="150" y="220" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="13" font-weight="500" font-family="inherit">코</text><path d="M120 344 Q150 360 180 344" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="150" y="376" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="500" font-family="inherit">턱</text></svg>'
+ cheek:'<svg viewBox="0 0 300 380" fill="none"><path d="M158 42 C124 50 106 74 102 100 C99 116 99 124 95 132 C88 145 79 153 75 160 C82 167 89 169 92 173 C86 179 86 184 89 188 C94 191 94 194 93 198 C87 203 88 208 92 212 C99 218 102 226 100 238 C104 268 128 290 166 300 C180 304 190 310 194 322" stroke="rgba(255,255,255,.66)" stroke-width="3" stroke-dasharray="9 9" stroke-linecap="round"/><ellipse cx="128" cy="126" rx="15" ry="6.5" stroke="rgba(91,141,239,.75)" stroke-width="2.5"/><text x="128" y="106" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12" font-weight="500" font-family="inherit">눈</text><circle cx="160" cy="205" r="54" stroke="rgba(91,141,239,.8)" stroke-width="2.5" stroke-dasharray="6 6"/><text x="160" y="210" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="13" font-weight="500" font-family="inherit">볼</text><text x="150" y="356" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12.5" font-weight="500" font-family="inherit">얼굴 옆면이 실루엣에 맞게 — 볼을 원 안에</text></svg>',
+ nose:'<svg viewBox="0 0 300 380" fill="none"><ellipse cx="88" cy="84" rx="26" ry="12" stroke="rgba(91,141,239,.65)" stroke-width="2.5"/><ellipse cx="212" cy="84" rx="26" ry="12" stroke="rgba(91,141,239,.65)" stroke-width="2.5"/><text x="150" y="56" text-anchor="middle" fill="rgba(174,182,195,.95)" font-size="12.5" font-weight="500" font-family="inherit">눈을 위 타원에 맞춰요</text><path d="M137 128 C136 156 133 180 126 200 C120 213 114 220 114 230 C114 243 124 250 136 250 C142 250 145 246 150 246 C155 246 158 250 164 250 C176 250 186 243 186 230 C186 220 180 213 174 200 C167 180 164 156 163 128" stroke="rgba(255,255,255,.75)" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/><path d="M128 236 Q136 241 143 237" stroke="rgba(91,141,239,.65)" stroke-width="2" stroke-dasharray="4 4"/><path d="M157 237 Q164 241 172 236" stroke="rgba(91,141,239,.65)" stroke-width="2" stroke-dasharray="4 4"/><text x="150" y="286" text-anchor="middle" fill="rgba(255,255,255,.82)" font-size="13" font-weight="500" font-family="inherit">코</text><path d="M122 336 Q150 352 178 336" stroke="rgba(91,141,239,.6)" stroke-width="2.5" stroke-dasharray="5 5"/><text x="150" y="370" text-anchor="middle" fill="rgba(174,182,195,.9)" font-size="12" font-weight="500" font-family="inherit">턱</text></svg>'
 };
 const RZOOM=1; // 자동 줌인 제거(사용자 요청 2026-07-12) — 화면 확대·중앙크롭 없이 전체화면. 1로 두면 scale(1)·크롭 전체프레임이라 로직 그대로 안전
 const RSTEP={
  tzone:{label:'T존 클로즈업',coach:'이마·콧대를 T자 점선에 맞춰요',next:'cheek'},
- cheek:{label:'볼 클로즈업',coach:'볼을 원 안에 — 눈·코·턱 표시에 맞춰요',next:'nose'},
- nose:{label:'코 클로즈업',coach:'코를 안에, 눈은 양쪽 끝 위에 — 턱은 아래',next:null}
+ cheek:{label:'볼 클로즈업',coach:'옆얼굴을 실루엣에 — 볼이 원 안에 오게',next:'nose'},
+ nose:{label:'코 클로즈업',coach:'코를 점선 실루엣에 — 눈은 위 타원에',next:null}
 };
 
 /* ===== MediaPipe ===== */
@@ -437,6 +440,7 @@ function renderResult(){
   $('#t0v').textContent=pct[0]+'%';$('#t1v').textContent=pct[1]+'%';$('#t2v').textContent=pct[2]+'%';
   $('#reason').innerHTML=reasonText(r,faceResult,Sv);
   $('#usedPhoto').querySelector('span:last-child').textContent=r.usedPhoto?((faceResult&&faceResult.regions?'부위(T존·볼·코) 분석':'얼굴 분석')+' + 설문 반영 · 사진은 기기에서만 처리(서버 전송 없음)'):'설문만 반영 · 사진 없이 분석';
+  populateIdx(); /* 한 페이지 결과 리포트: 부위 썸네일·칩·지수 통합 */
   const tkey={지성:'oily',건성:'dry',여드름:'trouble'}[TYPES[r.primary]];
   /* 처방 번호: 시간 진행 + 기기별 테스트 횟수로 계속 증가 */
   let fnoInc=1;try{fnoInc=(parseInt(localStorage.getItem('bfm_fno')||'0',10)||0)+1;localStorage.setItem('bfm_fno',String(fnoInc));}catch(e){}
@@ -576,9 +580,11 @@ function storeRegion(r,c){regionData[r]={...analyzeRegionShot(c,r),thumb:makeThu
 function beginRegion(r){if(!inApp&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)startCamera(r);else{stepMode=r;$('#fileInput').click();}}
 function nextAfterRegion(){const nx=RSTEP[stepMode]&&RSTEP[stepMode].next;if(nx)beginRegion(nx);else{applyRegions();regionTheater();}}
 const P100=x=>Math.round(clamp(x,0,1)*100);
+/* 표시용 지수: √커브(저신호 증폭)+최소 10 — 웬만해선 0 안 나오게 */
+const PIDX=x=>x==null?null:Math.round(10+86*Math.sqrt(clamp(x,0,1)));
 function applyRegions(){const tz=regionData.tzone,n=regionData.nose,ch=regionData.cheek;if(!tz&&!n&&!ch)return;
-  const tzOilC=tz?clamp(tz.shine/0.15,0,1):null,noseOil=n?clamp(n.shine/0.15,0,1):null,pore=n?clamp((n.lap-110)/560,0,1):null;
-  const cheekOil=ch?clamp(ch.shine/0.15,0,1):null,cheekRed=ch?clamp((ch.redness-0.04)/0.12,0,1):null;
+  const tzOilC=tz?clamp(tz.shine/0.11,0,1):null,noseOil=n?clamp(n.shine/0.11,0,1):null,pore=n?clamp((n.lap-70)/620,0,1):null;
+  const cheekOil=ch?clamp(ch.shine/0.11,0,1):null,cheekRed=ch?clamp((ch.redness-0.02)/0.13,0,1):null;
   const oilSig=tzOilC??noseOil??0.3;
   const oily=clamp(0.45*oilSig+0.30*(noseOil??oilSig)+0.25*(pore??oilSig),0,1);
   const shineTz=tz?tz.shine:(n?n.shine:0);
@@ -591,7 +597,7 @@ function applyRegions(){const tz=regionData.tzone,n=regionData.nose,ch=regionDat
   const shineDiff=(tz&&ch)?Math.max(0,tz.shine-ch.shine*0.6):(oily>0.5?0.08:0); // T존 vs 볼 = 복합성 판단
   faceResult={ok:true,regions:true,q,Sp:normalize([oily+0.05,dry,acne]),shine:shineTz,shineDiff,
     redness:ch?ch.redness:(n?n.redness:0),
-    idx:{tzOil:tzOilC!=null?P100(tzOilC):null,noseOil:n?P100(noseOil):null,pore:n?P100(pore):null,cheekOil:ch?P100(cheekOil):null,red:ch?P100(cheekRed):null}};}
+    idx:{tzOil:PIDX(tzOilC),noseOil:PIDX(noseOil),pore:PIDX(pore),cheekOil:PIDX(cheekOil),red:PIDX(cheekRed)}};}
 function idxBar(lb,v){return v==null?'':`<div class="bar"><div class="bt"><span>${lb}</span><b>${v}</b></div><div class="tr"><div class="fl" style="width:${v}%"></div></div></div>`;}
 /* ===== 부위 분석 씨어터 — 찍은 사진 위 스캔·측정 연출(실측값 기반) ===== */
 function regionTheater(){
@@ -677,13 +683,14 @@ function regionTheater(){
       if(p<1)requestAnimationFrame(frame);
       else{ri++;if(ri<order.length)setTimeout(runOne,260);else{
         $('#scanEyebrow').textContent='분석 완료';$('#scanTitle').textContent='부위 신호를 모두 읽었어요';
-        $('#scanStat').style.display='none';setTimeout(()=>{tsv.style.display='';showIdx();},500);}}
+        $('#scanStat').style.display='none';setTimeout(()=>{tsv.style.display='';goSurvey();},650);}}
     }
     requestAnimationFrame(frame);
   }
   runOne();
 }
-function showIdx(){show('#s-idx');$('#stepLabel').textContent='부위 분석';
+function showIdx(){populateIdx();show('#s-idx');$('#stepLabel').textContent='부위 분석';}
+function populateIdx(){
   const idx=(faceResult&&faceResult.idx)||{};const th=[];
   if(capCanvas)th.push(`<div class="th"><img src="${makeThumb(capCanvas)}"><span class="lb">얼굴</span></div>`);
   if(regionData.tzone)th.push(`<div class="th"><img src="${regionData.tzone.thumb}"><span class="lb">T존</span>${regionData.tzone.q<0.35?'<span class="lq">품질 낮음</span>':''}</div>`);
@@ -722,7 +729,7 @@ $('#fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.targ
   catch(err){const img=new Image();img.onload=()=>handle(imageToCanvas(img));img.src=URL.createObjectURL(f);}};
 $('#startCam').onclick=()=>startCamera('tzone');
 $('#shoot').onclick=()=>{if(!$('#shoot').disabled)captureStill();};
-$('#camCancel').onclick=()=>{stopCamera();if(stepMode!=='face'&&Object.keys(regionData).length){applyRegions();showIdx();}else{show('#s-intro');$('#stepLabel').textContent='AI 피부 진단';}};
+$('#camCancel').onclick=()=>{stopCamera();if(stepMode!=='face'&&Object.keys(regionData).length){applyRegions();goSurvey();}else{show('#s-intro');$('#stepLabel').textContent='AI 피부 진단';}};
 $('#regionSkip').onclick=()=>{stopCamera();nextAfterRegion();};
 /* '사진 없이 설문만' 링크 제거(2026-07-14 사용자 요청) */
 $('#toSurvey').onclick=()=>beginRegion('tzone');
