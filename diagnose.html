@@ -438,7 +438,10 @@ function renderResult(){
   $('#reason').innerHTML=reasonText(r,faceResult,Sv);
   $('#usedPhoto').querySelector('span:last-child').textContent=r.usedPhoto?((faceResult&&faceResult.regions?'부위(T존·볼·코) 분석':'얼굴 분석')+' + 설문 반영 · 사진은 기기에서만 처리(서버 전송 없음)'):'설문만 반영 · 사진 없이 분석';
   const tkey={지성:'oily',건성:'dry',여드름:'trouble'}[TYPES[r.primary]];
-  document.querySelector('#s-result a.btn').setAttribute('href','result.html?type='+tkey);
+  /* 처방 번호: 시간 진행 + 기기별 테스트 횟수로 계속 증가 */
+  let fnoInc=1;try{fnoInc=(parseInt(localStorage.getItem('bfm_fno')||'0',10)||0)+1;localStorage.setItem('bfm_fno',String(fnoInc));}catch(e){}
+  const fnoNew=1500+Math.floor((Date.now()-Date.UTC(2026,6,1))/3900000)+fnoInc;
+  document.querySelector('#s-result a.btn').setAttribute('href','result.html?type='+tkey+'&fno='+fnoNew+'&o='+pct[0]+'&d='+pct[1]+'&t='+pct[2]);
 }
 
 /* ===== retake ===== */

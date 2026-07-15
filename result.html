@@ -131,10 +131,36 @@
 #bfm-result .fullwrap .cnt{margin-left:auto;margin-right:6px;font-size:12.5px;color:var(--faint)}
 #bfm-result .fulllist{padding:0 0 6px;color:var(--mut);font-size:13.5px;line-height:1.9;word-break:keep-all}
 #bfm-result .fullnote{padding:14px 0 22px;font-size:12px;color:var(--faint);line-height:1.6;border-top:1px solid var(--line);margin-top:4px}
+
+/* ── 히어로 풀스크린 + 컬러 오로라 + 결과 세분화 ── */
+#bfm-result .hero{min-height:100svh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:44px 0}
+#bfm-result .hero .wrap{position:relative;z-index:2;width:100%}
+#bfm-result .aur{position:absolute;width:70vmax;height:70vmax;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0;opacity:.55}
+#bfm-result .a1{background:radial-gradient(circle,rgba(91,141,239,.5),transparent 62%);top:-25vmax;left:-18vmax;animation:aurA 13s ease-in-out infinite alternate}
+#bfm-result .a2{background:radial-gradient(circle,rgba(150,90,255,.36),transparent 62%);bottom:-30vmax;right:-20vmax;animation:aurB 17s ease-in-out infinite alternate}
+#bfm-result .a3{background:radial-gradient(circle,rgba(45,205,190,.28),transparent 60%);top:30%;left:55%;width:44vmax;height:44vmax;animation:aurC 11s ease-in-out infinite alternate}
+@keyframes aurA{to{transform:translate(9vmax,7vmax) scale(1.15)}}
+@keyframes aurB{to{transform:translate(-8vmax,-6vmax) scale(1.1)}}
+@keyframes aurC{to{transform:translate(-6vmax,5vmax) scale(1.22);opacity:.4}}
+#bfm-result .hstats{max-width:520px;margin:20px auto 0;background:rgba(13,17,27,.66);border:1px solid #232b3d;border-radius:16px;padding:16px 18px;backdrop-filter:blur(8px);display:flex;flex-direction:column;gap:12px}
+#bfm-result .hstats[hidden]{display:none}
+#bfm-result .hs{display:flex;align-items:center;gap:12px}
+#bfm-result .hl{flex:none;width:92px;font-size:12.5px;color:var(--mut);text-align:left}
+#bfm-result .hb{flex:1;height:7px;border-radius:99px;background:#1c2230;overflow:hidden}
+#bfm-result .hb i{display:block;height:100%;width:0;border-radius:99px;transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
+#bfm-result .io{background:linear-gradient(90deg,#5B8DEF,#83a8ff)}
+#bfm-result .id2{background:linear-gradient(90deg,#2fbfae,#7ee2ae)}
+#bfm-result .it{background:linear-gradient(90deg,#E2725B,#f0a48f)}
+#bfm-result .hv{flex:none;width:40px;font-size:13px;text-align:right;color:#dfe8fb}
+#bfm-result .shint{margin-top:26px;font-size:11px;letter-spacing:.18em;color:var(--faint)}
+#bfm-result .shint span{display:block;width:1px;height:26px;margin:8px auto 0;background:linear-gradient(180deg,var(--accent),transparent);animation:shd 1.6s ease-in-out infinite}
+@keyframes shd{0%{transform:scaleY(.2);transform-origin:top;opacity:0}30%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+#bfm-result .prod .was{font-size:15px;color:var(--faint);text-decoration:line-through;margin-right:8px}
+@media (prefers-reduced-motion:reduce){#bfm-result .aur,#bfm-result .shint span{animation:none}}
 </style>
 
   <!-- HERO -->
-  <div class="hero"><div class="wrap">
+  <div class="hero"><div class="aur a1"></div><div class="aur a2"></div><div class="aur a3"></div><div class="wrap">
     <div class="et">AI 분석 완료 · 처방 No. <span class="fno">—</span></div>
     <div class="scanline"><i></i></div>
     <div class="persona">
@@ -143,7 +169,13 @@
       <div class="pc-tag"></div>
       <div class="pc-fno">맞춤 처방 매칭 완료</div>
     </div>
+    <div class="hstats" hidden>
+      <div class="hs"><span class="hl">유분·번들거림</span><div class="hb"><i class="io"></i></div><b class="hv vo">—</b></div>
+      <div class="hs"><span class="hl">건조·당김</span><div class="hb"><i class="id2"></i></div><b class="hv vd">—</b></div>
+      <div class="hs"><span class="hl">트러블·자극</span><div class="hb"><i class="it"></i></div><b class="hv vt">—</b></div>
+    </div>
     <h1>당신에게 맞는<br><span class="ac">처방</span>을 찾았습니다.</h1>
+    <div class="shint">SCROLL<span></span></div>
   </div></div>
 
   <!-- CONCEPT -->
@@ -186,7 +218,7 @@
     <div class="prod">
       <div class="nm">Perfect All-in-One</div>
       <div class="ds">당신 타입에 맞춘 활성·보조 성분을, 좋은 오일·유화로 한 병에. 토너·로션·세럼·영양을 따로 바를 필요 없습니다.</div>
-      <div class="price"><span class="now">21,900원</span><span class="s">2개월분(200ml) · 하루 약 365원</span></div>
+      <div class="price"><span class="was">23,900원</span><span class="now">21,900원</span><span class="s">구독 시 · 2개월분(200ml)</span></div>
       <div class="spec">
         <div class="ln"><span>용량</span><b>200ml · 약 2개월분</b></div>
         <div class="ln"><span>구성</span><b>올인원 1병 (4-in-1)</b></div>
@@ -250,17 +282,28 @@
   var t=(root.dataset.type||'').toLowerCase();t=m[t]||t;
   if(!P[t]){ var u=(new URLSearchParams(location.search).get('type')||'').toLowerCase(); t=m[u]||u; if(!P[t])t='b'; }
   var p=P[t], ig=ING[p.key];
-  root.querySelector('.fno').textContent=String(p.fno).padStart(2,'0');
+  /* 처방 번호: 진단이 넘긴 ?fno(증가형) 우선, 없으면 시간 기반 진행 번호 */
+  var params2=new URLSearchParams(location.search);
+  var fno=parseInt(params2.get('fno'),10);
+  if(!fno||fno<1){fno=1500+Math.floor((Date.now()-Date.UTC(2026,6,1))/3900000);}
+  root.querySelector('.fno').textContent=String(fno).padStart(2,'0');
   root.querySelector('.pc-en').textContent=p.en;
   root.querySelector('.pc-ko').textContent=p.ko;
   root.querySelector('.pc-tag').textContent=p.tag;
+  /* 결과 세분화: 진단이 넘긴 실측 % (o=유분, d=건조, t=트러블) */
+  var qo=parseInt(params2.get('o'),10),qd=parseInt(params2.get('d'),10),qt=parseInt(params2.get('t'),10);
+  var hst=root.querySelector('.hstats');
+  if(hst&&!isNaN(qo)&&!isNaN(qd)&&!isNaN(qt)){hst.hidden=false;
+    var cl=function(v){return Math.max(0,Math.min(100,v));};
+    var sv=function(vs,bs,v){var e=root.querySelector(vs);if(e)e.textContent=cl(v)+'%';var b=root.querySelector(bs);if(b)setTimeout(function(){b.style.width=cl(v)+'%';},380);};
+    sv('.vo','.io',qo);sv('.vd','.id2',qd);sv('.vt','.it',qt);}
   /* 핵심 4 성분 — 용량 게이지(전성분 표기 순서 기반) */
   var fullArr=(FULL[p.key]||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
   function fidx(nm){var n=String(nm).replace(/\s/g,'');for(var i2=0;i2<fullArr.length;i2++){var a=fullArr[i2].replace(/\s/g,'');if(!a)continue;if(a.indexOf(n)>=0||n.indexOf(a)>=0)return i2;}return -1;}
   var key4=ig.core.concat(ig.sub).slice(0,4);
-  function card(i,idx){var L='ABCD'.charAt(idx);var pos=fidx(i.nm);
+  function card(i,idx){var pos=fidx(i.nm);
     var lv=pos>=0?Math.max(18,Math.round(94-(pos/Math.max(1,fullArr.length-1))*80)):[88,74,62,52][idx];
-    return '<div class="ig"><span class="igidx">'+String(idx+1).padStart(2,'0')+'</span><div class="igr"><div class="ignm">성분 '+L+'</div><div class="igef">'+i.ef+'</div></div><div class="iglvl"><i style="width:'+lv+'%"></i></div><p>'+i.d+'</p></div>';}
+    return '<div class="ig"><span class="igidx">'+String(idx+1).padStart(2,'0')+'</span><div class="igr"><div class="ignm">'+i.nm+'</div><div class="igef">'+i.ef+'</div></div><div class="iglvl"><i style="width:'+lv+'%"></i></div><p>'+i.d+'</p></div>';}
   root.querySelector('.coreList').innerHTML=key4.map(card).join('');
   /* 전성분 — 타원 칩, 탭하면 설명 */
   var ROLE={'정제수':'제품의 베이스가 되는 용제','부틸렌글라이콜':'보습·성분 용해 보조','글리세린':'수분을 끌어당기는 보습제','1,2-헥산다이올':'보존 보조·보습','카프릴릭/카프릭트라이글리세라이드':'가볍게 발리는 피부 유연 오일','다이카프릴릴카보네이트':'산뜻한 에몰리언트 오일','식물성스쿠알란':'피부와 닮은 보습 오일','호호바씨오일':'유수분 밸런스 보습 오일','해바라기씨오일':'지질 보급 보습 오일','마카다미아씨오일':'피부 유연 보습 오일','동백나무씨오일':'윤기·보습 오일','베타인':'수분·진정 보조','판테놀':'진정·보습(프로비타민 B5)','알란토인':'피부 컨디셔닝·진정','세라마이드엔피':'피부 장벽 지질','토코페릴아세테이트':'항산화(비타민 E 유도체)','잔탄검':'점도 조절(제형 안정)','실리카':'피지 흡착·보송한 사용감','아데노신':'주름 개선 기능성 성분','다이소듐이디티에이':'제형 안정화(금속이온 봉쇄)','하이드록시아세토페논':'항산화·보존 보조','에틸헥실글리세린':'컨디셔닝·보존 보조','세테아릴올리베이트':'올리브 유래 천연 유화제','솔비탄올리베이트':'올리브 유래 천연 유화제','하이드로제네이티드레시틴':'유화·흡수 보조','리놀레익애씨드':'피부 지질 보급(오메가6)','암모늄아크릴로일다이메틸타우레이트/브이피코폴리머':'점도·제형 안정 폴리머','다이프로필렌글라이콜':'용제·보습 보조','메틸트라이메티콘':'가벼운 발림성 향상 실리콘','글루코오스':'보습 보조(당류)','시트릭애씨드':'pH 조절','스테아릴알코올':'제형 경도 조절 지방알코올','글리세릴스테아레이트':'유화제','폴리글리세릴-2스테아레이트':'유화제','팔미틱애씨드':'제형 보조 지방산','C12-16알코올':'제형 보조','C14-22알코올':'유화 보조','C12-20알킬글루코사이드':'유화 보조','알로에베라잎추출물':'수분·진정 식물 추출물','다이포타슘글리시리제이트':'감초 유래 진정 성분','은행나무잎추출물':'식물 유래 컨디셔닝','징크피씨에이':'아연 유래 피지 밸런싱','글리세릴글루코사이드':'속 수분 충전 보습 성분','락토바실러스발효용해물':'유산균 발효 컨디셔닝','글로코노락톤':'각질 결 정돈(PHA)','나이아신아마이드':'피지·톤 케어 활성(비타민 B3)','4-터피네올':'티트리 유래 트러블 케어 활성'};
@@ -271,7 +314,8 @@
     var pd=root.querySelector('.pilldesc'),pdN=root.querySelector('.pdN'),pdR=root.querySelector('.pdR');
     pillsEl.addEventListener('click',function(e){var b2=e.target.closest('.fpill');if(!b2)return;
       var on=pillsEl.querySelector('.fpill.on');if(on)on.classList.remove('on');b2.classList.add('on');
-      pdN.textContent=b2.textContent;pdR.textContent=roleOf(b2.textContent);pd.hidden=false;});
+      pdN.textContent=b2.textContent;pdR.textContent=roleOf(b2.textContent);pd.hidden=false;
+      try{pd.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(e){}});
     var c2=root.querySelector('.cnt2');if(c2)c2.textContent=fullArr.length+'종';}
 
   /* ── ✦ 스크롤 등장(리빌) : 섹션·카드에 순차 페이드업 ── */
