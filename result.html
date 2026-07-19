@@ -73,7 +73,9 @@
 #bfm-result .prod .ln b{color:var(--ink);font-weight:400}
 #bfm-result .trust{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 #bfm-result .trust span{font-size:12.5px;color:var(--accent2);border:1px solid rgba(91,141,239,.28);padding:7px 12px;border-radius:99px}
-#bfm-result .order{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;padding:17px;border-radius:14px;background:var(--accent);color:#fff;font-size:16.5px;font-weight:500;text-decoration:none}
+#bfm-result .optguide{margin:20px 0 0;text-align:center;font-size:13.5px;color:var(--mut)}
+#bfm-result .optguide b{color:var(--accent);font-weight:500}
+#bfm-result .order{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;padding:17px;border-radius:14px;background:var(--accent);color:#fff;font-size:16.5px;font-weight:500;text-decoration:none}
 /* guarantee */
 #bfm-result .guar{margin:64px 0 0;padding:48px 30px;text-align:center;background:radial-gradient(120% 120% at 50% -10%,#16223f,#0c0e13 62%);border:1px solid #283247;border-radius:22px}
 #bfm-result .guar .badge{width:54px;height:54px;border-radius:15px;margin:0 auto 18px;background:linear-gradient(135deg,var(--accent),#3E6FE0);display:flex;align-items:center;justify-content:center;font-size:25px}
@@ -226,7 +228,8 @@
       </div>
       <div class="trust"><span>미개봉 7일 이내 환불</span><span>무상 타입 교체 1회</span><span>구독 해지 자유</span></div>
       <!-- ▼ 주문/결제 페이지 주소 -->
-      <a class="order" href="https://www.bfm.best/shop_view?idx=5">정기배송으로 시작하기 →</a>
+      <p class="optguide">구매 화면에서 <b class="opttype">타입</b>을 선택해 주세요.</p>
+      <a class="order" href="https://www.bfm.best/shop_view?idx=7">정기배송으로 시작하기 →</a>
     </div>
   </div></div>
 
@@ -288,6 +291,7 @@
   if(!fno||fno<1){fno=1500+Math.floor((Date.now()-Date.UTC(2026,6,1))/3900000);}
   root.querySelector('.fno').textContent=String(fno).padStart(2,'0');
   root.querySelector('.pc-en').textContent=p.en;
+  var ot=root.querySelector('.opttype'); if(ot) ot.textContent=p.ko;
   root.querySelector('.pc-ko').textContent=p.ko;
   root.querySelector('.pc-tag').textContent=p.tag;
   /* 결과 세분화: 진단이 넘긴 실측 % (o=유분, d=건조, t=트러블) */
