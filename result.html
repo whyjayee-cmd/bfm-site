@@ -282,8 +282,13 @@
     dry:'정제수, 카프릴릭/카프릭트라이글리세라이드, 부틸렌글라이콜, 글리세린, 식물성스쿠알란, 나이아신아마이드, 메틸트라이메티콘, 1,2-헥산다이올, 베타인, 판테놀, 해바라기씨오일, 마카다미아씨오일, 호호바씨오일, 폴리글리세릴-2스테아레이트, 글리세릴스테아레이트, 스테아릴알코올, 황금추출물, 글리세릴글루코사이드, 글루코오스, 줄작두콩씨추출물, 돌콩추출물, 렌틸콩씨추출물, 칡뿌리추출물, 녹두씨추출물, 캐롭씨추출물, 락토바실러스발효용해물, 세라마이드엔피, 동백나무씨오일, 리놀레익애씨드, C12-16알코올, 하이드로제네이티드레시틴, 팔미틱애씨드, C14-22알코올, C12-20알킬글루코사이드, 알로에베라잎추출물, 다이포타슘글리시리제이트, 토코페릴아세테이트, 에틸헥실글리세린, 알란토인, 잔탄검, 암모늄아크릴로일다이메틸타우레이트/브이피코폴리머, 아데노신, 하이드록시아세토페논, 다이소듐이디티에이'
   };
   var m={oily:'b',dry:'a',trouble:'c',eternal:'b',neat:'a',renaissance:'c'};
-  var t=(root.dataset.type||'').toLowerCase();t=m[t]||t;
-  if(!P[t]){ var u=(new URLSearchParams(location.search).get('type')||'').toLowerCase(); t=m[u]||u; if(!P[t])t='b'; }
+  /* ⚠️ 진단이 넘긴 ?type= 을 최우선으로 사용한다.
+     (data-type 은 imweb 타입별 고정 페이지용 폴백 — 먼저 읽으면 진단 결과를 덮어써서
+      항상 같은 타입이 나오는 버그가 생김) */
+  var u=(new URLSearchParams(location.search).get('type')||'').toLowerCase();
+  var t=m[u]||u;
+  if(!P[t]){ var d=(root.dataset.type||'').toLowerCase(); t=m[d]||d; }
+  if(!P[t]) t='b';
   var p=P[t], ig=ING[p.key];
   /* 처방 번호: 진단이 넘긴 ?fno(증가형) 우선, 없으면 시간 기반 진행 번호 */
   var params2=new URLSearchParams(location.search);
